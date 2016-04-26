@@ -12,35 +12,35 @@ angular.module('app.controllers', [])
 
 })
    
-.controller('tHISISMECtrl', function($scope) {
+.controller('profileCtrl', function($scope) {
 
 })
    
-.controller('bUDDYSPROFILECtrl', function($scope) {
+.controller('buddyProfileCtrl', function($scope) {
 
 })
    
-.controller('bUDDIESCtrl', function($scope) {
+.controller('buddiesCtrl', function($scope) {
 
 })
    
-.controller('cHALLENGESCtrl', function($scope) {
+.controller('challengesCtrl', function($scope) {
 
 })
    
-.controller('mESSAGESCtrl', function($scope) {
+.controller('messagesCtrl', function($scope) {
 
 })
    
-.controller('aCCOUNTCtrl', function($scope) {
+.controller('accountCtrl', function($scope) {
 
 })
    
-.controller('sIGNOUTCtrl', function($scope) {
+.controller('signoutCtrl', function($scope) {
 
 })
    
-.controller('aDDBUDDYCtrl', function($scope) {
+.controller('addBuddyCtrl', function($scope) {
 
 })
    
@@ -56,15 +56,15 @@ angular.module('app.controllers', [])
 
 })
    
-.controller('cREATENEWCHALLENGECtrl', function($scope) {
+.controller('createNewChallengeCtrl', function($scope) {
 
 })
    
-.controller('aTeamChallengeCtrl', function($scope) {
+.controller('challengeGroupCtrl', function($scope) {
 
 })
    
-.controller('aCTIVITYFEEDCtrl', function($scope) {
+.controller('activityFeedCtrl', function($scope) {
 
 })
  

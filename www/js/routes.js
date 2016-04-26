@@ -11,14 +11,14 @@ angular.module('app.routes', [])
   
 
       .state('home', {
-    url: '/page1',
+    url: '/home',
     templateUrl: 'templates/home.html',
     controller: 'homeCtrl'
   })
 
-  .state('nIDO', {
-    url: '/side-menu21',
-    templateUrl: 'templates/nIDO.html',
+  .state('nido', {
+    url: '/side-menu',
+    templateUrl: 'templates/nido.html',
     abstract:true
   })
 
@@ -34,87 +34,87 @@ angular.module('app.routes', [])
     controller: 'signupCtrl'
   })
 
-  .state('nIDO.tHISISME', {
+  .state('nido.profile', {
     url: '/myprofile',
     views: {
       'side-menu21': {
-        templateUrl: 'templates/tHISISME.html',
-        controller: 'tHISISMECtrl'
+        templateUrl: 'templates/profile.html',
+        controller: 'profileCtrl'
       }
     }
   })
 
-  .state('nIDO.bUDDYSPROFILE', {
-    url: '/buddy',
+  .state('nido.buddyProfile', {
+    url: '/buddy-profile',
     views: {
       'side-menu21': {
-        templateUrl: 'templates/bUDDYSPROFILE.html',
-        controller: 'bUDDYSPROFILECtrl'
+        templateUrl: 'templates/buddyProfile.html',
+        controller: 'buddyProfileCtrl'
       }
     }
   })
 
-  .state('nIDO.bUDDIES', {
+  .state('nido.buddies', {
     url: '/buddies',
     views: {
       'side-menu21': {
-        templateUrl: 'templates/bUDDIES.html',
-        controller: 'bUDDIESCtrl'
+        templateUrl: 'templates/buddies.html',
+        controller: 'buddiesCtrl'
       }
     }
   })
 
-  .state('nIDO.cHALLENGES', {
+  .state('nido.challenges', {
     url: '/challenges',
     views: {
       'side-menu21': {
-        templateUrl: 'templates/cHALLENGES.html',
-        controller: 'cHALLENGESCtrl'
+        templateUrl: 'templates/challenges.html',
+        controller: 'challengesCtrl'
       }
     }
   })
 
-  .state('nIDO.mESSAGES', {
+  .state('nido.messages', {
     url: '/messages',
     views: {
       'side-menu21': {
-        templateUrl: 'templates/mESSAGES.html',
-        controller: 'mESSAGESCtrl'
+        templateUrl: 'templates/messages.html',
+        controller: 'messagesCtrl'
       }
     }
   })
 
-  .state('nIDO.aCCOUNT', {
+  .state('nido.account', {
     url: '/account',
     views: {
       'side-menu21': {
-        templateUrl: 'templates/aCCOUNT.html',
-        controller: 'aCCOUNTCtrl'
+        templateUrl: 'templates/account.html',
+        controller: 'accountCtrl'
       }
     }
   })
 
-  .state('nIDO.sIGNOUT', {
+  .state('nido.signout', {
     url: '/signout',
     views: {
       'side-menu21': {
-        templateUrl: 'templates/sIGNOUT.html',
-        controller: 'sIGNOUTCtrl'
+        templateUrl: 'templates/signout.html',
+        controller: 'signoutCtrl'
       }
     }
   })
 
-  .state('nIDO.aDDBUDDY', {
+  .state('nido.addBuddy', {
     url: '/add-buddy',
     views: {
       'side-menu21': {
-        templateUrl: 'templates/aDDBUDDY.html',
-        controller: 'aDDBUDDYCtrl'
+        templateUrl: 'templates/addBuddy.html',
+        controller: 'addBuddyCtrl'
       }
     }
   })
 
-  .state('nIDO.newMessage', {
+  .state('nido.newMessage', {
     url: '/new-message',
     views: {
       'side-menu21': {
@@ -124,7 +124,7 @@ angular.module('app.routes', [])
     }
   })
 
-  .state('nIDO.readMessage', {
+  .state('nido.readMessage', {
     url: '/read-message',
     views: {
       'side-menu21': {
@@ -134,7 +134,7 @@ angular.module('app.routes', [])
     }
   })
 
-  .state('nIDO.myPhoto', {
+  .state('nido.myPhoto', {
     url: '/photo',
     views: {
       'side-menu21': {
@@ -144,37 +144,37 @@ angular.module('app.routes', [])
     }
   })
 
-  .state('nIDO.cREATENEWCHALLENGE', {
+  .state('nido.createNewChallenge', {
     url: '/add-challenge',
     views: {
       'side-menu21': {
-        templateUrl: 'templates/cREATENEWCHALLENGE.html',
-        controller: 'cREATENEWCHALLENGECtrl'
+        templateUrl: 'templates/createNewChallenge.html',
+        controller: 'createNewChallengeCtrl'
       }
     }
   })
 
-  .state('nIDO.aTeamChallenge', {
-    url: '/challenge-page',
+  .state('nido.challengeGroup', {
+    url: '/challenge-group',
     views: {
       'side-menu21': {
-        templateUrl: 'templates/aTeamChallenge.html',
-        controller: 'aTeamChallengeCtrl'
+        templateUrl: 'templates/challengeGroup.html',
+        controller: 'challengeGroupCtrl'
       }
     }
   })
 
-  .state('nIDO.aCTIVITYFEED', {
+  .state('nido.activityFeed', {
     url: '/activity',
     views: {
       'side-menu21': {
-        templateUrl: 'templates/aCTIVITYFEED.html',
-        controller: 'aCTIVITYFEEDCtrl'
+        templateUrl: 'templates/activityFeed.html',
+        controller: 'activityFeedCtrl'
       }
     }
   })
 
-$urlRouterProvider.otherwise('/page1')
+$urlRouterProvider.otherwise('/home')
 
   
 
