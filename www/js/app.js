@@ -21,7 +21,6 @@ angular.module('app', ['ionic', 'backand', 'app.controllers', 'app.routes', 'app
   });
 })
 
-//Update Angular configuration section
 .config(function (BackandProvider) {
     BackandProvider.setAppName('nidolife');
     BackandProvider.setSignUpToken('a1435da8-9411-46b1-897a-77623eb9599c');
