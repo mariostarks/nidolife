@@ -5,7 +5,7 @@
 // the 2nd parameter is an array of 'requires'
 // 'starter.services' is found in services.js
 // 'starter.controllers' is found in controllers.js
-angular.module('app', ['ionic', 'app.controllers', 'app.routes', 'app.services', 'app.directives'])
+angular.module('app', ['ionic', 'backand', 'app.controllers', 'app.routes', 'app.services', 'app.directives'])
 
 .run(function($ionicPlatform) {
   $ionicPlatform.ready(function() {
@@ -19,4 +19,11 @@ angular.module('app', ['ionic', 'app.controllers', 'app.routes', 'app.services',
       StatusBar.styleDefault();
     }
   });
+})
+
+//Update Angular configuration section
+.config(function (BackandProvider) {
+    BackandProvider.setAppName('nidolife');
+    BackandProvider.setSignUpToken('a1435da8-9411-46b1-897a-77623eb9599c');
+    BackandProvider.setAnonymousToken('589837be-36cf-4ec0-8871-5d947dcd670a');
 })
