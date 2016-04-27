@@ -18,7 +18,8 @@ angular.module('app.routes', [])
 
   .state('nido', {
     url: '/side-menu',
-    templateUrl: 'templates/nido.html',
+    templateUrl: 'templates/menu.html',
+    controller: 'menuCtrl',
     abstract:true
   })
 

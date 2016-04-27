@@ -1,0 +1,73 @@
+<ion-side-menus enable-menu-with-back-views="false">
+    <ion-side-menu-content edge-drag-threshold="true"
+  drag-content="true">
+        <ion-nav-bar class="bar-stable">
+            <ion-nav-back-button></ion-nav-back-button>
+            <ion-nav-buttons side="left">
+                <button class="button button-icon button-clear ion-navicon" menu-toggle="left"></button>
+            </ion-nav-buttons>
+            <ion-nav-buttons side="right">
+                <button class="button button-icon button-clear ion-plus" menu-toggle="left"></button>
+            </ion-nav-buttons>
+        </ion-nav-bar>
+        <ion-nav-view name="side-menu21"></ion-nav-view>
+    </ion-side-menu-content>
+    <ion-side-menu width="{{.90 * devWidth}}" side="left" id="side-menu21">
+        <ion-header-bar class="bar-stable">
+            <div class="profile-header">
+                <img src="img/profile_image.jpg" class="profile-image"/>
+                <div class="profile-title">
+                    <div class="profile-name">Mario Starks</div>
+                    <div class="profile-location">New York, New York</div>
+                </div>
+            </div>
+        </ion-header-bar>
+        <ion-content padding="false" class="side-menu-left has-header">
+            <ion-list>
+                <ion-item ui-sref="nido.activityFeed" menu-close="">
+                    <div class="item-icon-left">
+                        <i class="icon ion-compass"></i>
+                        <p>ACTIVITY FEED</p>
+                    </div>
+                </ion-item>
+                <ion-item ui-sref="nido.profile" menu-close="">
+                    <div class="item-icon-left">
+                        <i class="icon ion-person"></i>
+                        <p>MY PROFILE</p>
+                    </div>
+                </ion-item>
+                <ion-item ui-sref="nido.buddies" menu-close="">
+                    <div class="item-icon-left">
+                        <i class="icon ion-person-stalker"></i>
+                        <p>BUDDIES</p>
+                    </div>
+                </ion-item>
+                <ion-item ui-sref="nido.challenges" menu-close="">
+                    <div class="item-icon-left">
+                        <i class="icon ion-arrow-graph-up-right"></i>
+                        <p>CHALLENGES</p>
+                    </div>
+                </ion-item>
+                <ion-item ui-sref="nido.messages" menu-close="">
+                    <div class="item-icon-left">
+                        <i class="icon ion-chatbubbles"></i>
+                        <p>MESSAGES</p>
+                        <span class="badge badge-light">0</span>
+                    </div>
+                </ion-item>
+                <ion-item ui-sref="nido.account" menu-close="">
+                    <div class="item-icon-left">
+                        <i class="icon ion-android-settings"></i>
+                        <p>ACCOUNT SETTINGS</p>
+                    </div>
+                </ion-item>
+                <ion-item ui-sref="nido.signout" menu-close="">
+                    <div class="item-icon-left">
+                        <i class="icon ion-android-cancel"></i>
+                        <p>SIGN OUT</p>
+                    </div>
+                </ion-item>
+            </ion-list>
+        </ion-content>
+    </ion-side-menu>
+</ion-side-menus> 

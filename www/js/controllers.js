@@ -1,5 +1,10 @@
 angular.module('app.controllers', [])
   
+.controller('menuCtrl', function($scope, $window) {
+	//var devWidth = 0;
+	$scope.devWidth = (($window.innerWidth > 0) ? $window.innerWidth : screen.width);
+})
+
 .controller('homeCtrl', function($scope) {
 
 })
