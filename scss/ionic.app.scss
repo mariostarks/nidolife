@@ -21,3 +21,39 @@ $ionicons-font-path: "../lib/ionic/fonts" !default;
 // Include all of Ionic
 @import "www/lib/ionic/scss/ionic";
 
+$base-background-color: #02a6ee !default; 
+$base-color: #FFF !default;
+
+// MS: ADDITIONS & OVERRIDES 
+
+[nav-bar-transition="ios"] [nav-bar="active"] .bar, [nav-bar-transition="ios"] [nav-bar="entering"] .bar { 
+	background-color: #02a6ee; 
+	padding: 10px; 
+}
+
+.bar.bar-stable .title { 
+	color: #fff; 
+	top: 5px; 
+}
+.bar { height: auto; }
+.bar-stable .button.button-clear {
+	color: #FFF;
+}
+.item-complex .item-content, .item-radio .item-content {
+	background-color: #02a6ee;
+}
+.item {
+	border: none; 
+}
+h1, h2, h3, h4, h5, h6, .h1, .h2, .h3, .h4, .h5, .h6 {
+	color: #f0f2ef; 
+}
+.item-avatar > .item-content > p { 
+    color: #eff587;
+    display: inline;
+    text-transform: uppercase;
+    font-size: 8px;
+    background-color: #a27850;
+    padding: 3px;
+    border-radius: 3px;
+}
