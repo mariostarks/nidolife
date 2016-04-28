@@ -9749,8 +9749,8 @@ a.button {
 .bar-stable .button.button-clear {
   color: #FFF; }
 
-.item, .menu-left, .bar.bar-stable, .item-complex .item-content, .item-radio .item-content {
-  background-color: #02a6ee; }
+.scroll-content, .item, .menu-left, .bar.bar-stable, .item-complex .item-content, .item-radio .item-content {
+  background-color: #02a6ee !important; }
 
 .item {
   border: none;
@@ -9770,7 +9770,7 @@ h1, h2, h3, h4, h5, h6, .h1, .h2, .h3, .h4, .h5, .h6 {
 
 .profile-header {
   position: relative;
-  margin: 35px auto 40px; }
+  margin: 35px auto 0px; }
 
 .profile-image {
   border-radius: 50%;
@@ -9798,10 +9798,78 @@ h1, h2, h3, h4, h5, h6, .h1, .h2, .h3, .h4, .h5, .h6 {
   margin-left: 10%; }
 
 .side-menu-left.has-header {
-  top: 260px; }
+  top: 250px; }
 
 .item p {
   color: #FFF; }
 
 .item .icon {
   font-size: 16px; }
+
+.menu-close {
+  position: absolute;
+  top: 25px;
+  font-size: 25px;
+  right: 30px;
+  opacity: .8; }
+
+.item.active.item-positive > a {
+  border-color: #0c60ee;
+  background-color: #0c60ee; }
+  .item.active.item-positive > a.item-complex > .item-content {
+    border-color: #0c60ee;
+    background-color: #0c60ee; }
+
+.has-header {
+  top: 60px; }
+
+.page-profile .profile-image {
+  width: 40%;
+  border: 2px solid #FFF; }
+
+.page-profile .profile-header {
+  margin-top: 3px;
+  margin-bottom: 15px; }
+
+.page-profile .button-large {
+  min-height: 70px; }
+
+.page-profile .button.button-block, .page-profile .button.button-full {
+  margin-bottom: 0px;
+  margin-top: 0px; }
+
+.page-profile .list {
+  margin-top: 0px; }
+
+.page-profile .card {
+  margin: 0 0 0 0; }
+
+.page-profile .item {
+  padding: 0px; }
+
+.page-profile .item-photo {
+  min-height: 90px;
+  width: auto; }
+
+.button-challenges {
+  background-color: #0c84c0; }
+
+.button-following {
+  background-color: #56a7d0; }
+
+.button-followers {
+  background-color: #0aa7b6; }
+
+.button-count {
+  font-weight: 500;
+  font-size: 20px;
+  margin-top: 5px;
+  color: #FFF; }
+
+.button-label {
+  color: #FFF;
+  font-size: 14px;
+  margin-top: -10px; }
+
+.input-label {
+  color: #FFF; }

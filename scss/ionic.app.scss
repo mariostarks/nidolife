@@ -21,9 +21,9 @@ $ionicons-font-path: "../lib/ionic/fonts" !default;
 // Include all of Ionic
 @import "www/lib/ionic/scss/ionic";
 
-$base-background-color: #02a6ee !default; 
-$base-color: #FFF !default;
-$menu-width:                      300px !default;
+$base-background-color: #02a6ee !important; 
+$base-color: #FFF !important;
+$menu-width: 300px !important;
 
 // MS: ADDITIONS & OVERRIDES 
 
@@ -40,9 +40,7 @@ $menu-width:                      300px !default;
 .bar-stable .button.button-clear {
 	color: #FFF;
 }
-.item, .menu-left, .bar.bar-stable, .item-complex .item-content, .item-radio .item-content {
-	background-color: #02a6ee;
-}
+.scroll-content, .item, .menu-left, .bar.bar-stable, .item-complex .item-content, .item-radio .item-content { background-color: $base-background-color; }
 .item {
 	border: none; 
 	color: #FFF;
@@ -61,7 +59,7 @@ h1, h2, h3, h4, h5, h6, .h1, .h2, .h3, .h4, .h5, .h6 {
 }
 .profile-header {
 	position: relative; 
-	margin: 35px auto 40px;
+	margin: 35px auto 0px;
 }
 .profile-image {
 	border-radius: 50%;
@@ -79,6 +77,48 @@ h1, h2, h3, h4, h5, h6, .h1, .h2, .h3, .h4, .h5, .h6 {
 .profile-location { font-size: 12px; }
 .bar .title { position: relative; }
 .side-menu-left .item-content { margin-left: 10%; }
-.side-menu-left.has-header { top: 260px; }
+.side-menu-left.has-header { top: 250px; }
 .item p { color: #FFF; }
 .item .icon { font-size: 16px; }
+.menu-close { 
+	position: absolute; 
+	top: 25px; 
+	font-size: 25px;
+	right: 30px; 
+	opacity: .8;
+}
+.item.active {
+    &.item-positive > a {
+        @include item-active-style($item-positive-active-bg, $item-positive-active-border);
+   }   
+}
+.has-header { top: 60px; }
+
+.page-profile {
+	.profile-image { 
+		width: 40%;
+		border: 2px solid #FFF;  
+	}
+.profile-header { margin-top: 3px; margin-bottom: 15px; }
+		.button-large { min-height: 70px; }
+	.button.button-block, .button.button-full { margin-bottom: 0px; margin-top: 0px; }
+	.list { margin-top: 0px; }
+	.card { margin: 0 0 0 0; }
+	.item { padding: 0px; }
+	.item-photo { min-height: 90px; width: auto; }
+}
+.button-challenges { background-color: #0c84c0; }
+.button-following { background-color: #56a7d0; }
+.button-followers { background-color: #0aa7b6; }
+.button-count { 
+	font-weight: 500;
+	font-size: 20px;
+	margin-top: 5px;
+	color: #FFF;
+}
+.button-label {
+	color: #FFF;
+	font-size: 14px;
+	margin-top: -10px;
+}
+.input-label { color: #FFF; }

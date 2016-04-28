@@ -6,14 +6,12 @@
             <ion-nav-buttons side="left">
                 <button class="button button-icon button-clear ion-navicon" menu-toggle="left"></button>
             </ion-nav-buttons>
-            <ion-nav-buttons side="right">
-                <button class="button button-icon button-clear ion-plus" menu-toggle="left"></button>
-            </ion-nav-buttons>
         </ion-nav-bar>
         <ion-nav-view name="side-menu21"></ion-nav-view>
     </ion-side-menu-content>
-    <ion-side-menu width="{{.90 * devWidth}}" side="left" id="side-menu21">
+    <ion-side-menu width="{{1.0 * devWidth}}" side="left" id="side-menu21">
         <ion-header-bar class="bar-stable">
+            <div class="menu-close ion-close-circled light"></div>
             <div class="profile-header">
                 <img src="img/profile_image.jpg" class="profile-image"/>
                 <div class="profile-title">
@@ -27,13 +25,13 @@
                 <ion-item ui-sref="nido.activityFeed" menu-close="">
                     <div class="item-icon-left">
                         <i class="icon ion-compass"></i>
-                        <p>ACTIVITY FEED</p>
+                        <p>NEWS FEED</p>
                     </div>
                 </ion-item>
                 <ion-item ui-sref="nido.profile" menu-close="">
                     <div class="item-icon-left">
                         <i class="icon ion-person"></i>
-                        <p>MY PROFILE</p>
+                        <p>PROFILE</p>
                     </div>
                 </ion-item>
                 <ion-item ui-sref="nido.buddies" menu-close="">
@@ -58,13 +56,13 @@
                 <ion-item ui-sref="nido.account" menu-close="">
                     <div class="item-icon-left">
                         <i class="icon ion-android-settings"></i>
-                        <p>ACCOUNT SETTINGS</p>
+                        <p>SETTINGS</p>
                     </div>
                 </ion-item>
                 <ion-item ui-sref="nido.signout" menu-close="">
                     <div class="item-icon-left">
                         <i class="icon ion-android-cancel"></i>
-                        <p>SIGN OUT</p>
+                        <p>LOG OUT</p>
                     </div>
                 </ion-item>
             </ion-list>

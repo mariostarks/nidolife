@@ -1,26 +1,33 @@
 <ion-view title="Account" id="page10">
     <ion-content padding="true" class="has-header">
         <form class="list">
-            <label class="item item-input">
-                <span class="input-label">Name</span>
+            <label class="item item-input ">
+               <div class="input-label">
+                  Name
+                </div>
                 <input type="text" placeholder="">
             </label>
             <label class="item item-input">
-                <span class="input-label">Email</span>
+               <div class="input-label">
+                  Email
+                </div>
                 <input type="text" placeholder="">
             </label>
             <label class="item item-input">
-                <span class="input-label">DOB</span>
+               <div class="input-label">
+                  Date of Birth
+                </div>
                 <input type="date" placeholder="">
             </label>
-            <label class="item item-select">
-                <span class="input-label">Gender</span>
+            <label class="item item-input item-select">
+                <div class="input-label">
+                  Gender
+                </div>
                 <select>
-                    <option>Male</option>
-                    <option>Female</option>
+                  <option>Male</option>
+                  <option selected>Female</option>
                 </select>
             </label>
-            <ion-toggle toggle-class="toggle-positive" ng-checked="true">Make Profile Public</ion-toggle>
         </form>
         <a ui-sref="nido.profile" id="account-button35" style="font-weight:;" class="button button-positive  button-block">SAVE CHANGES</a>
     </ion-content>
