@@ -15,6 +15,7 @@ $royal:                           #886aea !default;
 $dark:                            #444 !default;
 */
 
+
 // The path for our ionicons font files, relative to the built CSS in www/css
 $ionicons-font-path: "../lib/ionic/fonts" !default;
 
@@ -122,3 +123,40 @@ h1, h2, h3, h4, h5, h6, .h1, .h2, .h3, .h4, .h5, .h6 {
 	margin-top: -10px;
 }
 .input-label { color: #FFF; }
+.logo-login { 
+	max-width: 200px; 
+	display: block;
+	margin-left: auto;
+	margin-right: auto;
+	margin-bottom: 40px;
+	margin-top: -20px;
+}
+.page-login, .page-signup {
+	.list { text-align: center; }
+	.icon { 
+		display: block; 
+		font-size: 22px; 
+		position: relative;
+		top: 10px;
+	}
+	.input-label { margin-bottom: 20px; }
+	input {
+		@include placeholder($color: #FFF);
+	}
+	.input-login { 
+	    background-color: transparent;
+	    border-bottom: 1px solid #FFF;
+	    text-align: center;
+	    padding-right: 0px!important;
+	}
+	.item-input { padding: 10px 10px 10px 10px; }
+	.padding { padding: 20px; }
+}
+.page-challenges {
+	a.item-content { 
+		display: inline-block; 
+		background-color: #074c6b!important;
+		border-radius: 0 8px 8px 0;
+	}
+	.list { margin-top: 10px; }
+}

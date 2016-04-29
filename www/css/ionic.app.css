@@ -9873,3 +9873,53 @@ h1, h2, h3, h4, h5, h6, .h1, .h2, .h3, .h4, .h5, .h6 {
 
 .input-label {
   color: #FFF; }
+
+.logo-login {
+  max-width: 200px;
+  display: block;
+  margin-left: auto;
+  margin-right: auto;
+  margin-bottom: 40px;
+  margin-top: -20px; }
+
+.page-login .list, .page-signup .list {
+  text-align: center; }
+
+.page-login .icon, .page-signup .icon {
+  display: block;
+  font-size: 22px;
+  position: relative;
+  top: 10px; }
+
+.page-login .input-label, .page-signup .input-label {
+  margin-bottom: 20px; }
+
+.page-login input::-moz-placeholder, .page-signup input::-moz-placeholder {
+  color: #FFF; }
+
+.page-login input:-ms-input-placeholder, .page-signup input:-ms-input-placeholder {
+  color: #FFF; }
+
+.page-login input::-webkit-input-placeholder, .page-signup input::-webkit-input-placeholder {
+  color: #FFF;
+  text-indent: 0; }
+
+.page-login .input-login, .page-signup .input-login {
+  background-color: transparent;
+  border-bottom: 1px solid #FFF;
+  text-align: center;
+  padding-right: 0px !important; }
+
+.page-login .item-input, .page-signup .item-input {
+  padding: 10px 10px 10px 10px; }
+
+.page-login .padding, .page-signup .padding {
+  padding: 20px; }
+
+.page-challenges a.item-content {
+  display: inline-block;
+  background-color: #074c6b !important;
+  border-radius: 0 8px 8px 0; }
+
+.page-challenges .list {
+  margin-top: 10px; }

@@ -1,6 +1,6 @@
 {
   "name": "nidolife",
-  "app_id": "",
+  "app_id": "a6ade620",
   "gulpStartupTasks": [
     "sass",
     "watch"

@@ -7,7 +7,14 @@
 // 'starter.controllers' is found in controllers.js
 angular.module('app', ['ionic', 'backand', 'app.controllers', 'app.routes', 'app.services', 'app.directives'])
 
-.run(function($ionicPlatform) {
+.config(function (BackandProvider, $stateProvider, $urlRouterProvider, $httpProvider) {
+    BackandProvider.setAppName('nidolife');
+    BackandProvider.setSignUpToken('a1435da8-9411-46b1-897a-77623eb9599c');
+    BackandProvider.setAnonymousToken('589837be-36cf-4ec0-8871-5d947dcd670a');
+    $httpProvider.interceptors.push('APIInterceptor');
+})
+
+.run(function($ionicPlatform, $rootScope, $state, LoginService, Backand) {
   $ionicPlatform.ready(function() {
     // Hide the accessory bar by default (remove this to show the accessory bar above the keyboard
     // for form inputs)
@@ -18,11 +25,31 @@ angular.module('app', ['ionic', 'backand', 'app.controllers', 'app.routes', 'app
       // org.apache.cordova.statusbar required
       StatusBar.styleDefault();
     }
+    var isMobile = !(ionic.Platform.platforms[0] == "browser");
+    Backand.setIsMobile(isMobile);
+    Backand.setRunSignupAfterErrorInSigninSocial(true);
+
+    function unauthorized() {
+        console.log("user is unauthorized, sending to login");
+        $state.go('login');
+    }
+
+    function signout() {
+        LoginService.signout();
+    }
+
+    $rootScope.$on('unauthorized', function () {
+        unauthorized();
+    });
+
+    $rootScope.$on('$stateChangeSuccess', function (event, toState) {
+        if (toState.name == 'login') {
+            signout();
+        }
+        else if (toState.name != 'login' && Backand.getToken() === undefined) {
+            unauthorized();
+        }
+    });
   });
 })
 
-.config(function (BackandProvider) {
-    BackandProvider.setAppName('nidolife');
-    BackandProvider.setSignUpToken('a1435da8-9411-46b1-897a-77623eb9599c');
-    BackandProvider.setAnonymousToken('589837be-36cf-4ec0-8871-5d947dcd670a');
-})

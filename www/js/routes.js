@@ -8,9 +8,7 @@ angular.module('app.routes', [])
   // Each state's controller can be found in controllers.js
   $stateProvider
     
-  
-
-      .state('home', {
+  .state('home', {
     url: '/home',
     templateUrl: 'templates/home.html',
     controller: 'homeCtrl'
@@ -26,13 +24,13 @@ angular.module('app.routes', [])
   .state('login', {
     url: '/login',
     templateUrl: 'templates/login.html',
-    controller: 'loginCtrl'
+    controller: 'loginCtrl as login'
   })
 
   .state('signup', {
     url: '/signup',
     templateUrl: 'templates/signup.html',
-    controller: 'signupCtrl'
+    controller: 'signupCtrl as vm'
   })
 
   .state('nido.profile', {
@@ -175,8 +173,6 @@ angular.module('app.routes', [])
     }
   })
 
-$urlRouterProvider.otherwise('/home')
-
-  
+$urlRouterProvider.otherwise('/home')  
 
 });
