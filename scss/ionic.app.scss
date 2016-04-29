@@ -160,3 +160,18 @@ h1, h2, h3, h4, h5, h6, .h1, .h2, .h3, .h4, .h5, .h6 {
 	}
 	.list { margin-top: 10px; }
 }
+.page-newsfeed {
+	.item-body { 
+		background-color: #FFF!important;
+		
+		padding: 0; 
+		p { color: #000;  }
+	}
+	.card { margin: 0 0 0 0; }
+	h2 { color: #FFF; font-weight: 400; }
+}
+.item-social { padding: 0 16px 16px; background-color: #FFF; color: #2d2d2d; }
+.item-caption { 
+	padding: 0px 16px 0px 16px; 
+	color: #000; 
+}
