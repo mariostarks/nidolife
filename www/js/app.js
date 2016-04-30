@@ -5,13 +5,36 @@
 // the 2nd parameter is an array of 'requires'
 // 'starter.services' is found in services.js
 // 'starter.controllers' is found in controllers.js
-angular.module('app', ['ionic', 'backand', 'app.controllers', 'app.routes', 'app.services', 'app.directives'])
+angular.module('app', ['ionic', 'backand', 'app.controllers', 'app.routes', 'app.services', 'app.directives', 'ngImgCrop', 'ngLodash', 'restangular', 'ngStorage'])
 
-.config(function (BackandProvider, $stateProvider, $urlRouterProvider, $httpProvider) {
+.config(function (BackandProvider, $stateProvider, $urlRouterProvider, $httpProvider, RestangularProvider) {
     BackandProvider.setAppName('nidolife');
     BackandProvider.setSignUpToken('a1435da8-9411-46b1-897a-77623eb9599c');
     BackandProvider.setAnonymousToken('589837be-36cf-4ec0-8871-5d947dcd670a');
     $httpProvider.interceptors.push('APIInterceptor');
+    RestangularProvider.setBaseUrl('https://api.backand.com/1/objects');
+    RestangularProvider.setDefaultHeaders({'AnonymousToken': '589837be-36cf-4ec0-8871-5d947dcd670a'});
+    // add a response intereceptor
+    RestangularProvider.setResponseExtractor(function(response, operation) {
+        return response.data;
+    });
+
+    /*
+    RestangularProvider.addResponseInterceptor(function(data, operation, what, url, response, deferred) {
+      var extractedData;
+      // .. to look for getList operations
+      if (operation === "getList") {
+        // .. and handle the data and meta data
+        extractedData = data.data;
+        //extractedData.meta = data.data.meta;
+      } else {
+        extractedData = data.data;
+      }
+      //console.log(data.data);
+      return extractedData;
+    });
+*/
+    
 })
 
 .run(function($ionicPlatform, $rootScope, $state, LoginService, Backand) {

@@ -64,7 +64,9 @@ h1, h2, h3, h4, h5, h6, .h1, .h2, .h3, .h4, .h5, .h6 {
 }
 .profile-image {
 	border-radius: 50%;
-	width:65%;
+	width:100%;
+	max-width: 110px;
+	max-height: 110px;
 	height: auto;
     display: block;
     margin: 0 auto;
@@ -78,7 +80,7 @@ h1, h2, h3, h4, h5, h6, .h1, .h2, .h3, .h4, .h5, .h6 {
 .profile-location { font-size: 12px; }
 .bar .title { position: relative; }
 .side-menu-left .item-content { margin-left: 10%; }
-.side-menu-left.has-header { top: 250px; }
+.side-menu-left.has-header { top: 230px; }
 .item p { color: #FFF; }
 .item .icon { font-size: 16px; }
 .menu-close { 
@@ -93,7 +95,7 @@ h1, h2, h3, h4, h5, h6, .h1, .h2, .h3, .h4, .h5, .h6 {
         @include item-active-style($item-positive-active-bg, $item-positive-active-border);
    }   
 }
-.has-header { top: 60px; }
+.has-header { top: 50px; }
 
 .page-profile {
 	.profile-image { 
@@ -160,7 +162,7 @@ h1, h2, h3, h4, h5, h6, .h1, .h2, .h3, .h4, .h5, .h6 {
 	}
 	.list { margin-top: 10px; }
 }
-.page-newsfeed {
+.page-newsfeed, .page-uploadphoto {
 	.item-body { 
 		background-color: #FFF!important;
 		
@@ -174,4 +176,40 @@ h1, h2, h3, h4, h5, h6, .h1, .h2, .h3, .h4, .h5, .h6 {
 .item-caption { 
 	padding: 0px 16px 0px 16px; 
 	color: #000; 
+}
+/* IMAGE CROP */
+img-crop{width:100%;height:100%;display:block;position:relative;overflow:hidden}img-crop canvas{display:block;position:absolute;top:50%;left:50%;outline:0;-webkit-tap-highlight-color:transparent}
+.cropArea {
+  background: #E4E4E4;
+  overflow: hidden;
+  width: 100%;
+  height: 200px;
+}
+.uploadphoto-preview { 
+	width: 100px; 
+	height: 100px;   
+	display: block;
+    margin: 0 auto; 
+}
+.page-uploadphoto {
+	.item:first-child { padding-top: 0px; }
+}
+.photo-options { padding: 20px; }
+.account-photo { 
+    width: 100px;
+    height: 100px;
+    border-radius: 50%;
+    margin: 0 auto;
+    display: block;
+    border: 3px solid #FFF;
+    margin-bottom: 20px;
+    margin-top: 10px;
+}
+.icon-add-item { display: none; }
+.add-item .icon-add-item {
+	display: block; 
+    font-size: 28px;
+    position: absolute;
+    right: 10px;
+    top: 10px;
 }

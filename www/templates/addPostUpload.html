@@ -1,0 +1,26 @@
+<ion-view title="Upload Photo" id="upload-photo" class="page-uploadphoto">
+    <ion-content padding="false" class="has-header">
+      <div class="list card">
+
+        <div class="item">
+          <p>Select an image file: <input type="file" id="fileInput" /></p>
+        </div>
+
+        <div class="item item-body">
+            <div class="cropArea">
+              <img-crop image="image.originalImage" area-type="square" area-min-size="200" result-image-size="200" result-image="image.croppedImage" change-on-fly="true" maximize-crop="true" result-image-aspect="1x1"></img-crop>
+            </div>
+          <p>
+            <div>Preview Photo:</div>
+            <div><img class="uploadphoto-preview" ng-src="{{image.croppedImage}}" /></div>
+          </p>
+          <p class="photo-options">
+            <a ui-sref="nido.activityFeed" class="button button-dark">Cancel</a>
+            <a class="button button-positive" ng-click="savePhoto()">Next &rarr; Caption & Publish</a>
+          </p>
+        </div>
+
+      </div>
+
+    </ion-content>
+</ion-view>

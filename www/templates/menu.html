@@ -6,14 +6,17 @@
             <ion-nav-buttons side="left">
                 <button class="button button-icon button-clear ion-navicon" menu-toggle="left"></button>
             </ion-nav-buttons>
+            <ion-nav-buttons side="right">
+                <a ui-sref="addPost" class="icon-add-item icon light ion-plus-circled"></a>
+            </ion-nav-buttons>
         </ion-nav-bar>
         <ion-nav-view name="side-menu21"></ion-nav-view>
     </ion-side-menu-content>
-    <ion-side-menu width="{{1.0 * devWidth}}" side="left" id="side-menu21">
+    <ion-side-menu width="{{.9 * devWidth}}" side="left" id="side-menu21">
         <ion-header-bar class="bar-stable">
             <div class="menu-close ion-close-circled light"></div>
             <div class="profile-header">
-                <img src="img/profile_image.jpg" class="profile-image"/>
+                <img ng-src="{{getPhoto()}}" class="profile-image"/>
                 <div class="profile-title">
                     <div class="profile-name">Mario Starks</div>
                     <div class="profile-location">New York, New York</div>

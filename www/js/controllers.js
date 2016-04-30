@@ -1,15 +1,72 @@
 angular.module('app.controllers', [])
-  
-.controller('menuCtrl', function($scope, $window) {
+
+.controller('mainCtrl', function($rootScope) {
+    $rootScope.bodyClass = "";
+})
+
+.controller('addPostUploadCtrl', function($rootScope) {
+    $rootScope.bodyClass = "";
+})
+
+.controller('menuCtrl', function ($scope, $window, $localStorage) {
 	//var devWidth = 0;
+   // Set photo if exists
+    $scope.getPhoto = function() {
+        return $localStorage.user.photo;
+    }; 
 	$scope.devWidth = (($window.innerWidth > 0) ? $window.innerWidth : screen.width);
 })
 
-.controller('homeCtrl', function($scope) {
+.controller('homeCtrl', function($scope, $rootScope) {
+    $rootScope.bodyClass = "";
+})
+
+.controller('uploadPhotoCtrl', function ($state, AuthService, $rootScope, $scope, Restangular, $localStorage) {
+    console.log(JSON.stringify($localStorage.userQuery));
+    $rootScope.bodyClass = "";
+    Restangular.all("users").getList({ filter: JSON.stringify($localStorage.userQuery) }).then(function (users) {
+        $rootScope.user = users[0];
+        $rootScope.image = {
+           originalImage: '',
+           croppedImage: ''
+        };
+
+        // Upload & Crop Image Functionality
+        var handleFileSelect=function(evt) {
+          var file=evt.currentTarget.files[0];
+          var reader = new FileReader();
+          reader.onload = function (evt) {
+            $rootScope.$apply(function($rootScope){
+              $rootScope.image.originalImage=evt.target.result;
+            });
+          };
+          reader.readAsDataURL(file);
+        };
+
+        angular.element(document.querySelector('#fileInput')).on('change',handleFileSelect);
+        
+        // Save Photo
+        $rootScope.savePhoto = function() {
+            $rootScope.$watch('user', function(){
+                $rootScope.user.photo = $rootScope.image.croppedImage;
+                $localStorage.user.photo = $rootScope.image.croppedImage;
+            });
+
+            $rootScope.user.save().then( function(resp) {
+                console.log(resp);
+                $state.go('nido.account', {}, {reload: true});
+            }, function() {
+                console.log('There was an error saving.');
+            }); 
+        };
+
+    });
+
 
 })
       
-.controller('loginCtrl', function (Backand, $state, $rootScope, LoginService) {
+.controller('loginCtrl', function (Backand, $state, $rootScope, LoginService, $localStorage, Restangular, $localStorage) {
+    $rootScope.bodyClass = "";
     var login = this;
 
     function gotoSignup() {
@@ -33,8 +90,18 @@ angular.module('app.controllers', [])
 
     function onLogin() {
         $rootScope.$broadcast('authorized');
-        $state.go('nido.activityFeed');
         login.username = Backand.getUsername();
+        /* Params used to query API */
+        $localStorage.userQuery = {}; 
+        $localStorage.userQuery['value'] = login.username;
+        $localStorage.userQuery['fieldName'] = "email"; 
+        $localStorage.userQuery['operator'] = "contains";
+
+        Restangular.all("users").getList({ filter: JSON.stringify($localStorage.userQuery) }).then(function (users) {
+            $localStorage.user = users[0];
+        }); 
+
+        $state.go('nido.activityFeed');
 	}
 
     function signout() {
@@ -82,6 +149,7 @@ angular.module('app.controllers', [])
 })
    
 .controller('signupCtrl', function (Backand, $state, $rootScope, LoginService) {
+    $rootScope.bodyClass = "";
     var vm = this;
 
     vm.signup = signUp;
@@ -118,28 +186,40 @@ angular.module('app.controllers', [])
     vm.errorMessage = '';
 })
    
-.controller('profileCtrl', function($scope) {
-
+.controller('profileCtrl', function($scope, $rootScope) {
+    $rootScope.bodyClass = "";
 })
    
-.controller('buddyProfileCtrl', function($scope) {
-
+.controller('buddyProfileCtrl', function($scope, $rootScope) {
+    $rootScope.bodyClass = "";
 })
    
 .controller('buddiesCtrl', function($scope) {
 
 })
    
-.controller('challengesCtrl', function($scope) {
-
+.controller('challengesCtrl', function($scope, $rootScope) {
+    $rootScope.bodyClass = "";
 })
    
-.controller('messagesCtrl', function($scope) {
-
+.controller('messagesCtrl', function($scope, $rootScope) {
+    $rootScope.bodyClass = "";
 })
    
-.controller('accountCtrl', function($scope) {
-
+.controller('accountCtrl', function (Backand, $scope, $rootScope, $localStorage, Restangular) {
+    $rootScope.bodyClass = "";
+    $scope.getPhoto = function() {
+        return $localStorage.user.photo;
+    }; 
+    /*
+    Restangular.all("users").getList({ filter: JSON.stringify($localStorage.userQuery) }).then(function (users) {
+        $scope.user = users[0];
+    });
+*/
+    //console.log($scope.user.photo);
+   // Set photo if exists
+    //$rootScope.user = {};
+    //$rootScope.user.photo = $localStorage.user.photo;
 })
    
 .controller('signoutCtrl', function($scope) {
@@ -170,7 +250,7 @@ angular.module('app.controllers', [])
 
 })
    
-.controller('activityFeedCtrl', function($scope) {
-
+.controller('activityFeedCtrl', function($scope, $rootScope) {
+    $rootScope.bodyClass = "add-item";
 })
  

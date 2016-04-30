@@ -21,6 +21,12 @@ angular.module('app.routes', [])
     abstract:true
   })
 
+  .state('addPost', {
+    url: '/add-post-upload',
+    templateUrl: 'templates/addPostUpload.html',
+    controller: 'addPostUploadCtrl'
+  })
+
   .state('login', {
     url: '/login',
     templateUrl: 'templates/login.html',
@@ -31,6 +37,12 @@ angular.module('app.routes', [])
     url: '/signup',
     templateUrl: 'templates/signup.html',
     controller: 'signupCtrl as vm'
+  })
+
+  .state('uploadphoto', {
+    url: '/uploadphoto',
+    templateUrl: 'templates/uploadphoto.html',
+    controller: 'uploadPhotoCtrl'
   })
 
   .state('nido.profile', {

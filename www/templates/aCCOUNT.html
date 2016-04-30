@@ -1,6 +1,8 @@
-<ion-view title="Account" id="page10">
+<ion-view title="Account & Profile Settings" id="page10">
     <ion-content padding="true" class="has-header">
         <form class="list">
+          <img class="account-photo" data-ng-src="{{getPhoto()}}" />
+          <a ui-sref="uploadphoto" id="account-button35" style="font-weight:;" class="button button-calm  button-block"><i class="icon ion-ios-camera"></i> &nbsp; CHANGE PROFILE PHOTO</a>
             <label class="item item-input ">
                <div class="input-label">
                   Name
@@ -30,5 +32,6 @@
             </label>
         </form>
         <a ui-sref="nido.profile" id="account-button35" style="font-weight:;" class="button button-positive  button-block">SAVE CHANGES</a>
+
     </ion-content>
 </ion-view>

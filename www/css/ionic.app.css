@@ -9774,7 +9774,9 @@ h1, h2, h3, h4, h5, h6, .h1, .h2, .h3, .h4, .h5, .h6 {
 
 .profile-image {
   border-radius: 50%;
-  width: 65%;
+  width: 100%;
+  max-width: 110px;
+  max-height: 110px;
   height: auto;
   display: block;
   margin: 0 auto; }
@@ -9798,7 +9800,7 @@ h1, h2, h3, h4, h5, h6, .h1, .h2, .h3, .h4, .h5, .h6 {
   margin-left: 10%; }
 
 .side-menu-left.has-header {
-  top: 250px; }
+  top: 230px; }
 
 .item p {
   color: #FFF; }
@@ -9821,7 +9823,7 @@ h1, h2, h3, h4, h5, h6, .h1, .h2, .h3, .h4, .h5, .h6 {
     background-color: #0c60ee; }
 
 .has-header {
-  top: 60px; }
+  top: 50px; }
 
 .page-profile .profile-image {
   width: 40%;
@@ -9924,16 +9926,16 @@ h1, h2, h3, h4, h5, h6, .h1, .h2, .h3, .h4, .h5, .h6 {
 .page-challenges .list {
   margin-top: 10px; }
 
-.page-newsfeed .item-body {
+.page-newsfeed .item-body, .page-uploadphoto .item-body {
   background-color: #FFF !important;
   padding: 0; }
-  .page-newsfeed .item-body p {
+  .page-newsfeed .item-body p, .page-uploadphoto .item-body p {
     color: #000; }
 
-.page-newsfeed .card {
+.page-newsfeed .card, .page-uploadphoto .card {
   margin: 0 0 0 0; }
 
-.page-newsfeed h2 {
+.page-newsfeed h2, .page-uploadphoto h2 {
   color: #FFF;
   font-weight: 400; }
 
@@ -9945,3 +9947,57 @@ h1, h2, h3, h4, h5, h6, .h1, .h2, .h3, .h4, .h5, .h6 {
 .item-caption {
   padding: 0px 16px 0px 16px;
   color: #000; }
+
+/* IMAGE CROP */
+img-crop {
+  width: 100%;
+  height: 100%;
+  display: block;
+  position: relative;
+  overflow: hidden; }
+
+img-crop canvas {
+  display: block;
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  outline: 0;
+  -webkit-tap-highlight-color: transparent; }
+
+.cropArea {
+  background: #E4E4E4;
+  overflow: hidden;
+  width: 100%;
+  height: 200px; }
+
+.uploadphoto-preview {
+  width: 100px;
+  height: 100px;
+  display: block;
+  margin: 0 auto; }
+
+.page-uploadphoto .item:first-child {
+  padding-top: 0px; }
+
+.photo-options {
+  padding: 20px; }
+
+.account-photo {
+  width: 100px;
+  height: 100px;
+  border-radius: 50%;
+  margin: 0 auto;
+  display: block;
+  border: 3px solid #FFF;
+  margin-bottom: 20px;
+  margin-top: 10px; }
+
+.icon-add-item {
+  display: none; }
+
+.add-item .icon-add-item {
+  display: block;
+  font-size: 28px;
+  position: absolute;
+  right: 10px;
+  top: 10px; }

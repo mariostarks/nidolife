@@ -44,6 +44,44 @@ angular.module('app.services', [])
 	    };
 	})
 
+    .service('getData', function ($http, Backand) {
+    	var service = this; 
+
+    	service.lookup = function(queryName, params) {
+	        var baseUrl = '/1/query/data/',
+	            objectName = queryName,
+	            params = params,
+	            paramsString = '',
+	            appendedUrl = '',
+	            apiUrl = '';
+
+	        // If we have parameters to send //
+	        if (params) {
+	        	paramsString = JSON.stringify(params);
+	        	appendedUrl = "?parameters=" + paramsString;
+	        }
+
+	        apiUrl = Backand.getApiUrl() + baseUrl + objectName + appendedUrl;
+    	   	console.log(apiUrl);
+    	   	return $http.get(apiUrl);
+    	};
+
+
+        function getUrl() {
+            return Backand.getApiUrl() + baseUrl + objectName + paramsString;
+        }
+
+        /*
+        if (params) { 
+            paramsString = "?parameters={".params."}"; 
+        }
+
+
+
+        https://api.backand.com/1/query/data/GetUserByEmail?parameters={"user_email":"mariostarks@gmail.com"}
+        */
+    })
+
 	.service('LoginService', function (Backand) {
 	    var service = this;
 
@@ -85,6 +123,8 @@ angular.module('app.services', [])
 	loadUserDetails();
 
 	function loadUserDetails() {
+		self.currentUser = Backand.getUserDetails();
+
 	    self.currentUser.name = Backand.getUsername();
 	    if (self.currentUser.name) {
 	        getCurrentUserInfo()
