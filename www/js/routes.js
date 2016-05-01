@@ -47,6 +47,7 @@ angular.module('app.routes', [])
 
   .state('nido.profile', {
     url: '/myprofile',
+    cache: false,
     views: {
       'side-menu21': {
         templateUrl: 'templates/profile.html',
@@ -146,7 +147,7 @@ angular.module('app.routes', [])
   })
 
   .state('nido.myPhoto', {
-    url: '/photo',
+    url: '/photo/:id',
     views: {
       'side-menu21': {
         templateUrl: 'templates/myPhoto.html',
@@ -177,6 +178,7 @@ angular.module('app.routes', [])
 
   .state('nido.activityFeed', {
     url: '/activity',
+    cache: false,
     views: {
       'side-menu21': {
         templateUrl: 'templates/activityFeed.html',

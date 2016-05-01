@@ -1,18 +1,25 @@
 angular.module('app.controllers', [])
 
-.controller('mainCtrl', function($rootScope) {
+.controller('mainCtrl', function($rootScope, $scope, $location) {
+    $scope.addItemClass = function() {
+        if ($location.path().replace("/", "")=='side-menu/activity') {
+            return 'add-item'; 
+        }
+        else { return ''; }
+    };
     $rootScope.bodyClass = "";
+    $scope.$back = function() { 
+        window.history.back();
+    };
 })
 
 .controller('addPostUploadCtrl', function ($state, AuthService, $rootScope, $scope, Restangular, $localStorage, $http, Backand, PhotosModel) {
     var _self = this; 
-
-    $rootScope.post_caption = '';
-
-    var post = {}; //object for new post being created 
+    $scope.post = {}; //object for new post being created 
+    $scope.post.caption = '';
 
     $rootScope.bodyClass = "";
-    $rootScope.post = {
+    $scope.post = {
        originalImage: '',
        croppedImage: ''
     };
@@ -27,8 +34,8 @@ angular.module('app.controllers', [])
       var file=evt.currentTarget.files[0];
       var reader = new FileReader();
       reader.onload = function (evt) {
-        $rootScope.$apply(function($rootScope){
-          $rootScope.post.originalImage=evt.target.result;
+        $scope.$apply(function($scope){
+          $scope.post.originalImage=evt.target.result;
         });
       };
       reader.readAsDataURL(file);
@@ -37,18 +44,19 @@ angular.module('app.controllers', [])
     
     // File Storage Save & DB CREATE 
     $rootScope.save = function() {
-        var post_filename = $localStorage.user.id + '-post-' + Math.random().toString(36).replace(/[^a-z]+/g, '').substr(0, 6) + '.png';
-        upload(post_filename, $rootScope.post.croppedImage).then(function(res) {
+        var post_filename = $localStorage.user.id + '-post-' + Math.random().toString(36).replace(/[^a-z]+/g, '').substr(0, 12) + '.png';
+        upload(post_filename, $scope.post.croppedImage).then(function(res) {
             $scope.imageUrl = res.data.url;
             console.log($scope.imageUrl);
 
             // Construct Post Object 
-            post.data = $scope.imageUrl;
-            post.caption = $rootScope.post_caption;
-            post.created = Date.now().toString(); 
-            post.user = $localStorage.user.id;  
+            $scope.post.data = $scope.imageUrl;
+            $scope.post.caption = $scope.post.caption;
+            $scope.post.category = $scope.post.category;
+            $scope.post.created = Date.now().toString(); 
+            $scope.post.user = $localStorage.user.id;  
     
-            create(post);
+            create($scope.post);
 
         }, function(err){
             console.log(err.data);
@@ -84,9 +92,7 @@ angular.module('app.controllers', [])
 
 })
 
-.controller('menuCtrl', function ($scope, $window, $localStorage) {
-	//var devWidth = 0;
-   // Set photo if exists
+.controller('menuCtrl', function ($scope, $window, $localStorage, $location) {
     $scope.getPhoto = function() {
         return $localStorage.user.photo;
     }; 
@@ -208,7 +214,7 @@ angular.module('app.controllers', [])
             console.log($rootScope.user.photo);
         }); 
 
-        $state.go('nido.activityFeed');
+        $state.go('nido.activityFeed', {}, {reload: true});
 	}
 
     function signout() {
@@ -293,10 +299,6 @@ angular.module('app.controllers', [])
     vm.errorMessage = '';
 })
    
-.controller('profileCtrl', function($scope, $rootScope) {
-    $rootScope.bodyClass = "";
-})
-   
 .controller('buddyProfileCtrl', function($scope, $rootScope) {
     $rootScope.bodyClass = "";
 })
@@ -362,10 +364,6 @@ angular.module('app.controllers', [])
 
 })
    
-.controller('myPhotoCtrl', function($scope) {
-
-})
-   
 .controller('createNewChallengeCtrl', function($scope) {
 
 })
@@ -373,8 +371,102 @@ angular.module('app.controllers', [])
 .controller('challengeGroupCtrl', function($scope) {
 
 })
-   
-.controller('activityFeedCtrl', function($scope, $rootScope) {
+
+.controller('myPhotoCtrl', function ($stateParams, $scope, $rootScope, $state, Backand, PhotosModel, UsersModel, $http, $localStorage) {
+    var photo_id = $stateParams.id; 
+    PhotosModel.fetch(photo_id).then(function(result){
+        $scope.photo = result.data; 
+        console.log($scope.photo); 
+    });
+
+    $scope.editPhoto = function() {
+        //unhide input text field
+        //unhide Save button, hide Edit button
+        //change button label from "Edit" to "Save"
+        //fire save() on onclick on unhidden Save button 
+    };
+
+    $scope.deletePhoto = function() {
+
+    };
+
+})
+
+.controller('profileCtrl', function ($scope, $rootScope, $state, Backand, PhotosModel, UsersModel, $http, $localStorage) {
     $rootScope.bodyClass = "add-item";
+    var _self = this; 
+    $scope.user = {};
+    UsersModel.fetch($localStorage.user.id).then(function(result){
+        $scope.user = result.data; 
+        getPhotos().then(function(results) {
+            $scope.user.photos = results.data.data;
+            $scope.user.postCount = results.data.data.length;
+            console.log($scope.user.photos); 
+        });
+    });
+
+    getPhotos = function() {
+        return $http ({
+          method: 'GET',
+          url: Backand.getApiUrl() + '/1/objects/photos',
+          params: {
+            pageSize: 20,
+            pageNumber: 1,
+            filter: [
+              {
+                fieldName: 'user',
+                operator: 'in',
+                value: $localStorage.user.id,
+              }
+            ],
+            sort: '[{fieldName:\'id\', order:\'desc\'}]'
+          }
+        });  
+    }
+
+    $scope.gotoPhoto = function(photo_id) {
+        $state.go('nido.myPhoto', {id: photo_id});
+    }
+
+})
+
+.controller('activityFeedCtrl', function ($state, $scope, $rootScope, Backand, PhotosModel, UsersModel, $http, $localStorage) {
+    var _self = this; 
+    $rootScope.bodyClass = "add-item";
+    $scope.user = {};
+    UsersModel.fetch($localStorage.user.id).then(function(result){
+        $scope.user = result.data; 
+        getPhotos().then(function(results) {
+            $scope.user.photos = results.data.data;
+            console.log($scope.user.photos); 
+        });
+    });
+
+    $scope.showPhotos = function() {
+        return $scope.user.photos;
+    };
+
+    getPhotos = function() {
+        return $http ({
+          method: 'GET',
+          url: Backand.getApiUrl() + '/1/objects/photos',
+          params: {
+            pageSize: 20,
+            pageNumber: 1,
+            filter: [
+              {
+                fieldName: 'user',
+                operator: 'in',
+                value: $localStorage.user.id,
+              }
+            ],
+            sort: '[{fieldName:\'id\', order:\'desc\'}]'
+          }
+        });  
+    }
+
+    $scope.gotoPhoto = function(photo_id) {
+        $state.go('nido.myPhoto', {id: photo_id});
+    }
 })
  

@@ -5,43 +5,27 @@
                 <img data-ng-src="{{getPhoto()}}" class="profile-image"/>
             </div>
             <div class="profile-title">
-                <div class="profile-name">Mario Starks</div>
-                <div class="profile-location">New York, New York</div>
+                <div class="profile-name">{{user.firstName}} {{user.lastName}}</div>
+                <div class="profile-location">{{user.location}}</div>
             </div>
         </div>
         <div class="button-bar">
             <a ui-sref="nido.challenges" id="profile-button4" class="button button-challenges button-block">
-                <div class="button-count">3</div>
-                <div class="button-label">Challenges</div>
+                <div class="button-count">{{user.postCount}}</div>
+                <div class="button-label">Posts</div>
             </a>
             <a ui-sref="nido.buddies" id="profile-button5" class="button button-following  button-block">
-                <div class="button-count">11</div>
-                <div class="button-label">Following</div>
+                <div class="button-count">0</div>
+                <div class="button-label">Challenges</div>
             </a>
             <a ui-sref="nido.buddies" id="profile-button6" class="button button-followers  button-block">
-                <div class="button-count">88</div>
-                <div class="button-label">Followers</div>
+                <div class="button-count">0</div>
+                <div class="button-label">Buddies</div>
             </a>
         </div>
         <div class="list card">
             <div class="item item-body">
-                <div class="button-bar">
-                    <a ui-sref="nido.myPhoto" id="profile-button10" style="font-weight:;" class="button button-positive  button-block item-photo">photo</a>
-                    <a ui-sref="nido.myPhoto" id="profile-button11" style="font-weight:;" class="button button-positive  button-block item-photo">photo</a>
-                    <a ui-sref="nido.myPhoto" id="profile-button12" style="font-weight:;" class="button button-positive  button-block item-photo">photo</a>
-                </div>
-                <div class="button-bar">
-                    <a ui-sref="nido.myPhoto" id="profile-button23" style="font-weight:;" class="button button-positive  button-block item-photo">photo</a>
-                    <a ui-sref="nido.myPhoto" id="profile-button24" style="font-weight:;" class="button button-positive  button-block item-photo">photo</a>
-                    <a ui-sref="nido.myPhoto" id="profile-button25" style="font-weight:;" class="button button-positive  button-block item-photo">photo</a>
-                </div>
-                <div class="button-bar">
-                    <a ui-sref="nido.myPhoto" id="profile-button26" style="font-weight:;" class="button button-positive  button-block item-photo">photo</a>
-                    <a ui-sref="nido.myPhoto" id="profile-button27" style="font-weight:;" class="button button-positive  button-block item-photo">photo</a>
-                    <a ui-sref="nido.myPhoto" id="profile-button28" style="font-weight:;" class="button button-positive  button-block item-photo">photo</a>
-                </div>
-                <div class="button-bar"></div>
-                <div class="button-bar"></div>
+                    <img ng-repeat="p in user.photos" ng-click="gotoPhoto({{p.id}})" class="item-photo" ng-src="{{p.data}}" title="{{p.caption}}" />
             </div>
         </div>
     </ion-content>

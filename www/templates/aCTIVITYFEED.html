@@ -1,64 +1,22 @@
 
-<ion-view title="News Feed" id="page19" class="page-newsfeed">
+<ion-view title="Timeline" id="page19" class="page-newsfeed">
     <ion-content padding="false" class="has-header">
-        <div class="list card">
+        <div class="list card" ng-repeat="p in t = angular.equals(t, showPhotos()) ? t : showPhotos()"">
 
           <div class="item item-avatar">
-            <img src="img/profile_image.jpg">
-            <h2>Marty McFly</h2>
-            <p>November 05, 1955</p>
+            <img ng-src="{{user.photo}}">
+            <h2>{{user.firstName}} {{user.lastName}}</h2>
+            <p>{{p.created | date:'MM-dd-yyyy h:mm a'}}</p>
           </div>
 
           <div class="item item-body">
-            <img class="full-image" src="img/newsfeed-sneakers.png">
+            <img class="full-image" ng-click="gotoPhoto({{p.id}})" ng-src="{{p.data}}">
             <p class="item-caption">
-              Here's the caption to my photo. We'll probably make this a character limit, 140 characters.
+             {{p.caption}}
             </p>
             <p class="item-social">
-              <a href="#" class="subdued"><i class="icon ion-thumbsup"></i> 1 Like</a>
-              <a href="#" class="subdued"><i class="icon ion-ios-chatbubble"></i> 5 Comments</a>
+              <a href="#" class="subdued"><i class="icon ion-thumbsup"></i> 0 Like</a>
               <a href="#" class="subdued pull-right"><i class="icon ion-ios-folder"></i> Sneaker Tag</a>
-            </p>
-          </div>
-
-        </div>
-
-        <div class="list card">
-          <div class="item item-avatar">
-            <img src="img/profile_image.jpg">
-            <h2>Marty McFly</h2>
-            <p>November 05, 1955</p>
-          </div>
-
-          <div class="item item-body">
-            <img class="full-image" src="img/newsfeed-meal.png">
-            <p class="item-caption">
-              Here's the caption to my photo. We'll probably make this a character limit, 140 characters.
-            </p>
-            <p class="item-social">
-              <a href="#" class="subdued"><i class="icon ion-thumbsup"></i> 1 Like</a>
-              <a href="#" class="subdued"><i class="icon ion-ios-chatbubble"></i> 5 Comments</a>
-              <a href="#" class="subdued pull-right"><i class="icon ion-ios-folder"></i> Meal</a>
-            </p>
-          </div>
-        </div>
-
-        <div class="list card">
-          <div class="item item-avatar">
-            <img src="img/profile_image.jpg">
-            <h2>Tito Jackson</h2>
-            <p>November 05, 1955</p>
-          </div>
-
-          <div class="item item-body">
-            <img class="full-image" src="img/newsfeed-run.png">
-            <p class="item-caption">
-              Here's the caption to my photo. We'll probably make this a character limit, 140 characters.
-            </p>
-            <p class="item-social">
-              <a href="#" class="subdued"><i class="icon ion-thumbsup"></i> 11 Like</a>
-              <a href="#" class="subdued"><i class="icon ion-ios-chatbubble"></i> 2 Comments</a>
-              <a href="#" class="subdued pull-right"><i class="icon ion-ios-folder"></i> Motivation</a>
             </p>
           </div>
         </div>

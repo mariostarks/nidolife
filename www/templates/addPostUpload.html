@@ -4,7 +4,7 @@
 
         <div class="item">
           <div class="upload-input">
-              <span class="button icon button-full button-dark ion-image">&nbsp; Upload Photo </span>
+              <span class="button icon button-full button-dark ion-image">&nbsp; Choose Photo </span>
               <input id="post-fileInput" type="file" class="input-file" />
           </div>
         </div>
@@ -16,9 +16,20 @@
           <div class="list">
             <label class="item item-input item-stacked-label">
               <span class="input-label">Description / Caption</span>
-              <input type="text" ng-model="post_caption" placeholder="Tell us about your photo.">
+              <input type="text" value="{{post.caption}}" ng-model="post.caption" placeholder="Tell us about your photo.">
+            </label>
+
+            <label class="item item-input item-stacked-label">
+              <span class="input-label">Category</span>
+              <select ng-model="post.category">
+                <option value="0">None Selected</option>
+                <option value="1">Meal</option>
+                <option value="2">Sneaker</option>
+                <option value="3">Motivation</option>
+              </select>
             </label>
           </div>
+
           <p class="photo-options">
             <a ng-click="save()" class="button button-positive">Submit</a>
             <a ui-sref="nido.activityFeed" class="button button-dark">Cancel</a>

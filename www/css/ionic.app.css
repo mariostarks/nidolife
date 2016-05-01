@@ -9824,7 +9824,10 @@ h1, h2, h3, h4, h5, h6, .h1, .h2, .h3, .h4, .h5, .h6 {
       color: #2d2d2d; }
 
 .side-menu-left.has-header {
-  top: 230px; }
+  top: 205px; }
+
+.menu-left .bar.bar-stable {
+  background-color: #0295d6 !important; }
 
 .item p {
   color: #FFF; }
@@ -9847,7 +9850,10 @@ h1, h2, h3, h4, h5, h6, .h1, .h2, .h3, .h4, .h5, .h6 {
     background-color: #0c60ee; }
 
 .has-header {
-  top: 50px; }
+  top: 45px; }
+
+.page-uploadphoto .has-header {
+  top: 35px; }
 
 .page-profile .profile-header {
   margin-top: 3px;
@@ -9871,7 +9877,7 @@ h1, h2, h3, h4, h5, h6, .h1, .h2, .h3, .h4, .h5, .h6 {
 
 .page-profile .item-photo {
   min-height: 90px;
-  width: auto; }
+  width: 33.3333%; }
 
 .button-challenges {
   background-color: #0c84c0; }
@@ -9997,7 +10003,8 @@ img-crop canvas {
   margin: 0 auto; }
 
 .page-uploadphoto .item:first-child {
-  padding-top: 0px; }
+  padding-top: 0px;
+  padding-bottom: 5px; }
 
 .photo-options {
   padding: 20px; }
@@ -10054,3 +10061,17 @@ img-crop canvas {
 .page-account .item.item-input input {
   background-color: #FFF !important;
   padding: 10px; }
+
+.page-myphoto .scroll-content {
+  background-color: #FFF !important; }
+
+.page-myphoto .myphoto-detail {
+  max-width: 100%; }
+
+.page-myphoto .myphoto-caption {
+  padding: 20px;
+  font-size: 18px; }
+
+.page-myphoto .myphoto-options {
+  padding: 0 20px;
+  font-size: 14px; }
