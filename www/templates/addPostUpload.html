@@ -1,24 +1,30 @@
-<ion-view title="Upload Photo" id="upload-photo" class="page-uploadphoto">
+<ion-view title="Share Post" id="upload-post" class="page-uploadphoto page-upload-post">
     <ion-content padding="false" class="has-header">
       <div class="list card">
 
         <div class="item">
-          <p>Select an image file: <input type="file" id="fileInput" /></p>
+          <div class="upload-input">
+              <span class="button icon button-full button-dark ion-image">&nbsp; Upload Photo </span>
+              <input id="post-fileInput" type="file" class="input-file" />
+          </div>
         </div>
 
-        <div class="item item-body">
-            <div class="cropArea">
-              <img-crop image="image.originalImage" area-type="square" area-min-size="200" result-image-size="200" result-image="image.croppedImage" change-on-fly="true" maximize-crop="true" result-image-aspect="1x1"></img-crop>
-            </div>
-          <p>
-            <div>Preview Photo:</div>
-            <div><img class="uploadphoto-preview" ng-src="{{image.croppedImage}}" /></div>
-          </p>
+        <form class="item item-body">
+          <div class="cropArea">
+            <img-crop image="post.originalImage" area-type="square" area-min-size="200" result-image-size="400" result-image="post.croppedImage" result-image-format="image/png" result-image-quality="0.8" change-on-fly="true" maximize-crop="true" result-image-aspect="1x1"></img-crop>
+          </div>
+          <div class="list">
+            <label class="item item-input item-stacked-label">
+              <span class="input-label">Description / Caption</span>
+              <input type="text" ng-model="post_caption" placeholder="Tell us about your photo.">
+            </label>
+          </div>
           <p class="photo-options">
+            <a ng-click="save()" class="button button-positive">Submit</a>
             <a ui-sref="nido.activityFeed" class="button button-dark">Cancel</a>
-            <a class="button button-positive" ng-click="savePhoto()">Next &rarr; Caption & Publish</a>
+
           </p>
-        </div>
+        </form>
 
       </div>
 

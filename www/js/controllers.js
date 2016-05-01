@@ -4,8 +4,84 @@ angular.module('app.controllers', [])
     $rootScope.bodyClass = "";
 })
 
-.controller('addPostUploadCtrl', function($rootScope) {
+.controller('addPostUploadCtrl', function ($state, AuthService, $rootScope, $scope, Restangular, $localStorage, $http, Backand, PhotosModel) {
+    var _self = this; 
+
+    $rootScope.post_caption = '';
+
+    var post = {}; //object for new post being created 
+
     $rootScope.bodyClass = "";
+    $rootScope.post = {
+       originalImage: '',
+       croppedImage: ''
+    };
+
+    var baseUrl = '/1/objects/';
+    var baseActionUrl = baseUrl + 'action/'
+    var objectName = 'photos';
+    var filesActionName = 'files';
+
+    // Upload & Crop Image Functionality
+    var handleFileSelect=function(evt) {
+      var file=evt.currentTarget.files[0];
+      var reader = new FileReader();
+      reader.onload = function (evt) {
+        $rootScope.$apply(function($rootScope){
+          $rootScope.post.originalImage=evt.target.result;
+        });
+      };
+      reader.readAsDataURL(file);
+    };
+    angular.element(document.querySelector('#post-fileInput')).on('change',handleFileSelect);
+    
+    // File Storage Save & DB CREATE 
+    $rootScope.save = function() {
+        var post_filename = $localStorage.user.id + '-post-' + Math.random().toString(36).replace(/[^a-z]+/g, '').substr(0, 6) + '.png';
+        upload(post_filename, $rootScope.post.croppedImage).then(function(res) {
+            $scope.imageUrl = res.data.url;
+            console.log($scope.imageUrl);
+
+            // Construct Post Object 
+            post.data = $scope.imageUrl;
+            post.caption = $rootScope.post_caption;
+            post.created = Date.now().toString(); 
+            post.user = $localStorage.user.id;  
+    
+            create(post);
+
+        }, function(err){
+            console.log(err.data);
+        });
+
+
+    };
+
+    function create(object) {
+        PhotosModel.create(object)
+            .then(function (result) {
+                console.log(result);
+                $state.go('nido.activityFeed', {}, {reload: true}); 
+            });
+    }
+    
+    function upload(filename, filedata) {
+        return $http({
+          method: 'POST',
+          url : Backand.getApiUrl() + baseActionUrl + objectName,
+          params:{
+            "name": filesActionName
+          },
+          headers: {
+            'Content-Type': 'application/json'
+          },
+          data: {
+            "filename": filename,
+            "filedata": filedata.substr(filedata.indexOf(',') + 1, filedata.length) //need to remove the file prefix type
+          }
+        });
+    };
+
 })
 
 .controller('menuCtrl', function ($scope, $window, $localStorage) {
@@ -21,9 +97,13 @@ angular.module('app.controllers', [])
     $rootScope.bodyClass = "";
 })
 
-.controller('uploadPhotoCtrl', function ($state, AuthService, $rootScope, $scope, Restangular, $localStorage) {
+.controller('uploadPhotoCtrl', function ($state, AuthService, $rootScope, $scope, Restangular, $localStorage, $http, Backand) {
     console.log(JSON.stringify($localStorage.userQuery));
     $rootScope.bodyClass = "";
+    var baseUrl = '/1/objects/';
+    var baseActionUrl = baseUrl + 'action/'
+    var objectName = 'photos';
+    var filesActionName = 'files';
     Restangular.all("users").getList({ filter: JSON.stringify($localStorage.userQuery) }).then(function (users) {
         $rootScope.user = users[0];
         $rootScope.image = {
@@ -47,9 +127,14 @@ angular.module('app.controllers', [])
         
         // Save Photo
         $rootScope.savePhoto = function() {
-            $rootScope.$watch('user', function(){
-                $rootScope.user.photo = $rootScope.image.croppedImage;
-                $localStorage.user.photo = $rootScope.image.croppedImage;
+            var photoname = 'profile-photo-' + $rootScope.user.id + '.png';
+            upload(photoname, $rootScope.image.croppedImage).then(function(res) {
+                $scope.imageUrl = res.data.url + "?" + Date.now();
+                $rootScope.user.photo = $scope.imageUrl; 
+                $localStorage.user.photo = $scope.imageUrl;
+                console.log($scope.imageUrl);
+            }, function(err){
+                console.log(err.data);
             });
 
             $rootScope.user.save().then( function(resp) {
@@ -58,6 +143,26 @@ angular.module('app.controllers', [])
             }, function() {
                 console.log('There was an error saving.');
             }); 
+        };
+
+        function upload(filename, filedata) {
+            // By calling the files action with POST method in will perform 
+            // an upload of the file into Backand Storage
+            return $http({
+              method: 'POST',
+              url : Backand.getApiUrl() + baseActionUrl +  objectName,
+              params:{
+                "name": filesActionName
+              },
+              headers: {
+                'Content-Type': 'application/json'
+              },
+              // you need to provide the file name and the file data
+              data: {
+                "filename": filename,
+                "filedata": filedata.substr(filedata.indexOf(',') + 1, filedata.length) //need to remove the file prefix type
+              }
+            });
         };
 
     });
@@ -99,6 +204,8 @@ angular.module('app.controllers', [])
 
         Restangular.all("users").getList({ filter: JSON.stringify($localStorage.userQuery) }).then(function (users) {
             $localStorage.user = users[0];
+            $rootScope.user = $localStorage.user; 
+            console.log($rootScope.user.photo);
         }); 
 
         $state.go('nido.activityFeed');
@@ -206,20 +313,37 @@ angular.module('app.controllers', [])
     $rootScope.bodyClass = "";
 })
    
-.controller('accountCtrl', function (Backand, $scope, $rootScope, $localStorage, Restangular) {
+.controller('accountCtrl', function (Backand, $scope, $rootScope, $localStorage, Restangular, UsersModel) {
+    var _self = this;
+    var user = {}; 
+
+    getUser(); 
+
+    //console.log($scope.user);
+
     $rootScope.bodyClass = "";
     $scope.getPhoto = function() {
         return $localStorage.user.photo;
-    }; 
-    /*
-    Restangular.all("users").getList({ filter: JSON.stringify($localStorage.userQuery) }).then(function (users) {
-        $scope.user = users[0];
-    });
-*/
-    //console.log($scope.user.photo);
-   // Set photo if exists
-    //$rootScope.user = {};
-    //$rootScope.user.photo = $localStorage.user.photo;
+    };
+
+    function getUser() {
+        UsersModel.fetch($localStorage.user.id)
+            .then(function (result) {
+                $scope.user = result.data;
+                if ($scope.user.birthdate) {
+                    $scope.user.birthdate = new Date($scope.user.birthdate);
+                }
+                console.log($scope.user); 
+            });
+    }
+
+    $scope.updateAccount = function() {
+        UsersModel.update($scope.user.id, $scope.user)
+            .then(function (result) {
+                console.log(result); 
+            });
+    };
+
 })
    
 .controller('signoutCtrl', function($scope) {

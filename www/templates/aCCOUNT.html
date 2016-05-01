@@ -1,37 +1,43 @@
-<ion-view title="Account & Profile Settings" id="page10">
+<ion-view title="Account Settings" id="page-account" class="page-account">
     <ion-content padding="true" class="has-header">
         <form class="list">
           <img class="account-photo" data-ng-src="{{getPhoto()}}" />
           <a ui-sref="uploadphoto" id="account-button35" style="font-weight:;" class="button button-calm  button-block"><i class="icon ion-ios-camera"></i> &nbsp; CHANGE PROFILE PHOTO</a>
             <label class="item item-input ">
                <div class="input-label">
-                  Name
+                  First Name
                 </div>
-                <input type="text" placeholder="">
+                <input type="text" ng-model="user.firstName" placeholder="">
+            </label>
+            <label class="item item-input ">
+               <div class="input-label">
+                  Last Name
+                </div>
+                <input type="text" ng-model="user.lastName" placeholder="">
             </label>
             <label class="item item-input">
                <div class="input-label">
                   Email
                 </div>
-                <input type="text" placeholder="">
+                <input type="text" ng-model="user.email" placeholder="">
             </label>
             <label class="item item-input">
                <div class="input-label">
                   Date of Birth
                 </div>
-                <input type="date" placeholder="">
+                <input type="date" ng-model="user.birthdate" placeholder="">
             </label>
             <label class="item item-input item-select">
                 <div class="input-label">
                   Gender
                 </div>
-                <select>
-                  <option>Male</option>
-                  <option selected>Female</option>
+                <select ng-model="user.gender">
+                  <option value="m">Male</option>
+                  <option value="f">Female</option>
                 </select>
             </label>
         </form>
-        <a ui-sref="nido.profile" id="account-button35" style="font-weight:;" class="button button-positive  button-block">SAVE CHANGES</a>
+        <a ng-click="updateAccount()" id="account-button35" style="font-weight:;" class="button button-positive  button-block">SAVE CHANGES</a>
 
     </ion-content>
 </ion-view>

@@ -21,7 +21,7 @@ angular.module('app.routes', [])
     abstract:true
   })
 
-  .state('addPost', {
+  .state('addpost', {
     url: '/add-post-upload',
     templateUrl: 'templates/addPostUpload.html',
     controller: 'addPostUploadCtrl'

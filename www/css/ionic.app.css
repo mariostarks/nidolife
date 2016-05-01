@@ -9741,7 +9741,7 @@ a.button {
 
 .bar.bar-stable .title {
   color: #fff;
-  top: 5px; }
+  top: 0px; }
 
 .bar {
   height: auto; }
@@ -9774,12 +9774,11 @@ h1, h2, h3, h4, h5, h6, .h1, .h2, .h3, .h4, .h5, .h6 {
 
 .profile-image {
   border-radius: 50%;
-  width: 100%;
-  max-width: 110px;
-  max-height: 110px;
-  height: auto;
+  width: 100px;
+  height: 100px;
   display: block;
-  margin: 0 auto; }
+  margin: 0 auto;
+  border: 2px solid #fff; }
 
 .profile-title {
   text-align: center;
@@ -9796,8 +9795,33 @@ h1, h2, h3, h4, h5, h6, .h1, .h2, .h3, .h4, .h5, .h6 {
 .bar .title {
   position: relative; }
 
+.side-menu-left .item {
+  border: none;
+  color: #FFF;
+  width: 100%;
+  text-align: left;
+  line-height: 14px; }
+
+.side-menu-left .badge-light {
+  display: inline-block;
+  position: relative;
+  right: -20px;
+  top: 0px;
+  padding: 1px 6px;
+  font-size: 9px; }
+
 .side-menu-left .item-content {
   margin-left: 10%; }
+
+.side-menu-left .button:hover, .side-menu-left .button.active {
+  color: #074c6b;
+  background-color: #FFF !important;
+  width: 100%;
+  border-radius: 0px; }
+  .side-menu-left .button:hover .item-content, .side-menu-left .button.active .item-content {
+    background-color: #FFF !important; }
+    .side-menu-left .button:hover .item-content p, .side-menu-left .button.active .item-content p {
+      color: #2d2d2d; }
 
 .side-menu-left.has-header {
   top: 230px; }
@@ -9824,10 +9848,6 @@ h1, h2, h3, h4, h5, h6, .h1, .h2, .h3, .h4, .h5, .h6 {
 
 .has-header {
   top: 50px; }
-
-.page-profile .profile-image {
-  width: 40%;
-  border: 2px solid #FFF; }
 
 .page-profile .profile-header {
   margin-top: 3px;
@@ -10001,3 +10021,36 @@ img-crop canvas {
   position: absolute;
   right: 10px;
   top: 10px; }
+
+.page-upload-post label.item {
+  padding: 10px 20px 30px 20px !important;
+  background-color: #2d2d2d !important; }
+
+.page-upload-post input {
+  padding: 20px; }
+
+.page-upload-post .input-label {
+  font-size: 12px;
+  text-transform: uppercase;
+  margin-bottom: 5px; }
+
+.upload-input {
+  position: relative;
+  overflow: hidden;
+  margin: 10px; }
+  .upload-input .input-file {
+    position: absolute;
+    top: 0;
+    right: 0;
+    margin: 0;
+    padding: 0;
+    font-size: 20px;
+    cursor: pointer;
+    opacity: 0;
+    filter: alpha(opacity=0);
+    height: 100%;
+    min-height: 50px; }
+
+.page-account .item.item-input input {
+  background-color: #FFF !important;
+  padding: 10px; }

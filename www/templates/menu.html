@@ -7,7 +7,7 @@
                 <button class="button button-icon button-clear ion-navicon" menu-toggle="left"></button>
             </ion-nav-buttons>
             <ion-nav-buttons side="right">
-                <a ui-sref="addPost" class="icon-add-item icon light ion-plus-circled"></a>
+                <a ui-sref="addpost" class="icon-add-item icon light ion-plus-circled"></a>
             </ion-nav-buttons>
         </ion-nav-bar>
         <ion-nav-view name="side-menu21"></ion-nav-view>
@@ -25,44 +25,44 @@
         </ion-header-bar>
         <ion-content padding="false" class="side-menu-left has-header">
             <ion-list>
-                <ion-item ui-sref="nido.activityFeed" menu-close="">
+                <ion-item ui-sref="nido.activityFeed" ui-sref-active="active" class="button" menu-close="">
                     <div class="item-icon-left">
                         <i class="icon ion-compass"></i>
                         <p>NEWS FEED</p>
                     </div>
                 </ion-item>
-                <ion-item ui-sref="nido.profile" menu-close="">
+                <ion-item ui-sref="nido.profile" ui-sref-active="active" class="button" menu-close="">
                     <div class="item-icon-left">
                         <i class="icon ion-person"></i>
                         <p>PROFILE</p>
                     </div>
                 </ion-item>
-                <ion-item ui-sref="nido.buddies" menu-close="">
+                <ion-item ui-sref="nido.buddies" ui-sref-active="active" class="button" menu-close="">
                     <div class="item-icon-left">
                         <i class="icon ion-person-stalker"></i>
                         <p>BUDDIES</p>
                     </div>
                 </ion-item>
-                <ion-item ui-sref="nido.challenges" menu-close="">
+                <ion-item ui-sref="nido.challenges" ui-sref-active="active" class="button" menu-close="">
                     <div class="item-icon-left">
                         <i class="icon ion-arrow-graph-up-right"></i>
                         <p>CHALLENGES</p>
                     </div>
                 </ion-item>
-                <ion-item ui-sref="nido.messages" menu-close="">
+                <ion-item ui-sref="nido.messages" ui-sref-active="active" class="button" menu-close="">
                     <div class="item-icon-left">
                         <i class="icon ion-chatbubbles"></i>
-                        <p>MESSAGES</p>
-                        <span class="badge badge-light">0</span>
+                        <p>MESSAGES <span class="badge badge-light">0</span></p>
+                        
                     </div>
                 </ion-item>
-                <ion-item ui-sref="nido.account" menu-close="">
+                <ion-item ui-sref="nido.account" ui-sref-active="active" class="button" menu-close="">
                     <div class="item-icon-left">
                         <i class="icon ion-android-settings"></i>
                         <p>SETTINGS</p>
                     </div>
                 </ion-item>
-                <ion-item ui-sref="nido.signout" menu-close="">
+                <ion-item ui-sref="nido.signout" ui-sref-active="active" class="button" menu-close="">
                     <div class="item-icon-left">
                         <i class="icon ion-android-cancel"></i>
                         <p>LOG OUT</p>

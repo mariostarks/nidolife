@@ -5,7 +5,7 @@
 // the 2nd parameter is an array of 'requires'
 // 'starter.services' is found in services.js
 // 'starter.controllers' is found in controllers.js
-angular.module('app', ['ionic', 'backand', 'app.controllers', 'app.routes', 'app.services', 'app.directives', 'ngImgCrop', 'ngLodash', 'restangular', 'ngStorage'])
+angular.module('app', ['ionic', 'backand', 'app.controllers', 'app.routes', 'app.services', 'app.directives', 'ngImgCrop', 'ngLodash', 'restangular', 'ngStorage', 'angular-loading-bar'])
 
 .config(function (BackandProvider, $stateProvider, $urlRouterProvider, $httpProvider, RestangularProvider) {
     BackandProvider.setAppName('nidolife');
