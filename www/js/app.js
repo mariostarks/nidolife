@@ -5,13 +5,14 @@
 // the 2nd parameter is an array of 'requires'
 // 'starter.services' is found in services.js
 // 'starter.controllers' is found in controllers.js
-angular.module('app', ['ionic', 'backand', 'app.controllers', 'app.routes', 'app.services', 'app.directives', 'ngImgCrop', 'ngLodash', 'restangular', 'ngStorage', 'angular-loading-bar'])
+angular.module('app', ['angular-toArrayFilter', 'ionic', 'backand', 'app.controllers', 'app.routes', 'app.services', 'app.directives', 'ngImgCrop', 'ngLodash', 'restangular', 'ngStorage', 'angular-loading-bar'])
 
-.config(function (BackandProvider, $stateProvider, $urlRouterProvider, $httpProvider, RestangularProvider) {
+.config(function ($provide, BackandProvider,  $stateProvider, $urlRouterProvider, $httpProvider, RestangularProvider) {
     BackandProvider.setAppName('nidolife');
     BackandProvider.setSignUpToken('a1435da8-9411-46b1-897a-77623eb9599c');
     BackandProvider.setAnonymousToken('589837be-36cf-4ec0-8871-5d947dcd670a');
     $httpProvider.interceptors.push('APIInterceptor');
+
     RestangularProvider.setBaseUrl('https://api.backand.com/1/objects');
     RestangularProvider.setDefaultHeaders({'AnonymousToken': '589837be-36cf-4ec0-8871-5d947dcd670a'});
     // add a response intereceptor
@@ -19,6 +20,16 @@ angular.module('app', ['ionic', 'backand', 'app.controllers', 'app.routes', 'app
         return response.data;
     });
 
+   $provide.decorator('$state', function($delegate, $stateParams) {
+        $delegate.forceReload = function() {
+            return $delegate.go($delegate.current, $stateParams, {
+                reload: true,
+                inherit: false,
+                notify: true
+            });
+        };
+        return $delegate;
+    });
     /*
     RestangularProvider.addResponseInterceptor(function(data, operation, what, url, response, deferred) {
       var extractedData;
@@ -63,6 +74,10 @@ angular.module('app', ['ionic', 'backand', 'app.controllers', 'app.routes', 'app
 
     $rootScope.$on('unauthorized', function () {
         unauthorized();
+    });
+
+    $rootScope.$on('authorized', function(){
+        //$state.go('nido.activityFeed', {}, {reload: "true"});
     });
 
     $rootScope.$on('$stateChangeSuccess', function (event, toState) {

@@ -4,9 +4,9 @@
         <div class="list card" ng-repeat="p in t = angular.equals(t, showPhotos()) ? t : showPhotos()"">
 
           <div class="item item-avatar">
-            <img ng-src="{{user.photo}}">
-            <h2>{{user.firstName}} {{user.lastName}}</h2>
-            <p>{{p.created | date:'MM-dd-yyyy h:mm a'}}</p>
+            <img ng-src="{{getUserPhoto()}}">
+            <h2 style="font-weight:500;">{{user.firstName}}</h2>
+            <p>{{p.created | date:'MMMM dd, yyyy h:mma'}}</p>
           </div>
 
           <div class="item item-body">

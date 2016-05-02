@@ -177,7 +177,7 @@ angular.module('app.routes', [])
   })
 
   .state('nido.activityFeed', {
-    url: '/activity',
+    url: '/activity/:id',
     cache: false,
     views: {
       'side-menu21': {

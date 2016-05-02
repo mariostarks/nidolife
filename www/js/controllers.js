@@ -2,10 +2,22 @@ angular.module('app.controllers', [])
 
 .controller('mainCtrl', function($rootScope, $scope, $location) {
     $scope.addItemClass = function() {
-        if ($location.path().replace("/", "")=='side-menu/activity') {
-            return 'add-item'; 
+
+        var bodyClasses = ''; 
+        if ($location.path().replace("/", "").slice(0, -2)=='side-menu/activity') {
+            bodyClasses = 'add-item'; 
         }
-        else { return ''; }
+        if ($location.path().replace("/", "")=='side-menu/activity') {
+            bodyClasses = 'add-item'; 
+        }
+        if ($location.path().replace("/", "")=='side-menu/activity/') {
+            bodyClasses = 'add-item'; 
+        }
+        if ($location.path().replace("/", "")=='home') {
+            bodyClasses = 'hide-nav-bar';
+        }
+
+        return bodyClasses;
     };
     $rootScope.bodyClass = "";
     $scope.$back = function() { 
@@ -93,8 +105,14 @@ angular.module('app.controllers', [])
 })
 
 .controller('menuCtrl', function ($scope, $window, $localStorage, $location) {
+    var user_photo = '';
+    $scope.user = $localStorage.user;
+    console.log($localStorage.user); 
     $scope.getPhoto = function() {
-        return $localStorage.user.photo;
+        if($localStorage.user.photo) {
+            user_photo = $localStorage.user.photo;
+        }
+        return user_photo;
     }; 
 	$scope.devWidth = (($window.innerWidth > 0) ? $window.innerWidth : screen.width);
 })
@@ -176,7 +194,7 @@ angular.module('app.controllers', [])
 
 })
       
-.controller('loginCtrl', function (Backand, $state, $rootScope, LoginService, $localStorage, Restangular, $localStorage) {
+.controller('loginCtrl', function (Backand, $state, $rootScope, LoginService, $localStorage, Restangular) {
     $rootScope.bodyClass = "";
     var login = this;
 
@@ -211,10 +229,11 @@ angular.module('app.controllers', [])
         Restangular.all("users").getList({ filter: JSON.stringify($localStorage.userQuery) }).then(function (users) {
             $localStorage.user = users[0];
             $rootScope.user = $localStorage.user; 
-            console.log($rootScope.user.photo);
+            //console.log($rootScope.user.photo);
+            $state.go('nido.activityFeed', {id: $localStorage.user.id}, {reload: true});
+
         }); 
 
-        $state.go('nido.activityFeed', {}, {reload: true});
 	}
 
     function signout() {
@@ -261,9 +280,10 @@ angular.module('app.controllers', [])
 
 })
    
-.controller('signupCtrl', function (Backand, $state, $rootScope, LoginService) {
+.controller('signupCtrl', function (Backand, $state, $rootScope, LoginService, $localStorage, Restangular) {
     $rootScope.bodyClass = "";
     var vm = this;
+    var login = this;
 
     vm.signup = signUp;
 
@@ -287,7 +307,20 @@ angular.module('app.controllers', [])
 
     function onLogin() {
         $rootScope.$broadcast('authorized');
-        $state.go('nido.uploadPhoto');
+        login.username = Backand.getUsername();
+        /* Params used to query API */
+        $localStorage.userQuery = {}; 
+        $localStorage.userQuery['value'] = login.username;
+        $localStorage.userQuery['fieldName'] = "email"; 
+        $localStorage.userQuery['operator'] = "contains";
+
+        Restangular.all("users").getList({ filter: JSON.stringify($localStorage.userQuery) }).then(function (users) {
+            $localStorage.user = users[0];
+            $rootScope.user = $localStorage.user; 
+            //console.log($rootScope.user.photo);
+            $state.go('uploadphoto');
+        }); 
+        
     }
 
 
@@ -299,13 +332,10 @@ angular.module('app.controllers', [])
     vm.errorMessage = '';
 })
    
-.controller('buddyProfileCtrl', function($scope, $rootScope) {
+.controller('buddyProfileCtrl', function ($scope, $rootScope) {
     $rootScope.bodyClass = "";
 })
-   
-.controller('buddiesCtrl', function($scope) {
 
-})
    
 .controller('challengesCtrl', function($scope, $rootScope) {
     $rootScope.bodyClass = "";
@@ -313,6 +343,43 @@ angular.module('app.controllers', [])
    
 .controller('messagesCtrl', function($scope, $rootScope) {
     $rootScope.bodyClass = "";
+})
+
+.controller('buddiesCtrl', function (Backand, $scope, $rootScope, BuddyRequestsModel, $localStorage, Restangular, UsersModel) {
+    $scope.users = {}; 
+    $scope.query = {};
+    $scope.queryBy = '$';
+    $scope.filter = {};
+    $scope.buddyRequest = {};
+    $scope.followStatus = "Follow";
+    $scope.followClass = "";
+    
+    $scope.inviteBuddy = function(to_id) {
+        $scope.buddyRequest.to_id = to_id;
+        $scope.buddyRequest.from_id = $localStorage.user.id;
+        $scope.buddyRequest.created = Date.now();
+        $scope.buddyRequest.status = 'pending';
+        $scope.updateAccount(); 
+        console.log($scope.buddyRequest);
+    };
+
+    UsersModel.all()
+        .then(function (result) {
+            $scope.users = result.data.data;
+            console.log($scope.users); 
+        });
+
+    $scope.orderProp="firstName"; 
+
+    $scope.updateAccount = function() {
+        BuddyRequestsModel.create($scope.buddyRequest)
+            .then(function (result) {
+                $scope.followStatus = "Invite sent";
+                $scope.followClass = "button-dark";
+                console.log(result); 
+            });
+    };
+
 })
    
 .controller('accountCtrl', function (Backand, $scope, $rootScope, $localStorage, Restangular, UsersModel) {
@@ -325,6 +392,7 @@ angular.module('app.controllers', [])
 
     $rootScope.bodyClass = "";
     $scope.getPhoto = function() {
+        console.log($localStorage);
         return $localStorage.user.photo;
     };
 
@@ -383,11 +451,22 @@ angular.module('app.controllers', [])
         //unhide input text field
         //unhide Save button, hide Edit button
         //change button label from "Edit" to "Save"
-        //fire save() on onclick on unhidden Save button 
+        //fire DB save() on onclick on unhidden Save button 
+        //reload myphoto/:photo_id page 
     };
 
     $scope.deletePhoto = function() {
+        // install angular-modal: https://github.com/btford/angular-modal
+        // in modal (pass id of photo): are you sure you want to delete?
+        // onclick "YES" - fire db delete() on photo with ID
+        // reload to profile page  
+    };
 
+    $scope.likePhoto = function() {
+        //create object LIKES 
+        //fields: id, userid, post_id 
+        //grab likecounter -- add 1
+        //reload timeline page 
     };
 
 })
@@ -430,12 +509,16 @@ angular.module('app.controllers', [])
 
 })
 
-.controller('activityFeedCtrl', function ($state, $scope, $rootScope, Backand, PhotosModel, UsersModel, $http, $localStorage) {
+.controller('activityFeedCtrl', function ($state, $stateParams, $scope, $rootScope, Backand, PhotosModel, UsersModel, $http, $localStorage) {
     var _self = this; 
     $rootScope.bodyClass = "add-item";
     $scope.user = {};
+    var user_photo = ''; 
+    //$localStorage.user.id = $stateParams.id; 
     UsersModel.fetch($localStorage.user.id).then(function(result){
-        $scope.user = result.data; 
+        $scope.user = result.data;
+        $localStorage.user = $scope.user; 
+        $rootScope.user = result.data; 
         getPhotos().then(function(results) {
             $scope.user.photos = results.data.data;
             console.log($scope.user.photos); 
@@ -445,6 +528,20 @@ angular.module('app.controllers', [])
     $scope.showPhotos = function() {
         return $scope.user.photos;
     };
+
+    $scope.getUserPhoto = function() {
+        if($localStorage.user.photo) {
+            user_photo = $localStorage.user.photo;
+        }
+        return user_photo;
+    }
+
+    $scope.getPhoto = function() {
+        if($localStorage.user.photo) {
+            user_photo = $localStorage.user.photo;
+        }
+        return user_photo;
+    }; 
 
     getPhotos = function() {
         return $http ({

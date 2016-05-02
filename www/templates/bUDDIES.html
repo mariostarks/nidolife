@@ -1,23 +1,55 @@
-<ion-view title="Buddies" id="page7">
+<ion-view title="Find Buddies" id="page7">
     <ion-content padding="true" class="has-header">
-        <ion-list>
-            <ion-item class="item item-avatar" ui-sref="nido.buddyProfile">
-                <img src="img/profile_image.jpg">
-                <h2>Charlotte Rivera</h2>
-                <p>Pending Request</p>
-            </ion-item>
-            <ion-item class="item item-avatar" ui-sref="nido.buddyProfile">
-                <img src="img/profile_image.jpg">
-                <h2>Michael Jackson</h2>
-                <p>Pending Request</p>
-            </ion-item>
-            <ion-item class="item item-avatar" ui-sref="nido.buddyProfile">
-                <img src="img/profile_image.jpg">
-                <h2>Alex Pinata</h2>
-               
-            </ion-item>
+        <div class="list list-inset">
+          <label class="item item-input input-search">
+            <i class="icon ion-search placeholder-icon"></i>
+            <input type="text" placeholder="Search by Full Name, Username or Email" ng-model="search">
+          </label>
+        </div>
+        <ion-list ng-show="(filteredData = (users | filter:search)) && filteredData.length >= 0 && search && search.length >= 0">
+
+            <div class="row item" ng-repeat="u in users | filter:search">
+              <div class="col item-avatar"><img ng-src="{{u.photo}}"></div>
+              <div class="col user-details">
+                <h2>{{u.firstName}}</h2>
+                <p>{{u.location}}</p>
+              </div>
+              <div class="col"></div>
+              <div class="col">
+                <button class="button button-small button-light {{followClass}}" ng-click="inviteBuddy(u.id, $index)" ng-model="followStatus">{{followStatus ? followStatus : 'Follow'}}</button>
+              </div>
+            </div>
         </ion-list>
-        <a ui-sref="nido.addBuddy" id="buddies-button32" style="font-weight:bolder;font-size:30px;" class="button button-positive  button-block">+</a>
+
+        <!--<a ui-sref="nido.addBuddy" id="buddies-button32" style="font-weight:bolder;font-size:30px;" class="button button-positive  button-block">+</a>-->
+
+
+        <hr class="separator"/>
+        <div class="card">
+          <div class="item item-text-wrap buddies-active">
+            <h2>My Buddies</h2>
+            <div class="item item-avatar" style="display:inline-block;" ng-repeat="u in users">
+                <img ng-src="{{u.photo}}">
+            </div>
+          </div>
+        </div>
+
+
     </ion-content>
+
+    <div class="bar bar-footer bar-positive">
+        <div class="list">
+            <span>New to NIDO? Invite your friends by email. </span>
+            <div class="item item-input-inset">
+                <label class="item-input-wrapper ion-email icon style="color:#000;">
+                  <input type="text" placeholder="&nbsp;Email">
+                </label>
+                <button class="button button-small">
+                  Send
+                </button>
+            </div>
+        </div>
+    </div>
+
 </ion-view>
 

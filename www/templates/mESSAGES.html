@@ -1,22 +1,32 @@
-<ion-view title="Messages" id="page9">
+<ion-view title="Messages" id="page9" class="page-messages">
     <ion-content padding="true" class="has-header">
+        <a ui-sref="nido.newMessage" id="messages-button34" style="margin-top:10px;" class="button button-positive  button-block icon ion-plus-round"> &nbsp; New Message</a>
         <div class="list card">
-            <div class="item item-body">
-                <h5 id="messages-heading1" style="color:#000000;">Alex Quebec</h5>
-                <div id="messages-markdown1" style="color:#000000;">
-                    <p>Hi Jenny. I just checked out the app for the first time and I have to say it's absolutely amazing...</p>
-                </div>
-                <a ui-sref="nido.readMessage" id="messages-button49" class="button button-positive  button-block">Read Message</a>
+            <div class="item item-avatar">
+                <img src="https://files.backand.io/nidolife/2-post-eyxaco.png">
+                <h2><a ui-sref="nido.readMessage">jluna02</a></h2>
+                <p>"Hi Jenny. I just checked out the app and I meant to mention" <a ui-sref="nido.readMessage">More..</a></p>
             </div>
         </div>
+
         <div class="list card">
-            <div class="item item-body">
-                <h5 id="messages-heading2" style="color:#000000;">Alex Quebec</h5>
-                <div id="messages-markdown2" style="color:#000000;">
-                    <p>Hi Jenny. I just checked out the app for the first time and I have to say it's absolutely amazing...</p>
-                </div>
+            <div class="item item-avatar">
+                <img src="https://files.backand.io/nidolife/2-post-fahqsxthuppr.png">
+                <h2><a ui-sref="nido.readMessage">jeromefitness</a></h2>
+                <p>"Great job with this meal plan sequence you've .." <a ui-sref="nido.readMessage">More..</a></p>
             </div>
         </div>
-        <a ui-sref="nido.newMessage" id="messages-button34" style="font-weight:;" class="button button-positive  button-block">+ New Message</a>
+
     </ion-content>
+
+    <div class="bar bar-footer bar-light">
+      <div class="item item-input-inset">
+        <label class="item-input-wrapper icon ion-chatbubble-working">
+          <input type="text" placeholder="Type your message...">
+        </label>
+        <button class="button button-small">
+          Submit
+        </button>
+      </div>
+    </div>
 </ion-view>

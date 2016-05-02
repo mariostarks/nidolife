@@ -1,58 +1,40 @@
 <ion-view view-title="" class="page-signup">
-    <ion-content class="padding has-header">
+    <ion-content padding="true" class="has-header">
         <div class="">
             <form ng-submit="vm.signup()">
-                <img src="img/logo-white.png" class="logo-login center"/>
-                <div class="list">
-                    <div class="row">
-                        <div class="col">
-                            <label class="item item-input">
-                                <input id="email" name="email" type="email" placeholder="Your email"
-                                       ng-model="vm.email">
-                            </label>
-                        </div>
-                    </div>
-                    <div class="row">
-                        <div class="col">
-                            <label class="item item-input">
-                                <input id="firstname" name="firstname" type="text" placeholder="Your first name"
-                                       ng-model="vm.firstName">
-                            </label>
-                        </div>
-                        <div class="col">
-                            <label class="item item-input">
-                                <input id="username" name="lastname" type="text" placeholder="Your last name"
-                                       ng-model="vm.lastName">
-                            </label>
+                <!-- <img src="img/logo-white.png" class="logo-login center"/> -->
+                <i class="icon ion-ios-personadd-outline light" style="font-size:120px; text-align:center; display: block;"></i>
 
-                        </div>
-                    </div>
-                    <div class="row">
-                        <div class="col">
-
-                            <label class="item item-input">
-                                <input id="password" name="password" type="password" placeholder="Your password"
-                                       ng-model="vm.password">
-                            </label>
-                        </div>
-                    </div>
-                    <div class="row">
-                        <div class="col">
-
-                            <label class="item item-input">
-                                <input id="again" name="again" type="password" placeholder="confirm your password"
-                                       ng-model="vm.again">
-                            </label>
-                        </div>
-                    </div>
-                    <h4 class="login-error" ng-bind="vm.errorMessage"></h4>
-
-                    <div class="">
-                        <button class="button button-block button-stable" type="submit">
-                            SignUp
-                        </button>
-                    </div>
+                <div class="list list-inset">
+                  <label class="item item-input login-field">
+                    <i class="icon ion-person placeholder-icon"></i>
+                    <input id="username" name="username" type="text" class="" placeholder="Username" ng-model="vm.firstName">
+                  </label>
+                  <label class="item item-input login-field">
+                    <i class="icon ion-person placeholder-icon"></i>
+                    <input id="fullName" name="fullName" type="text" class="" placeholder="Full Name" ng-model="vm.lastName">
+                  </label>
+                  <label class="item item-input login-field">
+                    <i class="icon ion-email placeholder-icon"></i>
+                    <input id="email" name="email" type="email" class="" placeholder="Email" ng-model="vm.email">
+                  </label>
+                  <label class="item item-input login-field">
+                    <i class="icon ion-android-lock placeholder-icon"></i>
+                    <input id="password" name="password" type="password" class="" placeholder="Password" ng-model="vm.password">
+                  </label>
+                  <label class="item item-input login-field">
+                    <i class="icon ion-android-lock placeholder-icon"></i>
+                    <input id="again" name="again" type="password" class="" placeholder="Re-type Password" ng-model="vm.again">
+                  </label>
                 </div>
+
+                <h4 class="login-error" ng-bind="vm.errorMessage"></h4>
+                <div class="">
+                    <button class="button button-block button-stable" type="submit">
+                        DONE
+                    </button>
+                </div>
+
             </form>
         </div>
     </ion-content>
