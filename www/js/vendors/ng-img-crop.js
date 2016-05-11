@@ -1,2 +1,1914 @@
-/*! ngImgCrop v0.3.2 License: MIT */!function(){"use strict";var e=angular.module("ngImgCrop",[]);e.factory("cropAreaCircle",["cropArea",function(e){var t=function(){e.apply(this,arguments),this._boxResizeBaseSize=20,this._boxResizeNormalRatio=.9,this._boxResizeHoverRatio=1.2,this._iconMoveNormalRatio=.9,this._iconMoveHoverRatio=1.2,this._boxResizeNormalSize=this._boxResizeBaseSize*this._boxResizeNormalRatio,this._boxResizeHoverSize=this._boxResizeBaseSize*this._boxResizeHoverRatio,this._posDragStartX=0,this._posDragStartY=0,this._posResizeStartX=0,this._posResizeStartY=0,this._posResizeStartSize=0,this._boxResizeIsHover=!1,this._areaIsHover=!1,this._boxResizeIsDragging=!1,this._areaIsDragging=!1};return t.prototype=new e,t.prototype._calcCirclePerimeterCoords=function(e){var t=this._width/2,i=Math.floor(this._aspect[1]*(this._width/2)/this._aspect[0]),r=e*(Math.PI/180),a=this._x+t*Math.cos(r),s=this._y+i*Math.sin(r);return[a,s]},t.prototype._calcResizeIconCenterCoords=function(){return this._calcCirclePerimeterCoords(-45)},t.prototype._isCoordWithinArea=function(e){return Math.sqrt((e[0]-this._x)*(e[0]-this._x)+(e[1]-this._y)*(e[1]-this._y))<this._width/2},t.prototype._isCoordWithinBoxResize=function(e){var t=this._calcResizeIconCenterCoords(),i=this._boxResizeHoverSize/2;return e[0]>t[0]-i&&e[0]<t[0]+i&&e[1]>t[1]-i&&e[1]<t[1]+i},t.prototype._drawArea=function(e,t,i,r){var a=t[0]-i/2,s=t[1]-r/2,o=.5522848,n=i/2*o,h=r/2*o,c=a+i,g=s+r,u=a+i/2,l=s+r/2;e.beginPath(),e.moveTo(a,l),e.bezierCurveTo(a,l-h,u-n,s,u,s),e.bezierCurveTo(u+n,s,c,l-h,c,l),e.bezierCurveTo(c,l+h,u+n,g,u,g),e.bezierCurveTo(u-n,g,a,l+h,a,l),e.stroke()},t.prototype.draw=function(){e.prototype.draw.apply(this,arguments),this._cropCanvas.drawIconMove([this._x,this._y],this._areaIsHover?this._iconMoveHoverRatio:this._iconMoveNormalRatio),this._cropCanvas.drawIconResizeBoxNESW(this._calcResizeIconCenterCoords(),this._boxResizeBaseSize,this._boxResizeIsHover?this._boxResizeHoverRatio:this._boxResizeNormalRatio)},t.prototype.processMouseMove=function(e,t){var i="default",r=!1,a=this._ctx.canvas.height,s=this._ctx.canvas.width;if(this._boxResizeIsHover=!1,this._areaIsHover=!1,this._areaIsDragging)this._x=e-this._posDragStartX,this._y=t-this._posDragStartY,this._areaIsHover=!0,i="move",r=!0,this._events.trigger("area-move");else if(this._boxResizeIsDragging){i="nesw-resize";var o=e-this._posResizeStartX,n=this._posResizeStartSize+o,h=this._width,c=this._height,g=this.getScale(),u=Math.ceil(g*this._minSize),l=Math.max(u,this._unscaledMinSize,n),d=Math.floor(this._aspect[1]*l/this._aspect[0]);if(s>=l&&a>=d){this._width=l,this._height=d;var p=(this._width-h)/2,f=(this._height-c)/2;this._x+=p,this._y+=-1*f,this._boxResizeIsHover=!0,r=!0,this._events.trigger("area-resize")}}else this._isCoordWithinBoxResize([e,t])?(i="nesw-resize",this._areaIsHover=!1,this._boxResizeIsHover=!0,r=!0):this._isCoordWithinArea([e,t])&&(i="move",this._areaIsHover=!0,r=!0);return this._dontDragOutside(),angular.element(this._ctx.canvas).css({cursor:i}),r},t.prototype.processMouseDown=function(e,t){this._isCoordWithinBoxResize([e,t])?(this._areaIsDragging=!1,this._areaIsHover=!1,this._boxResizeIsDragging=!0,this._boxResizeIsHover=!0,this._posResizeStartX=e,this._posResizeStartY=t,this._posResizeStartSize=this._width,this._events.trigger("area-resize-start")):this._isCoordWithinArea([e,t])&&(this._areaIsDragging=!0,this._areaIsHover=!0,this._boxResizeIsDragging=!1,this._boxResizeIsHover=!1,this._posDragStartX=e-this._x,this._posDragStartY=t-this._y,this._events.trigger("area-move-start"))},t.prototype.processMouseUp=function(){this._areaIsDragging&&(this._areaIsDragging=!1,this._events.trigger("area-move-end")),this._boxResizeIsDragging&&(this._boxResizeIsDragging=!1,this._events.trigger("area-resize-end")),this._areaIsHover=!1,this._boxResizeIsHover=!1,this._posDragStartX=0,this._posDragStartY=0},t}]),e.factory("cropAreaSquare",["cropArea",function(e){var t=function(){e.apply(this,arguments),this._resizeCtrlBaseRadius=10,this._resizeCtrlNormalRatio=.75,this._resizeCtrlHoverRatio=1,this._iconMoveNormalRatio=.9,this._iconMoveHoverRatio=1.2,this._resizeCtrlNormalRadius=this._resizeCtrlBaseRadius*this._resizeCtrlNormalRatio,this._resizeCtrlHoverRadius=this._resizeCtrlBaseRadius*this._resizeCtrlHoverRatio,this._posDragStartX=0,this._posDragStartY=0,this._posResizeStartX=0,this._posResizeStartY=0,this._posResizeStartWidth=0,this._posResizeStartHeight=0,this._resizeCtrlIsHover=-1,this._areaIsHover=!1,this._resizeCtrlIsDragging=-1,this._areaIsDragging=!1};return t.prototype=new e,t.prototype._calcSquareCorners=function(){var e=this._width/2,t=this._height/2;return[[this._x-e,this._y-t],[this._x+e,this._y-t],[this._x-e,this._y+t],[this._x+e,this._y+t]]},t.prototype._calcSquareDimensions=function(){var e=this._width/2,t=this._height/2;return{left:this._x-e,top:this._y-t,right:this._x+e,bottom:this._y+t}},t.prototype._isCoordWithinArea=function(e){var t=this._calcSquareDimensions();return e[0]>=t.left&&e[0]<=t.right&&e[1]>=t.top&&e[1]<=t.bottom},t.prototype._isCoordWithinResizeCtrl=function(e){for(var t=this._calcSquareCorners(),i=-1,r=0,a=t.length;a>r;r++){var s=t[r];if(e[0]>s[0]-this._resizeCtrlHoverRadius&&e[0]<s[0]+this._resizeCtrlHoverRadius&&e[1]>s[1]-this._resizeCtrlHoverRadius&&e[1]<s[1]+this._resizeCtrlHoverRadius){i=r;break}}return i},t.prototype._drawArea=function(e,t,i,r){var a=i/2,s=r/2;e.rect(t[0]-a,t[1]-s,i,r)},t.prototype.draw=function(){e.prototype.draw.apply(this,arguments),this._cropCanvas.drawIconMove([this._x,this._y],this._areaIsHover?this._iconMoveHoverRatio:this._iconMoveNormalRatio);for(var t=this._calcSquareCorners(),i=0,r=t.length;r>i;i++){var a=t[i];this._cropCanvas.drawIconResizeCircle(a,this._resizeCtrlBaseRadius,this._resizeCtrlIsHover===i?this._resizeCtrlHoverRatio:this._resizeCtrlNormalRatio)}},t.prototype.processMouseMove=function(e,t){var i="default",r=!1,a=this._ctx.canvas.height,s=this._ctx.canvas.width;if(this._resizeCtrlIsHover=-1,this._areaIsHover=!1,this._areaIsDragging)this._x=e-this._posDragStartX,this._y=t-this._posDragStartY,this._areaIsHover=!0,i="move",r=!0,this._events.trigger("area-move");else if(this._resizeCtrlIsDragging>-1){var o,n;switch(this._resizeCtrlIsDragging){case 0:o=-1,n=-1,i="nwse-resize";break;case 1:o=1,n=-1,i="nesw-resize";break;case 2:o=-1,n=1,i="nesw-resize";break;case 3:o=1,n=1,i="nwse-resize"}var h=(e-this._posResizeStartX)*o,c=this._posResizeStartWidth+h,g=this._width,u=this._height,l=this.getScale(),d=Math.ceil(l*this._minSize),p=Math.max(d,this._unscaledMinSize,c),f=Math.floor(this._aspect[1]*p/this._aspect[0]);if(s>=p&&a>=f){this._width=p,this._height=f;var _=(this._width-g)/2,m=(this._height-u)/2;this._x+=_*o,this._y+=m*n,this._resizeCtrlIsHover=this._resizeCtrlIsDragging,r=!0,this._events.trigger("area-resize")}}else{var v=this._isCoordWithinResizeCtrl([e,t]);if(v>-1){switch(v){case 0:i="nwse-resize";break;case 1:i="nesw-resize";break;case 2:i="nesw-resize";break;case 3:i="nwse-resize"}this._areaIsHover=!1,this._resizeCtrlIsHover=v,r=!0}else this._isCoordWithinArea([e,t])&&(i="move",this._areaIsHover=!0,r=!0)}return this._dontDragOutside(),angular.element(this._ctx.canvas).css({cursor:i}),r},t.prototype.processMouseDown=function(e,t){var i=this._isCoordWithinResizeCtrl([e,t]);i>-1?(this._areaIsDragging=!1,this._areaIsHover=!1,this._resizeCtrlIsDragging=i,this._resizeCtrlIsHover=i,this._posResizeStartX=e,this._posResizeStartY=t,this._posResizeStartWidth=this._width,this._posResizeStartHeight=this._height,this._events.trigger("area-resize-start")):this._isCoordWithinArea([e,t])&&(this._areaIsDragging=!0,this._areaIsHover=!0,this._resizeCtrlIsDragging=-1,this._resizeCtrlIsHover=-1,this._posDragStartX=e-this._x,this._posDragStartY=t-this._y,this._events.trigger("area-move-start"))},t.prototype.processMouseUp=function(){this._areaIsDragging&&(this._areaIsDragging=!1,this._events.trigger("area-move-end")),this._resizeCtrlIsDragging>-1&&(this._resizeCtrlIsDragging=-1,this._events.trigger("area-resize-end")),this._areaIsHover=!1,this._resizeCtrlIsHover=-1,this._posDragStartX=0,this._posDragStartY=0},t}]),e.factory("cropArea",["cropCanvas",function(e){var t=function(t,i){this._ctx=t,this._events=i,this._minSize=80,this._unscaledMinSize=40,this._cropCanvas=new e(t),this._image=new Image,this._x=0,this._y=0,this._width=200,this._aspect=[1,1],this._height=Math.floor(this._aspect[1]*this._width/this._aspect[0])};return t.prototype.getImage=function(){return this._image},t.prototype.setImage=function(e){this._image=e},t.prototype.getX=function(){return this._x},t.prototype.setX=function(e){this._x=e,this._dontDragOutside()},t.prototype.getY=function(){return this._y},t.prototype.setY=function(e){this._y=e,this._dontDragOutside()},t.prototype.getSize=function(){return this._width},t.prototype.setSize=function(e){var t=this.getScale(),i=Math.round(t*this._minSize);this._width=Math.max(i,this._unscaledMinSize,e),this._height=Math.floor(this._aspect[1]*this._width/this._aspect[0]),this._dontDragOutside()},t.prototype.getWidth=function(){return this._width},t.prototype.setWidth=function(e){this.setSize(e)},t.prototype.getHeight=function(){return this._height},t.prototype.setHeight=function(e){var t=Math.floor(this._aspect[1]*this._minSize/this._aspect[0]),i=Math.max(t,e),r=Math.floor(this._aspect[0]*i/this._aspect[1]);this.setSize(r)},t.prototype.getMinSize=function(){return this._minSize},t.prototype.setMinSize=function(e){this._minSize=e,this._width=Math.max(this._minSize,this._width),this._height=Math.floor(this._aspect[1]*this._width/this._aspect[0]),this._dontDragOutside()},t.prototype.getAspect=function(){return this._aspect},t.prototype.setAspect=function(e,t){this._aspect=[e,t],this._dontDragOutside()},t.prototype.getScale=function(){var e=this._ctx.canvas.width/this._image.width,t=this._ctx.canvas.height/this._image.height;return(isNaN(e)||isNaN(t)||!isFinite(e)||!isFinite(t))&&(e=1,t=1),Math.max(e,t)},t.prototype._dontDragOutside=function(){var e=this._ctx.canvas.height,t=this._ctx.canvas.width;this._width>t&&(this._width=t),this._height>e&&(this._height=e),this._x<this._width/2&&(this._x=this._width/2),this._x>t-this._width/2&&(this._x=t-this._width/2),this._y<this._height/2&&(this._y=this._height/2),this._y>e-this._height/2&&(this._y=e-this._height/2)},t.prototype._drawArea=function(){},t.prototype.draw=function(){this._cropCanvas.drawCropArea(this._image,[this._x,this._y],this._width,this._height,this._drawArea)},t.prototype.processMouseMove=function(){},t.prototype.processMouseDown=function(){},t.prototype.processMouseUp=function(){},t}]),e.factory("cropCanvas",[function(){var e=[[-.5,-2],[-3,-4.5],[-.5,-7],[-7,-7],[-7,-.5],[-4.5,-3],[-2,-.5]],t=[[.5,-2],[3,-4.5],[.5,-7],[7,-7],[7,-.5],[4.5,-3],[2,-.5]],i=[[-.5,2],[-3,4.5],[-.5,7],[-7,7],[-7,.5],[-4.5,3],[-2,.5]],r=[[.5,2],[3,4.5],[.5,7],[7,7],[7,.5],[4.5,3],[2,.5]],a=[[-1.5,-2.5],[-1.5,-6],[-5,-6],[0,-11],[5,-6],[1.5,-6],[1.5,-2.5]],s=[[-2.5,-1.5],[-6,-1.5],[-6,-5],[-11,0],[-6,5],[-6,1.5],[-2.5,1.5]],o=[[-1.5,2.5],[-1.5,6],[-5,6],[0,11],[5,6],[1.5,6],[1.5,2.5]],n=[[2.5,-1.5],[6,-1.5],[6,-5],[11,0],[6,5],[6,1.5],[2.5,1.5]],h={areaOutline:"#fff",resizeBoxStroke:"#fff",resizeBoxFill:"#444",resizeBoxArrowFill:"#fff",resizeCircleStroke:"#fff",resizeCircleFill:"#444",moveIconFill:"#fff"};return function(c){var g=function(e,t,i){return[i*e[0]+t[0],i*e[1]+t[1]]},u=function(e,t,i,r){c.save(),c.fillStyle=t,c.beginPath();var a,s=g(e[0],i,r);c.moveTo(s[0],s[1]);for(var o in e)o>0&&(a=g(e[o],i,r),c.lineTo(a[0],a[1]));c.lineTo(s[0],s[1]),c.fill(),c.closePath(),c.restore()};this.drawIconMove=function(e,t){u(a,h.moveIconFill,e,t),u(s,h.moveIconFill,e,t),u(o,h.moveIconFill,e,t),u(n,h.moveIconFill,e,t)},this.drawIconResizeCircle=function(e,t,i){var r=t*i;c.save(),c.strokeStyle=h.resizeCircleStroke,c.lineWidth=2,c.fillStyle=h.resizeCircleFill,c.beginPath(),c.arc(e[0],e[1],r,0,2*Math.PI),c.fill(),c.stroke(),c.closePath(),c.restore()},this.drawIconResizeBoxBase=function(e,t,i){var r=t*i;c.save(),c.strokeStyle=h.resizeBoxStroke,c.lineWidth=2,c.fillStyle=h.resizeBoxFill,c.fillRect(e[0]-r/2,e[1]-r/2,r,r),c.strokeRect(e[0]-r/2,e[1]-r/2,r,r),c.restore()},this.drawIconResizeBoxNESW=function(e,r,a){this.drawIconResizeBoxBase(e,r,a),u(t,h.resizeBoxArrowFill,e,a),u(i,h.resizeBoxArrowFill,e,a)},this.drawIconResizeBoxNWSE=function(t,i,a){this.drawIconResizeBoxBase(t,i,a),u(e,h.resizeBoxArrowFill,t,a),u(r,h.resizeBoxArrowFill,t,a)},this.drawCropArea=function(e,t,i,r,a){var s=e.width/c.canvas.width,o=e.height/c.canvas.height,n=t[0]-i/2,g=t[1]-r/2;for(c.save(),c.strokeStyle=h.areaOutline,c.lineWidth=2,c.beginPath(),a(c,t,i,r),c.stroke(),c.clip();i*s>e.width;)i--;for(;r*o>e.height;)r--;i>0&&r>0&&c.drawImage(e,n*s,g*o,i*s,r*o,n,g,i,r),c.beginPath(),a(c,t,i,r),c.stroke(),c.clip(),c.restore()}}}]),e.service("cropEXIF",[function(){function e(e){return!!e.exifdata}function t(e,t){t=t||e.match(/^data\:([^\;]+)\;base64,/im)[1]||"",e=e.replace(/^data\:([^\;]+)\;base64,/gim,"");for(var i=atob(e),r=i.length,a=new ArrayBuffer(r),s=new Uint8Array(a),o=0;r>o;o++)s[o]=i.charCodeAt(o);return a}function i(e,t){var i=new XMLHttpRequest;i.open("GET",e,!0),i.responseType="blob",i.onload=function(){(200===this.status||0===this.status)&&t(this.response)},i.send()}function r(e,r){function o(t){var i=a(t),o=s(t);e.exifdata=i||{},e.iptcdata=o||{},r&&r.call(e)}if(e.src)if(/^data\:/i.test(e.src)){var n=t(e.src);o(n)}else if(/^blob\:/i.test(e.src)){var h=new FileReader;h.onload=function(e){o(e.target.result)},i(e.src,function(e){h.readAsArrayBuffer(e)})}else{var c=new XMLHttpRequest;c.onload=function(){if(200!==this.status&&0!==this.status)throw"Could not load image";o(c.response),c=null},c.open("GET",e.src,!0),c.responseType="arraybuffer",c.send(null)}else if(window.FileReader&&(e instanceof window.Blob||e instanceof window.File)){var h=new FileReader;h.onload=function(e){u&&console.log("Got file of length "+e.target.result.byteLength),o(e.target.result)},h.readAsArrayBuffer(e)}}function a(e){var t=new DataView(e);if(u&&console.log("Got file of length "+e.byteLength),255!==t.getUint8(0)||216!==t.getUint8(1))return u&&console.log("Not a valid JPEG"),!1;for(var i,r=2,a=e.byteLength;a>r;){if(255!==t.getUint8(r))return u&&console.log("Not a valid marker at offset "+r+", found: "+t.getUint8(r)),!1;if(i=t.getUint8(r+1),u&&console.log(i),225===i)return u&&console.log("Found 0xFFE1 marker"),g(t,r+4,t.getUint16(r+2)-2);r+=2+t.getUint16(r+2)}}function s(e){var t=new DataView(e);if(u&&console.log("Got file of length "+e.byteLength),255!==t.getUint8(0)||216!==t.getUint8(1))return u&&console.log("Not a valid JPEG"),!1;for(var i=2,r=e.byteLength,a=function(e,t){return 56===e.getUint8(t)&&66===e.getUint8(t+1)&&73===e.getUint8(t+2)&&77===e.getUint8(t+3)&&4===e.getUint8(t+4)&&4===e.getUint8(t+5)};r>i;){if(a(t,i)){var s=t.getUint8(i+7);s%2!==0&&(s+=1),0===s&&(s=4);var n=i+8+s,h=t.getUint16(i+6+s);return o(e,n,h)}i++}}function o(e,t,i){for(var r,a,s,o,n,h=new DataView(e),g={},u=t;t+i>u;)28===h.getUint8(u)&&2===h.getUint8(u+1)&&(o=h.getUint8(u+2),o in _&&(s=h.getInt16(u+3),n=s+5,a=_[o],r=c(h,u+5,s),g.hasOwnProperty(a)?g[a]instanceof Array?g[a].push(r):g[a]=[g[a],r]:g[a]=r)),u++;return g}function n(e,t,i,r,a){var s,o,n,c=e.getUint16(i,!a),g={};for(n=0;c>n;n++)s=i+12*n+2,o=r[e.getUint16(s,!a)],!o&&u&&console.log("Unknown tag: "+e.getUint16(s,!a)),g[o]=h(e,s,t,i,a);return g}function h(e,t,i,r,a){var s,o,n,h,g,u,l=e.getUint16(t+2,!a),d=e.getUint32(t+4,!a),p=e.getUint32(t+8,!a)+i;switch(l){case 1:case 7:if(1===d)return e.getUint8(t+8,!a);for(s=d>4?p:t+8,o=[],h=0;d>h;h++)o[h]=e.getUint8(s+h);return o;case 2:return s=d>4?p:t+8,c(e,s,d-1);case 3:if(1===d)return e.getUint16(t+8,!a);for(s=d>2?p:t+8,o=[],h=0;d>h;h++)o[h]=e.getUint16(s+2*h,!a);return o;case 4:if(1===d)return e.getUint32(t+8,!a);for(o=[],h=0;d>h;h++)o[h]=e.getUint32(p+4*h,!a);return o;case 5:if(1===d)return g=e.getUint32(p,!a),u=e.getUint32(p+4,!a),n=new Number(g/u),n.numerator=g,n.denominator=u,n;for(o=[],h=0;d>h;h++)g=e.getUint32(p+8*h,!a),u=e.getUint32(p+4+8*h,!a),o[h]=new Number(g/u),o[h].numerator=g,o[h].denominator=u;return o;case 9:if(1===d)return e.getInt32(t+8,!a);for(o=[],h=0;d>h;h++)o[h]=e.getInt32(p+4*h,!a);return o;case 10:if(1===d)return e.getInt32(p,!a)/e.getInt32(p+4,!a);for(o=[],h=0;d>h;h++)o[h]=e.getInt32(p+8*h,!a)/e.getInt32(p+4+8*h,!a);return o}}function c(e,t,i){for(var r="",a=t;t+i>a;a++)r+=String.fromCharCode(e.getUint8(a));return r}function g(e,t){if("Exif"!==c(e,t,4))return u&&console.log("Not valid EXIF data! "+c(e,t,4)),!1;var i,r,a,s,o,h=t+6;if(18761===e.getUint16(h))i=!1;else{if(19789!==e.getUint16(h))return u&&console.log("Not valid TIFF data! (no 0x4949 or 0x4D4D)"),!1;i=!0}if(42!==e.getUint16(h+2,!i))return u&&console.log("Not valid TIFF data! (no 0x002A)"),!1;var g=e.getUint32(h+4,!i);if(8>g)return u&&console.log("Not valid TIFF data! (First offset less than 8)",e.getUint32(h+4,!i)),!1;if(r=n(e,h,h+g,d,i),r.ExifIFDPointer){s=n(e,h,h+r.ExifIFDPointer,l,i);for(a in s){switch(a){case"LightSource":case"Flash":case"MeteringMode":case"ExposureProgram":case"SensingMethod":case"SceneCaptureType":case"SceneType":case"CustomRendered":case"WhiteBalance":case"GainControl":case"Contrast":case"Saturation":case"Sharpness":case"SubjectDistanceRange":case"FileSource":s[a]=f[a][s[a]];break;case"ExifVersion":case"FlashpixVersion":s[a]=String.fromCharCode(s[a][0],s[a][1],s[a][2],s[a][3]);break;case"ComponentsConfiguration":s[a]=f.Components[s[a][0]]+f.Components[s[a][1]]+f.Components[s[a][2]]+f.Components[s[a][3]]}r[a]=s[a]}}if(r.GPSInfoIFDPointer){o=n(e,h,h+r.GPSInfoIFDPointer,p,i);for(a in o){switch(a){case"GPSVersionID":o[a]=o[a][0]+"."+o[a][1]+"."+o[a][2]+"."+o[a][3]}r[a]=o[a]}}return r}var u=!1,l=this.Tags={36864:"ExifVersion",40960:"FlashpixVersion",40961:"ColorSpace",40962:"PixelXDimension",40963:"PixelYDimension",37121:"ComponentsConfiguration",37122:"CompressedBitsPerPixel",37500:"MakerNote",37510:"UserComment",40964:"RelatedSoundFile",36867:"DateTimeOriginal",36868:"DateTimeDigitized",37520:"SubsecTime",37521:"SubsecTimeOriginal",37522:"SubsecTimeDigitized",33434:"ExposureTime",33437:"FNumber",34850:"ExposureProgram",34852:"SpectralSensitivity",34855:"ISOSpeedRatings",34856:"OECF",37377:"ShutterSpeedValue",37378:"ApertureValue",37379:"BrightnessValue",37380:"ExposureBias",37381:"MaxApertureValue",37382:"SubjectDistance",37383:"MeteringMode",37384:"LightSource",37385:"Flash",37396:"SubjectArea",37386:"FocalLength",41483:"FlashEnergy",41484:"SpatialFrequencyResponse",41486:"FocalPlaneXResolution",41487:"FocalPlaneYResolution",41488:"FocalPlaneResolutionUnit",41492:"SubjectLocation",41493:"ExposureIndex",41495:"SensingMethod",41728:"FileSource",41729:"SceneType",41730:"CFAPattern",41985:"CustomRendered",41986:"ExposureMode",41987:"WhiteBalance",41988:"DigitalZoomRation",41989:"FocalLengthIn35mmFilm",41990:"SceneCaptureType",41991:"GainControl",41992:"Contrast",41993:"Saturation",41994:"Sharpness",41995:"DeviceSettingDescription",41996:"SubjectDistanceRange",40965:"InteroperabilityIFDPointer",42016:"ImageUniqueID"},d=this.TiffTags={256:"ImageWidth",257:"ImageHeight",34665:"ExifIFDPointer",34853:"GPSInfoIFDPointer",40965:"InteroperabilityIFDPointer",258:"BitsPerSample",259:"Compression",262:"PhotometricInterpretation",274:"Orientation",277:"SamplesPerPixel",284:"PlanarConfiguration",530:"YCbCrSubSampling",531:"YCbCrPositioning",282:"XResolution",283:"YResolution",296:"ResolutionUnit",273:"StripOffsets",278:"RowsPerStrip",279:"StripByteCounts",513:"JPEGInterchangeFormat",514:"JPEGInterchangeFormatLength",301:"TransferFunction",318:"WhitePoint",319:"PrimaryChromaticities",529:"YCbCrCoefficients",532:"ReferenceBlackWhite",306:"DateTime",270:"ImageDescription",271:"Make",272:"Model",305:"Software",315:"Artist",33432:"Copyright"},p=this.GPSTags={0:"GPSVersionID",1:"GPSLatitudeRef",2:"GPSLatitude",3:"GPSLongitudeRef",4:"GPSLongitude",5:"GPSAltitudeRef",6:"GPSAltitude",7:"GPSTimeStamp",8:"GPSSatellites",9:"GPSStatus",10:"GPSMeasureMode",11:"GPSDOP",12:"GPSSpeedRef",13:"GPSSpeed",14:"GPSTrackRef",15:"GPSTrack",16:"GPSImgDirectionRef",17:"GPSImgDirection",18:"GPSMapDatum",19:"GPSDestLatitudeRef",20:"GPSDestLatitude",21:"GPSDestLongitudeRef",22:"GPSDestLongitude",23:"GPSDestBearingRef",24:"GPSDestBearing",25:"GPSDestDistanceRef",26:"GPSDestDistance",27:"GPSProcessingMethod",28:"GPSAreaInformation",29:"GPSDateStamp",30:"GPSDifferential"},f=this.StringValues={ExposureProgram:{0:"Not defined",1:"Manual",2:"Normal program",3:"Aperture priority",4:"Shutter priority",5:"Creative program",6:"Action program",7:"Portrait mode",8:"Landscape mode"},MeteringMode:{0:"Unknown",1:"Average",2:"CenterWeightedAverage",3:"Spot",4:"MultiSpot",5:"Pattern",6:"Partial",255:"Other"},LightSource:{0:"Unknown",1:"Daylight",2:"Fluorescent",3:"Tungsten (incandescent light)",4:"Flash",9:"Fine weather",10:"Cloudy weather",11:"Shade",12:"Daylight fluorescent (D 5700 - 7100K)",13:"Day white fluorescent (N 4600 - 5400K)",14:"Cool white fluorescent (W 3900 - 4500K)",15:"White fluorescent (WW 3200 - 3700K)",17:"Standard light A",18:"Standard light B",19:"Standard light C",20:"D55",21:"D65",22:"D75",23:"D50",24:"ISO studio tungsten",255:"Other"},Flash:{0:"Flash did not fire",1:"Flash fired",5:"Strobe return light not detected",7:"Strobe return light detected",9:"Flash fired, compulsory flash mode",13:"Flash fired, compulsory flash mode, return light not detected",15:"Flash fired, compulsory flash mode, return light detected",16:"Flash did not fire, compulsory flash mode",24:"Flash did not fire, auto mode",25:"Flash fired, auto mode",29:"Flash fired, auto mode, return light not detected",31:"Flash fired, auto mode, return light detected",32:"No flash function",65:"Flash fired, red-eye reduction mode",69:"Flash fired, red-eye reduction mode, return light not detected",71:"Flash fired, red-eye reduction mode, return light detected",73:"Flash fired, compulsory flash mode, red-eye reduction mode",77:"Flash fired, compulsory flash mode, red-eye reduction mode, return light not detected",79:"Flash fired, compulsory flash mode, red-eye reduction mode, return light detected",89:"Flash fired, auto mode, red-eye reduction mode",93:"Flash fired, auto mode, return light not detected, red-eye reduction mode",95:"Flash fired, auto mode, return light detected, red-eye reduction mode"},SensingMethod:{1:"Not defined",2:"One-chip color area sensor",3:"Two-chip color area sensor",4:"Three-chip color area sensor",5:"Color sequential area sensor",7:"Trilinear sensor",8:"Color sequential linear sensor"},SceneCaptureType:{0:"Standard",1:"Landscape",2:"Portrait",3:"Night scene"},SceneType:{1:"Directly photographed"},CustomRendered:{0:"Normal process",1:"Custom process"},WhiteBalance:{0:"Auto white balance",1:"Manual white balance"},GainControl:{0:"None",1:"Low gain up",2:"High gain up",3:"Low gain down",4:"High gain down"},Contrast:{0:"Normal",1:"Soft",2:"Hard"},Saturation:{0:"Normal",1:"Low saturation",2:"High saturation"},Sharpness:{0:"Normal",1:"Soft",2:"Hard"},SubjectDistanceRange:{0:"Unknown",1:"Macro",2:"Close view",3:"Distant view"},FileSource:{3:"DSC"},Components:{0:"",1:"Y",2:"Cb",3:"Cr",4:"R",5:"G",6:"B"}},_={120:"caption",110:"credit",25:"keywords",55:"dateCreated",80:"byline",85:"bylineTitle",122:"captionWriter",105:"headline",116:"copyright",15:"category"};this.getData=function(t,i){return(t instanceof Image||t instanceof HTMLImageElement)&&!t.complete?!1:(e(t)?i&&i.call(t):r(t,i),!0)},this.getTag=function(t,i){return e(t)?t.exifdata[i]:void 0},this.getAllTags=function(t){if(!e(t))return{};var i,r=t.exifdata,a={};for(i in r)r.hasOwnProperty(i)&&(a[i]=r[i]);return a},this.pretty=function(t){if(!e(t))return"";var i,r=t.exifdata,a="";for(i in r)r.hasOwnProperty(i)&&(a+="object"==typeof r[i]?r[i]instanceof Number?i+" : "+r[i]+" ["+r[i].numerator+"/"+r[i].denominator+"]\r\n":i+" : ["+r[i].length+" values]\r\n":i+" : "+r[i]+"\r\n");return a},this.readFromBinaryFile=function(e){return a(e)}}]),e.factory("cropHost",["$document","$window","cropAreaCircle","cropAreaSquare","cropEXIF",function(e,t,i,r){var a=function(i){var r=i.getBoundingClientRect(),a=e[0].body,s=e[0].documentElement,o=t.pageYOffset||s.scrollTop||a.scrollTop,n=t.pageXOffset||s.scrollLeft||a.scrollLeft,h=s.clientTop||a.clientTop||0,c=s.clientLeft||a.clientLeft||0,g=r.top+o-h,u=r.left+n-c;return{top:Math.round(g),left:Math.round(u)}};return function(t,s,o){function n(){h.clearRect(0,0,h.canvas.width,h.canvas.height),null!==c&&(h.drawImage(c,0,0,h.canvas.width,h.canvas.height),h.save(),h.fillStyle="rgba(0, 0, 0, 0.65)",h.fillRect(0,0,h.canvas.width,h.canvas.height),h.restore(),g.draw())}var h=null,c=null,g=null,u=[100,100],l=[300,300],d=200,p=[1,1],f=d,_=Math.floor(p[1]*f/p[0]),m="image/png",v=null,S=function(e,i){if(null!==c){g.setImage(c);var r,a,s,o,d=[c.width,c.height],f=c.width/c.height,_=d;if(_[0]>l[0]?(_[0]=l[0],_[1]=_[0]/f):_[0]<u[0]&&(_[0]=u[0],_[1]=_[0]/f),_[1]>l[1]?(_[1]=l[1],_[0]=_[1]*f):_[1]<u[1]&&(_[1]=u[1],_[0]=_[1]*f),t.prop("width",_[0]).prop("height",_[1]).css({"margin-left":-_[0]/2+"px","margin-top":-_[1]/2+"px"}),r=h.canvas.width/2,a=h.canvas.height/2,e?(s=h.canvas.width-1,o=Math.floor(p[1]*s/p[0])):(s=.75*h.canvas.width,o=Math.floor(p[1]*s/p[0]),o>.75*h.canvas.height&&(o=.75*h.canvas.height,s=Math.floor(p[0]*o/p[1]))),"undefined"!=typeof i&&"undefined"!=typeof i.width&&i.width>0){var m=h.canvas.width/c.width;s=Math.round(i.width*m),s>h.canvas.width&&(s=h.canvas.width-1),o=Math.floor(p[1]*s/p[0]),r=Math.round(i.x*m+s/2),a=Math.round(i.y*m+o/2)}o>h.canvas.height&&(o=h.canvas.height-1,s=Math.floor(p[0]*o/p[1])),r+s/2>h.canvas.width&&(r=Math.floor(h.canvas.width-s/2)),a+o/2>h.canvas.height&&(a=Math.floor(h.canvas.height-o/2)),g.setX(r),g.setY(a),g.setSize(s)}else t.prop("width",0).prop("height",0).css({"margin-top":0});n()},w=function(e){return angular.isDefined(e.changedTouches)?e.changedTouches:e.originalEvent.changedTouches},I=function(e){if(null!==c){var t,i,r=a(h.canvas);"touchmove"===e.type?(t=w(e)[0].pageX,i=w(e)[0].pageY):(t=e.pageX,i=e.pageY),g.processMouseMove(t-r.left,i-r.top),n()}},z=function(e){if(e.preventDefault(),e.stopPropagation(),null!==c){var t,i,r=a(h.canvas);"touchstart"===e.type?(t=w(e)[0].pageX,i=w(e)[0].pageY):(t=e.pageX,i=e.pageY),g.processMouseDown(t-r.left,i-r.top),n()}},y=function(e){if(null!==c){var t,i,r=a(h.canvas);"touchend"===e.type?(t=w(e)[0].pageX,i=w(e)[0].pageY):(t=e.pageX,i=e.pageY),g.processMouseUp(t-r.left,i-r.top),n()}};this.getResultImageDataURI=function(){var e,t;if(t=angular.element("<canvas></canvas>")[0],e=t.getContext("2d"),t.width=f,t.height=_,null!==c){for(var i=g.getWidth(),r=g.getHeight(),a=c.width/h.canvas.width,s=c.height/h.canvas.height,o=g.getX()-i/2,n=g.getY()-r/2;i*a>c.width;)i--;for(;r*s>c.height;)r--;e.drawImage(c,o*a,n*s,i*a,r*s,0,0,f,_)}return null!==v?t.toDataURL(m,v):t.toDataURL(m)},this.setNewImageSource=function(e,t,i){if(c=null,S(t),o.trigger("image-updated"),e){var r=new Image;"http"===e.substring(0,4).toLowerCase()&&(r.crossOrigin="anonymous"),r.onload=function(){o.trigger("load-done"),c=r,S(t,i),o.trigger("image-updated")},r.onerror=function(){o.trigger("load-error")},o.trigger("load-start"),r.src=e}},this.setMaxDimensions=function(e,i){if(l=[e,i],null!==c){if(t[0].clientHeight>0){var r=h.canvas.width,a=h.canvas.height,s=[c.width,c.height],o=c.width/c.height,d=s;d[0]>l[0]?(d[0]=l[0],d[1]=d[0]/o):d[0]<u[0]&&(d[0]=u[0],d[1]=d[0]/o),d[1]>l[1]?(d[1]=l[1],d[0]=d[1]*o):d[1]<u[1]&&(d[1]=u[1],d[0]=d[1]*o),t.prop("width",d[0]).prop("height",d[1]).css({"margin-left":-d[0]/2+"px","margin-top":-d[1]/2+"px"});var p=h.canvas.width/r,f=h.canvas.height/a,_=Math.min(p,f);g.setX(g.getX()*p),g.setY(g.getY()*f),g.setSize(g.getSize()*_)}}else t.prop("width",0).prop("height",0).css({"margin-top":0});n()},this.setAreaMinSize=function(e){e=parseInt(e,10),isNaN(e)||(g.setMinSize(e),n())},this.setResultImageSize=function(e){e=parseInt(e,10),isNaN(e)||(d=e,f=d,_=Math.floor(p[1]*f/p[0]))},this.setResultImageAspect=function(e,t){if(e=parseInt(e,10),t=parseInt(t,10),!isNaN(e)&&!isNaN(t)){g.setAspect(e,t);var i=g.getWidth();g.setSize(i),p=[e,t],_=Math.floor(p[1]*f/p[0])}},this.setResultImageFormat=function(e){m=e},this.setResultImageQuality=function(e){e=parseFloat(e),!isNaN(e)&&e>=0&&1>=e&&(v=e)},this.setAreaType=function(e){var t=g.getSize(),a=g.getMinSize(),s=g.getX(),u=g.getY(),l=g.getAspect(),d=i;"square"===e&&(d=r),g=new d(h,o),g.setAspect(l[0],l[1]),g.setMinSize(a),g.setSize(t),g.setX(s),g.setY(u),null!==c&&g.setImage(c),n()},this.getArea=function(){return g},this.getCanvas=function(){return h.canvas},this.getImageWidth=function(){return null!==c?c.width:0},this.getImageHeight=function(){return null!==c?c.height:0},h=t[0].getContext("2d"),g=new i(h,o),e.on("mousemove",I),t.on("mousedown",z),e.on("mouseup",y),e.on("touchmove",I),t.on("touchstart",z),e.on("touchend",y),this.destroy=function(){e.off("mousemove",I),t.off("mousedown",z),e.off("mouseup",I),e.off("touchmove",I),t.off("touchstart",z),e.off("touchend",I),t.remove()}}}]),e.factory("cropPubSub",[function(){return function(){var e={};this.on=function(t,i){return t.split(" ").forEach(function(t){e[t]||(e[t]=[]),e[t].push(i)}),this},this.trigger=function(t,i){return angular.forEach(e[t],function(e){e.call(null,i)}),this}}}]),e.directive("imgCrop",["$timeout","cropHost","cropPubSub",function(e,t,i){return{restrict:"E",scope:{image:"=",resultImage:"=",originalData:"=",cropData:"=",changeOnFly:"=",areaType:"@",areaMinSize:"=",resultImageSize:"=",resultImageAspect:"@",resultImageFormat:"@",resultImageQuality:"=",maximizeCrop:"=",onChange:"&",onLoadBegin:"&",onLoadDone:"&",onLoadError:"&"},template:"<canvas></canvas>",controller:["$scope",function(e){e.events=new i}],link:function(i,r){var a,s=i.events,o=!0,n=new t(r.find("canvas"),{},s),h=function(e){if(""!==e.image){var t=n.getImageWidth(),i=n.getImageHeight(),r=n.getArea(),s=n.getCanvas(),o=r.getAspect(),h=Math.floor(r.getWidth()*o[1]/o[0]);if(h>s.height&&r.setHeight(s.height),angular.isDefined(e.cropData)&&0!==t){var c=t/s.width;e.cropData={width:Math.round(r.getWidth()*c),height:Math.round(r.getHeight()*c),x:Math.round((r.getX()-r.getWidth()/2)*c),y:Math.round((r.getY()-r.getHeight()/2)*c)}}if(angular.isDefined(e.originalData)&&0!==t&&0!==i&&(e.originalData={width:t,height:i}),angular.isDefined(e.resultImage)){var g=n.getResultImageDataURI();a!==g&&(a=g,angular.isDefined(e.resultImage)&&(e.resultImage=g),e.onChange({$dataURI:e.resultImage}))}}},c=function(t){return function(){e(function(){i.$apply(function(e){t(e)})})}};s.on("load-start",c(function(e){e.onLoadBegin({})})).on("load-done",c(function(e){e.onLoadDone({})})).on("load-error",c(function(e){e.onLoadError({})})).on("area-move area-resize",c(function(e){e.changeOnFly&&h(e)})).on("area-move-end area-resize-end image-updated",c(function(e){h(e)})),i.$watch("image",function(){var t={};e(function(){var e=i.maximizeCrop?!0:!1;angular.isDefined(i.cropData)&&(t=i.cropData),n.setNewImageSource(i.image,e,t)},100)}),i.$watch("areaType",function(){n.setAreaType(i.areaType),h(i)}),i.$watch("areaMinSize",function(){n.setAreaMinSize(i.areaMinSize),h(i)}),i.$watch("resultImageSize",function(){n.setResultImageSize(i.resultImageSize),h(i)}),i.$watch("resultImageAspect",function(){if("undefined"!=typeof i.resultImageAspect){var e=i.resultImageAspect.toLowerCase().split("x");2!==e.length||isNaN(parseInt(e[0],10))||isNaN(parseInt(e[1],10))||(n.setResultImageAspect(parseInt(e[0],10),parseInt(e[1],10)),h(i))}}),i.$watch("resultImageFormat",function(){n.setResultImageFormat(i.resultImageFormat),h(i)}),i.$watch("resultImageQuality",function(){n.setResultImageQuality(i.resultImageQuality),h(i)}),i.$watch("maximizeCrop",function(){var e=i.maximizeCrop?!0:!1;angular.isDefined(i.image)&&!o?n.setNewImageSource(i.image,e):o=!1}),i.$watch(function(){return[r[0].clientWidth,r[0].clientHeight]},function(e){n.setMaxDimensions(e[0],e[1]),h(i)},!0),i.$on("$destroy",function(){n.destroy()})}}}]),e.directive("imgCropResult",function(){return{restrict:"A",scope:{image:"=",cropData:"=",originalData:"=",width:"@"},template:'<div class="imgCropResultContainer"><img /></div>',link:function(e,t){var i,r,a=angular.element(t[0].querySelector(".imgCropResultContainer")),s=t.find("img")[0],o=0,n=0,h=0,c=function(){angular.isDefined(e.image)&&""!==e.image&&angular.isDefined(e.cropData)&&"undefined"!=typeof e.cropData.width&&g()
-},g=function(){var t,c=Math.round(100*e.cropData.width/e.cropData.height);c!==r&&(r=c,h=Math.round(1e5*e.cropData.height/e.cropData.width)/1e3,a.css({"padding-top":h+"%"})),e.image!==i?(i=e.image,angular.isDefined(e.originalData)&&"undefined"!=typeof e.originalData.width&&0!==e.originalData.width?(o=e.originalData.width,n=e.originalData.height,u()):(t=new Image,t.onload=function(){o=t.width,n=t.height,u()},t.src=e.image),s.src=e.image):u()},u=function(){var t=Math.round(1e5*o/e.cropData.width)/1e3,i=Math.round(1e5*n/e.cropData.height)/1e3,r=-1*Math.floor(1e3*t*e.cropData.x/o)/1e3,a=-1*Math.floor(1e3*i*e.cropData.y/n)/1e3;angular.element(s).css({width:t+"%",left:r+"%",top:a+"%"})};e.$watch("image",function(){c()}),e.$watch("cropData",function(){c()}),e.$watch("width",function(){var i=parseFloat(e.width)!==parseInt(e.width)||isNaN(e.width)?"":"px";t.css({width:e.width+i})})}}})}();
+/*!
+ * ngImgCrop v0.3.2
+ * https://github.com/alexk111/ngImgCrop
+ *
+ * Copyright (c) 2014 Alex Kaul
+ * License: MIT
+ *
+ * Generated at Wednesday, December 3rd, 2014, 3:54:12 PM
+ */
+(function() {
+'use strict';
+
+var crop = angular.module('ngImgCrop', []);
+
+crop.factory('cropAreaCircle', ['cropArea', function(CropArea) {
+  var CropAreaCircle = function() {
+    CropArea.apply(this, arguments);
+
+    this._boxResizeBaseSize = 20;
+    this._boxResizeNormalRatio = 0.9;
+    this._boxResizeHoverRatio = 1.2;
+    this._iconMoveNormalRatio = 0.9;
+    this._iconMoveHoverRatio = 1.2;
+
+    this._boxResizeNormalSize = this._boxResizeBaseSize*this._boxResizeNormalRatio;
+    this._boxResizeHoverSize = this._boxResizeBaseSize*this._boxResizeHoverRatio;
+
+    this._posDragStartX=0;
+    this._posDragStartY=0;
+    this._posResizeStartX=0;
+    this._posResizeStartY=0;
+    this._posResizeStartSize=0;
+
+    this._boxResizeIsHover = false;
+    this._areaIsHover = false;
+    this._boxResizeIsDragging = false;
+    this._areaIsDragging = false;
+  };
+
+  CropAreaCircle.prototype = new CropArea();
+
+  CropAreaCircle.prototype._calcCirclePerimeterCoords=function(angleDegrees) {
+    var hSize=this._size/2;
+    var angleRadians=angleDegrees * (Math.PI / 180),
+        circlePerimeterX=this._x + hSize * Math.cos(angleRadians),
+        circlePerimeterY=this._y + hSize * Math.sin(angleRadians);
+    return [circlePerimeterX, circlePerimeterY];
+  };
+
+  CropAreaCircle.prototype._calcResizeIconCenterCoords=function() {
+    return this._calcCirclePerimeterCoords(-45);
+  };
+
+  CropAreaCircle.prototype._isCoordWithinArea=function(coord) {
+    return Math.sqrt((coord[0]-this._x)*(coord[0]-this._x) + (coord[1]-this._y)*(coord[1]-this._y)) < this._size/2;
+  };
+  CropAreaCircle.prototype._isCoordWithinBoxResize=function(coord) {
+    var resizeIconCenterCoords=this._calcResizeIconCenterCoords();
+    var hSize=this._boxResizeHoverSize/2;
+    return(coord[0] > resizeIconCenterCoords[0] - hSize && coord[0] < resizeIconCenterCoords[0] + hSize &&
+           coord[1] > resizeIconCenterCoords[1] - hSize && coord[1] < resizeIconCenterCoords[1] + hSize);
+  };
+
+  CropAreaCircle.prototype._drawArea=function(ctx,centerCoords,size){
+    ctx.arc(centerCoords[0],centerCoords[1],size/2,0,2*Math.PI);
+  };
+
+  CropAreaCircle.prototype.draw=function() {
+    CropArea.prototype.draw.apply(this, arguments);
+
+    // draw move icon
+    this._cropCanvas.drawIconMove([this._x,this._y], this._areaIsHover?this._iconMoveHoverRatio:this._iconMoveNormalRatio);
+
+    // draw resize cubes
+    this._cropCanvas.drawIconResizeBoxNESW(this._calcResizeIconCenterCoords(), this._boxResizeBaseSize, this._boxResizeIsHover?this._boxResizeHoverRatio:this._boxResizeNormalRatio);
+  };
+
+  CropAreaCircle.prototype.processMouseMove=function(mouseCurX, mouseCurY) {
+    var cursor='default';
+    var res=false;
+
+    this._boxResizeIsHover = false;
+    this._areaIsHover = false;
+
+    if (this._areaIsDragging) {
+      this._x = mouseCurX - this._posDragStartX;
+      this._y = mouseCurY - this._posDragStartY;
+      this._areaIsHover = true;
+      cursor='move';
+      res=true;
+      this._events.trigger('area-move');
+    } else if (this._boxResizeIsDragging) {
+        cursor = 'nesw-resize';
+        var iFR, iFX, iFY;
+        iFX = mouseCurX - this._posResizeStartX;
+        iFY = this._posResizeStartY - mouseCurY;
+        if(iFX>iFY) {
+          iFR = this._posResizeStartSize + iFY*2;
+        } else {
+          iFR = this._posResizeStartSize + iFX*2;
+        }
+
+        this._size = Math.max(this._minSize, iFR);
+        this._boxResizeIsHover = true;
+        res=true;
+        this._events.trigger('area-resize');
+    } else if (this._isCoordWithinBoxResize([mouseCurX,mouseCurY])) {
+        cursor = 'nesw-resize';
+        this._areaIsHover = false;
+        this._boxResizeIsHover = true;
+        res=true;
+    } else if(this._isCoordWithinArea([mouseCurX,mouseCurY])) {
+        cursor = 'move';
+        this._areaIsHover = true;
+        res=true;
+    }
+
+    this._dontDragOutside();
+    angular.element(this._ctx.canvas).css({'cursor': cursor});
+
+    return res;
+  };
+
+  CropAreaCircle.prototype.processMouseDown=function(mouseDownX, mouseDownY) {
+    if (this._isCoordWithinBoxResize([mouseDownX,mouseDownY])) {
+      this._areaIsDragging = false;
+      this._areaIsHover = false;
+      this._boxResizeIsDragging = true;
+      this._boxResizeIsHover = true;
+      this._posResizeStartX=mouseDownX;
+      this._posResizeStartY=mouseDownY;
+      this._posResizeStartSize = this._size;
+      this._events.trigger('area-resize-start');
+    } else if (this._isCoordWithinArea([mouseDownX,mouseDownY])) {
+      this._areaIsDragging = true;
+      this._areaIsHover = true;
+      this._boxResizeIsDragging = false;
+      this._boxResizeIsHover = false;
+      this._posDragStartX = mouseDownX - this._x;
+      this._posDragStartY = mouseDownY - this._y;
+      this._events.trigger('area-move-start');
+    }
+  };
+
+  CropAreaCircle.prototype.processMouseUp=function(/*mouseUpX, mouseUpY*/) {
+    if(this._areaIsDragging) {
+      this._areaIsDragging = false;
+      this._events.trigger('area-move-end');
+    }
+    if(this._boxResizeIsDragging) {
+      this._boxResizeIsDragging = false;
+      this._events.trigger('area-resize-end');
+    }
+    this._areaIsHover = false;
+    this._boxResizeIsHover = false;
+
+    this._posDragStartX = 0;
+    this._posDragStartY = 0;
+  };
+
+  return CropAreaCircle;
+}]);
+
+
+
+crop.factory('cropAreaSquare', ['cropArea', function(CropArea) {
+  var CropAreaSquare = function() {
+    CropArea.apply(this, arguments);
+
+    this._resizeCtrlBaseRadius = 10;
+    this._resizeCtrlNormalRatio = 0.75;
+    this._resizeCtrlHoverRatio = 1;
+    this._iconMoveNormalRatio = 0.9;
+    this._iconMoveHoverRatio = 1.2;
+
+    this._resizeCtrlNormalRadius = this._resizeCtrlBaseRadius*this._resizeCtrlNormalRatio;
+    this._resizeCtrlHoverRadius = this._resizeCtrlBaseRadius*this._resizeCtrlHoverRatio;
+
+    this._posDragStartX=0;
+    this._posDragStartY=0;
+    this._posResizeStartX=0;
+    this._posResizeStartY=0;
+    this._posResizeStartSize=0;
+
+    this._resizeCtrlIsHover = -1;
+    this._areaIsHover = false;
+    this._resizeCtrlIsDragging = -1;
+    this._areaIsDragging = false;
+  };
+
+  CropAreaSquare.prototype = new CropArea();
+
+  CropAreaSquare.prototype._calcSquareCorners=function() {
+    var hSize=this._size/2;
+    return [
+      [this._x-hSize, this._y-hSize],
+      [this._x+hSize, this._y-hSize],
+      [this._x-hSize, this._y+hSize],
+      [this._x+hSize, this._y+hSize]
+    ];
+  };
+
+  CropAreaSquare.prototype._calcSquareDimensions=function() {
+    var hSize=this._size/2;
+    return {
+      left: this._x-hSize,
+      top: this._y-hSize,
+      right: this._x+hSize,
+      bottom: this._y+hSize
+    };
+  };
+
+  CropAreaSquare.prototype._isCoordWithinArea=function(coord) {
+    var squareDimensions=this._calcSquareDimensions();
+    return (coord[0]>=squareDimensions.left&&coord[0]<=squareDimensions.right&&coord[1]>=squareDimensions.top&&coord[1]<=squareDimensions.bottom);
+  };
+
+  CropAreaSquare.prototype._isCoordWithinResizeCtrl=function(coord) {
+    var resizeIconsCenterCoords=this._calcSquareCorners();
+    var res=-1;
+    for(var i=0,len=resizeIconsCenterCoords.length;i<len;i++) {
+      var resizeIconCenterCoords=resizeIconsCenterCoords[i];
+      if(coord[0] > resizeIconCenterCoords[0] - this._resizeCtrlHoverRadius && coord[0] < resizeIconCenterCoords[0] + this._resizeCtrlHoverRadius &&
+         coord[1] > resizeIconCenterCoords[1] - this._resizeCtrlHoverRadius && coord[1] < resizeIconCenterCoords[1] + this._resizeCtrlHoverRadius) {
+        res=i;
+        break;
+      }
+    }
+    return res;
+  };
+
+  CropAreaSquare.prototype._drawArea=function(ctx,centerCoords,size){
+    var hSize=size/2;
+    ctx.rect(centerCoords[0]-hSize,centerCoords[1]-hSize,size,size);
+  };
+
+  CropAreaSquare.prototype.draw=function() {
+    CropArea.prototype.draw.apply(this, arguments);
+
+    // draw move icon
+    this._cropCanvas.drawIconMove([this._x,this._y], this._areaIsHover?this._iconMoveHoverRatio:this._iconMoveNormalRatio);
+
+    // draw resize cubes
+    var resizeIconsCenterCoords=this._calcSquareCorners();
+    for(var i=0,len=resizeIconsCenterCoords.length;i<len;i++) {
+      var resizeIconCenterCoords=resizeIconsCenterCoords[i];
+      this._cropCanvas.drawIconResizeCircle(resizeIconCenterCoords, this._resizeCtrlBaseRadius, this._resizeCtrlIsHover===i?this._resizeCtrlHoverRatio:this._resizeCtrlNormalRatio);
+    }
+  };
+
+  CropAreaSquare.prototype.processMouseMove=function(mouseCurX, mouseCurY) {
+    var cursor='default';
+    var res=false;
+
+    this._resizeCtrlIsHover = -1;
+    this._areaIsHover = false;
+
+    if (this._areaIsDragging) {
+      this._x = mouseCurX - this._posDragStartX;
+      this._y = mouseCurY - this._posDragStartY;
+      this._areaIsHover = true;
+      cursor='move';
+      res=true;
+      this._events.trigger('area-move');
+    } else if (this._resizeCtrlIsDragging>-1) {
+      var xMulti, yMulti;
+      switch(this._resizeCtrlIsDragging) {
+        case 0: // Top Left
+          xMulti=-1;
+          yMulti=-1;
+          cursor = 'nwse-resize';
+          break;
+        case 1: // Top Right
+          xMulti=1;
+          yMulti=-1;
+          cursor = 'nesw-resize';
+          break;
+        case 2: // Bottom Left
+          xMulti=-1;
+          yMulti=1;
+          cursor = 'nesw-resize';
+          break;
+        case 3: // Bottom Right
+          xMulti=1;
+          yMulti=1;
+          cursor = 'nwse-resize';
+          break;
+      }
+      var iFX = (mouseCurX - this._posResizeStartX)*xMulti;
+      var iFY = (mouseCurY - this._posResizeStartY)*yMulti;
+      var iFR;
+      if(iFX>iFY) {
+        iFR = this._posResizeStartSize + iFY;
+      } else {
+        iFR = this._posResizeStartSize + iFX;
+      }
+      var wasSize=this._size;
+      this._size = Math.max(this._minSize, iFR);
+      var posModifier=(this._size-wasSize)/2;
+      this._x+=posModifier*xMulti;
+      this._y+=posModifier*yMulti;
+      this._resizeCtrlIsHover = this._resizeCtrlIsDragging;
+      res=true;
+      this._events.trigger('area-resize');
+    } else {
+      var hoveredResizeBox=this._isCoordWithinResizeCtrl([mouseCurX,mouseCurY]);
+      if (hoveredResizeBox>-1) {
+        switch(hoveredResizeBox) {
+          case 0:
+            cursor = 'nwse-resize';
+            break;
+          case 1:
+            cursor = 'nesw-resize';
+            break;
+          case 2:
+            cursor = 'nesw-resize';
+            break;
+          case 3:
+            cursor = 'nwse-resize';
+            break;
+        }
+        this._areaIsHover = false;
+        this._resizeCtrlIsHover = hoveredResizeBox;
+        res=true;
+      } else if(this._isCoordWithinArea([mouseCurX,mouseCurY])) {
+        cursor = 'move';
+        this._areaIsHover = true;
+        res=true;
+      }
+    }
+
+    this._dontDragOutside();
+    angular.element(this._ctx.canvas).css({'cursor': cursor});
+
+    return res;
+  };
+
+  CropAreaSquare.prototype.processMouseDown=function(mouseDownX, mouseDownY) {
+    var isWithinResizeCtrl=this._isCoordWithinResizeCtrl([mouseDownX,mouseDownY]);
+    if (isWithinResizeCtrl>-1) {
+      this._areaIsDragging = false;
+      this._areaIsHover = false;
+      this._resizeCtrlIsDragging = isWithinResizeCtrl;
+      this._resizeCtrlIsHover = isWithinResizeCtrl;
+      this._posResizeStartX=mouseDownX;
+      this._posResizeStartY=mouseDownY;
+      this._posResizeStartSize = this._size;
+      this._events.trigger('area-resize-start');
+    } else if (this._isCoordWithinArea([mouseDownX,mouseDownY])) {
+      this._areaIsDragging = true;
+      this._areaIsHover = true;
+      this._resizeCtrlIsDragging = -1;
+      this._resizeCtrlIsHover = -1;
+      this._posDragStartX = mouseDownX - this._x;
+      this._posDragStartY = mouseDownY - this._y;
+      this._events.trigger('area-move-start');
+    }
+  };
+
+  CropAreaSquare.prototype.processMouseUp=function(/*mouseUpX, mouseUpY*/) {
+    if(this._areaIsDragging) {
+      this._areaIsDragging = false;
+      this._events.trigger('area-move-end');
+    }
+    if(this._resizeCtrlIsDragging>-1) {
+      this._resizeCtrlIsDragging = -1;
+      this._events.trigger('area-resize-end');
+    }
+    this._areaIsHover = false;
+    this._resizeCtrlIsHover = -1;
+
+    this._posDragStartX = 0;
+    this._posDragStartY = 0;
+  };
+
+  return CropAreaSquare;
+}]);
+
+crop.factory('cropArea', ['cropCanvas', function(CropCanvas) {
+  var CropArea = function(ctx, events) {
+    this._ctx=ctx;
+    this._events=events;
+
+    this._minSize=80;
+
+    this._cropCanvas=new CropCanvas(ctx);
+
+    this._image=new Image();
+    this._x = 0;
+    this._y = 0;
+    this._size = 200;
+  };
+
+  /* GETTERS/SETTERS */
+
+  CropArea.prototype.getImage = function () {
+    return this._image;
+  };
+  CropArea.prototype.setImage = function (image) {
+    this._image = image;
+  };
+
+  CropArea.prototype.getX = function () {
+    return this._x;
+  };
+  CropArea.prototype.setX = function (x) {
+    this._x = x;
+    this._dontDragOutside();
+  };
+
+  CropArea.prototype.getY = function () {
+    return this._y;
+  };
+  CropArea.prototype.setY = function (y) {
+    this._y = y;
+    this._dontDragOutside();
+  };
+
+  CropArea.prototype.getSize = function () {
+    return this._size;
+  };
+  CropArea.prototype.setSize = function (size) {
+    this._size = Math.max(this._minSize, size);
+    this._dontDragOutside();
+  };
+
+  CropArea.prototype.getMinSize = function () {
+    return this._minSize;
+  };
+  CropArea.prototype.setMinSize = function (size) {
+    this._minSize = size;
+    this._size = Math.max(this._minSize, this._size);
+    this._dontDragOutside();
+  };
+
+  /* FUNCTIONS */
+  CropArea.prototype._dontDragOutside=function() {
+    var h=this._ctx.canvas.height,
+        w=this._ctx.canvas.width;
+    if(this._size>w) { this._size=w; }
+    if(this._size>h) { this._size=h; }
+    if(this._x<this._size/2) { this._x=this._size/2; }
+    if(this._x>w-this._size/2) { this._x=w-this._size/2; }
+    if(this._y<this._size/2) { this._y=this._size/2; }
+    if(this._y>h-this._size/2) { this._y=h-this._size/2; }
+  };
+
+  CropArea.prototype._drawArea=function() {};
+
+  CropArea.prototype.draw=function() {
+    // draw crop area
+    this._cropCanvas.drawCropArea(this._image,[this._x,this._y],this._size,this._drawArea);
+  };
+
+  CropArea.prototype.processMouseMove=function() {};
+
+  CropArea.prototype.processMouseDown=function() {};
+
+  CropArea.prototype.processMouseUp=function() {};
+
+  return CropArea;
+}]);
+
+crop.factory('cropCanvas', [function() {
+  // Shape = Array of [x,y]; [0, 0] - center
+  var shapeArrowNW=[[-0.5,-2],[-3,-4.5],[-0.5,-7],[-7,-7],[-7,-0.5],[-4.5,-3],[-2,-0.5]];
+  var shapeArrowNE=[[0.5,-2],[3,-4.5],[0.5,-7],[7,-7],[7,-0.5],[4.5,-3],[2,-0.5]];
+  var shapeArrowSW=[[-0.5,2],[-3,4.5],[-0.5,7],[-7,7],[-7,0.5],[-4.5,3],[-2,0.5]];
+  var shapeArrowSE=[[0.5,2],[3,4.5],[0.5,7],[7,7],[7,0.5],[4.5,3],[2,0.5]];
+  var shapeArrowN=[[-1.5,-2.5],[-1.5,-6],[-5,-6],[0,-11],[5,-6],[1.5,-6],[1.5,-2.5]];
+  var shapeArrowW=[[-2.5,-1.5],[-6,-1.5],[-6,-5],[-11,0],[-6,5],[-6,1.5],[-2.5,1.5]];
+  var shapeArrowS=[[-1.5,2.5],[-1.5,6],[-5,6],[0,11],[5,6],[1.5,6],[1.5,2.5]];
+  var shapeArrowE=[[2.5,-1.5],[6,-1.5],[6,-5],[11,0],[6,5],[6,1.5],[2.5,1.5]];
+
+  // Colors
+  var colors={
+    areaOutline: '#fff',
+    resizeBoxStroke: '#fff',
+    resizeBoxFill: '#444',
+    resizeBoxArrowFill: '#fff',
+    resizeCircleStroke: '#fff',
+    resizeCircleFill: '#444',
+    moveIconFill: '#fff'
+  };
+
+  return function(ctx){
+
+    /* Base functions */
+
+    // Calculate Point
+    var calcPoint=function(point,offset,scale) {
+        return [scale*point[0]+offset[0], scale*point[1]+offset[1]];
+    };
+
+    // Draw Filled Polygon
+    var drawFilledPolygon=function(shape,fillStyle,centerCoords,scale) {
+        ctx.save();
+        ctx.fillStyle = fillStyle;
+        ctx.beginPath();
+        var pc, pc0=calcPoint(shape[0],centerCoords,scale);
+        ctx.moveTo(pc0[0],pc0[1]);
+
+        for(var p in shape) {
+            if (p > 0) {
+                pc=calcPoint(shape[p],centerCoords,scale);
+                ctx.lineTo(pc[0],pc[1]);
+            }
+        }
+
+        ctx.lineTo(pc0[0],pc0[1]);
+        ctx.fill();
+        ctx.closePath();
+        ctx.restore();
+    };
+
+    /* Icons */
+
+    this.drawIconMove=function(centerCoords, scale) {
+      drawFilledPolygon(shapeArrowN, colors.moveIconFill, centerCoords, scale);
+      drawFilledPolygon(shapeArrowW, colors.moveIconFill, centerCoords, scale);
+      drawFilledPolygon(shapeArrowS, colors.moveIconFill, centerCoords, scale);
+      drawFilledPolygon(shapeArrowE, colors.moveIconFill, centerCoords, scale);
+    };
+
+    this.drawIconResizeCircle=function(centerCoords, circleRadius, scale) {
+      var scaledCircleRadius=circleRadius*scale;
+      ctx.save();
+      ctx.strokeStyle = colors.resizeCircleStroke;
+      ctx.lineWidth = 2;
+      ctx.fillStyle = colors.resizeCircleFill;
+      ctx.beginPath();
+      ctx.arc(centerCoords[0],centerCoords[1],scaledCircleRadius,0,2*Math.PI);
+      ctx.fill();
+      ctx.stroke();
+      ctx.closePath();
+      ctx.restore();
+    };
+
+    this.drawIconResizeBoxBase=function(centerCoords, boxSize, scale) {
+      var scaledBoxSize=boxSize*scale;
+      ctx.save();
+      ctx.strokeStyle = colors.resizeBoxStroke;
+      ctx.lineWidth = 2;
+      ctx.fillStyle = colors.resizeBoxFill;
+      ctx.fillRect(centerCoords[0] - scaledBoxSize/2, centerCoords[1] - scaledBoxSize/2, scaledBoxSize, scaledBoxSize);
+      ctx.strokeRect(centerCoords[0] - scaledBoxSize/2, centerCoords[1] - scaledBoxSize/2, scaledBoxSize, scaledBoxSize);
+      ctx.restore();
+    };
+    this.drawIconResizeBoxNESW=function(centerCoords, boxSize, scale) {
+      this.drawIconResizeBoxBase(centerCoords, boxSize, scale);
+      drawFilledPolygon(shapeArrowNE, colors.resizeBoxArrowFill, centerCoords, scale);
+      drawFilledPolygon(shapeArrowSW, colors.resizeBoxArrowFill, centerCoords, scale);
+    };
+    this.drawIconResizeBoxNWSE=function(centerCoords, boxSize, scale) {
+      this.drawIconResizeBoxBase(centerCoords, boxSize, scale);
+      drawFilledPolygon(shapeArrowNW, colors.resizeBoxArrowFill, centerCoords, scale);
+      drawFilledPolygon(shapeArrowSE, colors.resizeBoxArrowFill, centerCoords, scale);
+    };
+
+    /* Crop Area */
+
+    this.drawCropArea=function(image, centerCoords, size, fnDrawClipPath) {
+      var xRatio=image.width/ctx.canvas.width,
+          yRatio=image.height/ctx.canvas.height,
+          xLeft=centerCoords[0]-size/2,
+          yTop=centerCoords[1]-size/2;
+
+      ctx.save();
+      ctx.strokeStyle = colors.areaOutline;
+      ctx.lineWidth = 2;
+      ctx.beginPath();
+      fnDrawClipPath(ctx, centerCoords, size);
+      ctx.stroke();
+      ctx.clip();
+
+      // draw part of original image
+      if (size > 0) {
+          ctx.drawImage(image, xLeft*xRatio, yTop*yRatio, size*xRatio, size*yRatio, xLeft, yTop, size, size);
+      }
+
+      ctx.beginPath();
+      fnDrawClipPath(ctx, centerCoords, size);
+      ctx.stroke();
+      ctx.clip();
+
+      ctx.restore();
+    };
+
+  };
+}]);
+
+/**
+ * EXIF service is based on the exif-js library (https://github.com/jseidelin/exif-js)
+ */
+
+crop.service('cropEXIF', [function() {
+  var debug = false;
+
+  var ExifTags = this.Tags = {
+
+      // version tags
+      0x9000 : "ExifVersion",             // EXIF version
+      0xA000 : "FlashpixVersion",         // Flashpix format version
+
+      // colorspace tags
+      0xA001 : "ColorSpace",              // Color space information tag
+
+      // image configuration
+      0xA002 : "PixelXDimension",         // Valid width of meaningful image
+      0xA003 : "PixelYDimension",         // Valid height of meaningful image
+      0x9101 : "ComponentsConfiguration", // Information about channels
+      0x9102 : "CompressedBitsPerPixel",  // Compressed bits per pixel
+
+      // user information
+      0x927C : "MakerNote",               // Any desired information written by the manufacturer
+      0x9286 : "UserComment",             // Comments by user
+
+      // related file
+      0xA004 : "RelatedSoundFile",        // Name of related sound file
+
+      // date and time
+      0x9003 : "DateTimeOriginal",        // Date and time when the original image was generated
+      0x9004 : "DateTimeDigitized",       // Date and time when the image was stored digitally
+      0x9290 : "SubsecTime",              // Fractions of seconds for DateTime
+      0x9291 : "SubsecTimeOriginal",      // Fractions of seconds for DateTimeOriginal
+      0x9292 : "SubsecTimeDigitized",     // Fractions of seconds for DateTimeDigitized
+
+      // picture-taking conditions
+      0x829A : "ExposureTime",            // Exposure time (in seconds)
+      0x829D : "FNumber",                 // F number
+      0x8822 : "ExposureProgram",         // Exposure program
+      0x8824 : "SpectralSensitivity",     // Spectral sensitivity
+      0x8827 : "ISOSpeedRatings",         // ISO speed rating
+      0x8828 : "OECF",                    // Optoelectric conversion factor
+      0x9201 : "ShutterSpeedValue",       // Shutter speed
+      0x9202 : "ApertureValue",           // Lens aperture
+      0x9203 : "BrightnessValue",         // Value of brightness
+      0x9204 : "ExposureBias",            // Exposure bias
+      0x9205 : "MaxApertureValue",        // Smallest F number of lens
+      0x9206 : "SubjectDistance",         // Distance to subject in meters
+      0x9207 : "MeteringMode",            // Metering mode
+      0x9208 : "LightSource",             // Kind of light source
+      0x9209 : "Flash",                   // Flash status
+      0x9214 : "SubjectArea",             // Location and area of main subject
+      0x920A : "FocalLength",             // Focal length of the lens in mm
+      0xA20B : "FlashEnergy",             // Strobe energy in BCPS
+      0xA20C : "SpatialFrequencyResponse",    //
+      0xA20E : "FocalPlaneXResolution",   // Number of pixels in width direction per FocalPlaneResolutionUnit
+      0xA20F : "FocalPlaneYResolution",   // Number of pixels in height direction per FocalPlaneResolutionUnit
+      0xA210 : "FocalPlaneResolutionUnit",    // Unit for measuring FocalPlaneXResolution and FocalPlaneYResolution
+      0xA214 : "SubjectLocation",         // Location of subject in image
+      0xA215 : "ExposureIndex",           // Exposure index selected on camera
+      0xA217 : "SensingMethod",           // Image sensor type
+      0xA300 : "FileSource",              // Image source (3 == DSC)
+      0xA301 : "SceneType",               // Scene type (1 == directly photographed)
+      0xA302 : "CFAPattern",              // Color filter array geometric pattern
+      0xA401 : "CustomRendered",          // Special processing
+      0xA402 : "ExposureMode",            // Exposure mode
+      0xA403 : "WhiteBalance",            // 1 = auto white balance, 2 = manual
+      0xA404 : "DigitalZoomRation",       // Digital zoom ratio
+      0xA405 : "FocalLengthIn35mmFilm",   // Equivalent foacl length assuming 35mm film camera (in mm)
+      0xA406 : "SceneCaptureType",        // Type of scene
+      0xA407 : "GainControl",             // Degree of overall image gain adjustment
+      0xA408 : "Contrast",                // Direction of contrast processing applied by camera
+      0xA409 : "Saturation",              // Direction of saturation processing applied by camera
+      0xA40A : "Sharpness",               // Direction of sharpness processing applied by camera
+      0xA40B : "DeviceSettingDescription",    //
+      0xA40C : "SubjectDistanceRange",    // Distance to subject
+
+      // other tags
+      0xA005 : "InteroperabilityIFDPointer",
+      0xA420 : "ImageUniqueID"            // Identifier assigned uniquely to each image
+  };
+
+  var TiffTags = this.TiffTags = {
+      0x0100 : "ImageWidth",
+      0x0101 : "ImageHeight",
+      0x8769 : "ExifIFDPointer",
+      0x8825 : "GPSInfoIFDPointer",
+      0xA005 : "InteroperabilityIFDPointer",
+      0x0102 : "BitsPerSample",
+      0x0103 : "Compression",
+      0x0106 : "PhotometricInterpretation",
+      0x0112 : "Orientation",
+      0x0115 : "SamplesPerPixel",
+      0x011C : "PlanarConfiguration",
+      0x0212 : "YCbCrSubSampling",
+      0x0213 : "YCbCrPositioning",
+      0x011A : "XResolution",
+      0x011B : "YResolution",
+      0x0128 : "ResolutionUnit",
+      0x0111 : "StripOffsets",
+      0x0116 : "RowsPerStrip",
+      0x0117 : "StripByteCounts",
+      0x0201 : "JPEGInterchangeFormat",
+      0x0202 : "JPEGInterchangeFormatLength",
+      0x012D : "TransferFunction",
+      0x013E : "WhitePoint",
+      0x013F : "PrimaryChromaticities",
+      0x0211 : "YCbCrCoefficients",
+      0x0214 : "ReferenceBlackWhite",
+      0x0132 : "DateTime",
+      0x010E : "ImageDescription",
+      0x010F : "Make",
+      0x0110 : "Model",
+      0x0131 : "Software",
+      0x013B : "Artist",
+      0x8298 : "Copyright"
+  };
+
+  var GPSTags = this.GPSTags = {
+      0x0000 : "GPSVersionID",
+      0x0001 : "GPSLatitudeRef",
+      0x0002 : "GPSLatitude",
+      0x0003 : "GPSLongitudeRef",
+      0x0004 : "GPSLongitude",
+      0x0005 : "GPSAltitudeRef",
+      0x0006 : "GPSAltitude",
+      0x0007 : "GPSTimeStamp",
+      0x0008 : "GPSSatellites",
+      0x0009 : "GPSStatus",
+      0x000A : "GPSMeasureMode",
+      0x000B : "GPSDOP",
+      0x000C : "GPSSpeedRef",
+      0x000D : "GPSSpeed",
+      0x000E : "GPSTrackRef",
+      0x000F : "GPSTrack",
+      0x0010 : "GPSImgDirectionRef",
+      0x0011 : "GPSImgDirection",
+      0x0012 : "GPSMapDatum",
+      0x0013 : "GPSDestLatitudeRef",
+      0x0014 : "GPSDestLatitude",
+      0x0015 : "GPSDestLongitudeRef",
+      0x0016 : "GPSDestLongitude",
+      0x0017 : "GPSDestBearingRef",
+      0x0018 : "GPSDestBearing",
+      0x0019 : "GPSDestDistanceRef",
+      0x001A : "GPSDestDistance",
+      0x001B : "GPSProcessingMethod",
+      0x001C : "GPSAreaInformation",
+      0x001D : "GPSDateStamp",
+      0x001E : "GPSDifferential"
+  };
+
+  var StringValues = this.StringValues = {
+      ExposureProgram : {
+          0 : "Not defined",
+          1 : "Manual",
+          2 : "Normal program",
+          3 : "Aperture priority",
+          4 : "Shutter priority",
+          5 : "Creative program",
+          6 : "Action program",
+          7 : "Portrait mode",
+          8 : "Landscape mode"
+      },
+      MeteringMode : {
+          0 : "Unknown",
+          1 : "Average",
+          2 : "CenterWeightedAverage",
+          3 : "Spot",
+          4 : "MultiSpot",
+          5 : "Pattern",
+          6 : "Partial",
+          255 : "Other"
+      },
+      LightSource : {
+          0 : "Unknown",
+          1 : "Daylight",
+          2 : "Fluorescent",
+          3 : "Tungsten (incandescent light)",
+          4 : "Flash",
+          9 : "Fine weather",
+          10 : "Cloudy weather",
+          11 : "Shade",
+          12 : "Daylight fluorescent (D 5700 - 7100K)",
+          13 : "Day white fluorescent (N 4600 - 5400K)",
+          14 : "Cool white fluorescent (W 3900 - 4500K)",
+          15 : "White fluorescent (WW 3200 - 3700K)",
+          17 : "Standard light A",
+          18 : "Standard light B",
+          19 : "Standard light C",
+          20 : "D55",
+          21 : "D65",
+          22 : "D75",
+          23 : "D50",
+          24 : "ISO studio tungsten",
+          255 : "Other"
+      },
+      Flash : {
+          0x0000 : "Flash did not fire",
+          0x0001 : "Flash fired",
+          0x0005 : "Strobe return light not detected",
+          0x0007 : "Strobe return light detected",
+          0x0009 : "Flash fired, compulsory flash mode",
+          0x000D : "Flash fired, compulsory flash mode, return light not detected",
+          0x000F : "Flash fired, compulsory flash mode, return light detected",
+          0x0010 : "Flash did not fire, compulsory flash mode",
+          0x0018 : "Flash did not fire, auto mode",
+          0x0019 : "Flash fired, auto mode",
+          0x001D : "Flash fired, auto mode, return light not detected",
+          0x001F : "Flash fired, auto mode, return light detected",
+          0x0020 : "No flash function",
+          0x0041 : "Flash fired, red-eye reduction mode",
+          0x0045 : "Flash fired, red-eye reduction mode, return light not detected",
+          0x0047 : "Flash fired, red-eye reduction mode, return light detected",
+          0x0049 : "Flash fired, compulsory flash mode, red-eye reduction mode",
+          0x004D : "Flash fired, compulsory flash mode, red-eye reduction mode, return light not detected",
+          0x004F : "Flash fired, compulsory flash mode, red-eye reduction mode, return light detected",
+          0x0059 : "Flash fired, auto mode, red-eye reduction mode",
+          0x005D : "Flash fired, auto mode, return light not detected, red-eye reduction mode",
+          0x005F : "Flash fired, auto mode, return light detected, red-eye reduction mode"
+      },
+      SensingMethod : {
+          1 : "Not defined",
+          2 : "One-chip color area sensor",
+          3 : "Two-chip color area sensor",
+          4 : "Three-chip color area sensor",
+          5 : "Color sequential area sensor",
+          7 : "Trilinear sensor",
+          8 : "Color sequential linear sensor"
+      },
+      SceneCaptureType : {
+          0 : "Standard",
+          1 : "Landscape",
+          2 : "Portrait",
+          3 : "Night scene"
+      },
+      SceneType : {
+          1 : "Directly photographed"
+      },
+      CustomRendered : {
+          0 : "Normal process",
+          1 : "Custom process"
+      },
+      WhiteBalance : {
+          0 : "Auto white balance",
+          1 : "Manual white balance"
+      },
+      GainControl : {
+          0 : "None",
+          1 : "Low gain up",
+          2 : "High gain up",
+          3 : "Low gain down",
+          4 : "High gain down"
+      },
+      Contrast : {
+          0 : "Normal",
+          1 : "Soft",
+          2 : "Hard"
+      },
+      Saturation : {
+          0 : "Normal",
+          1 : "Low saturation",
+          2 : "High saturation"
+      },
+      Sharpness : {
+          0 : "Normal",
+          1 : "Soft",
+          2 : "Hard"
+      },
+      SubjectDistanceRange : {
+          0 : "Unknown",
+          1 : "Macro",
+          2 : "Close view",
+          3 : "Distant view"
+      },
+      FileSource : {
+          3 : "DSC"
+      },
+
+      Components : {
+          0 : "",
+          1 : "Y",
+          2 : "Cb",
+          3 : "Cr",
+          4 : "R",
+          5 : "G",
+          6 : "B"
+      }
+  };
+
+  function addEvent(element, event, handler) {
+      if (element.addEventListener) {
+          element.addEventListener(event, handler, false);
+      } else if (element.attachEvent) {
+          element.attachEvent("on" + event, handler);
+      }
+  }
+
+  function imageHasData(img) {
+      return !!(img.exifdata);
+  }
+
+  function base64ToArrayBuffer(base64, contentType) {
+      contentType = contentType || base64.match(/^data\:([^\;]+)\;base64,/mi)[1] || ''; // e.g. 'data:image/jpeg;base64,...' => 'image/jpeg'
+      base64 = base64.replace(/^data\:([^\;]+)\;base64,/gmi, '');
+      var binary = atob(base64);
+      var len = binary.length;
+      var buffer = new ArrayBuffer(len);
+      var view = new Uint8Array(buffer);
+      for (var i = 0; i < len; i++) {
+          view[i] = binary.charCodeAt(i);
+      }
+      return buffer;
+  }
+
+  function objectURLToBlob(url, callback) {
+      var http = new XMLHttpRequest();
+      http.open("GET", url, true);
+      http.responseType = "blob";
+      http.onload = function(e) {
+          if (this.status == 200 || this.status === 0) {
+              callback(this.response);
+          }
+      };
+      http.send();
+  }
+
+  function getImageData(img, callback) {
+      function handleBinaryFile(binFile) {
+          var data = findEXIFinJPEG(binFile);
+          var iptcdata = findIPTCinJPEG(binFile);
+          img.exifdata = data || {};
+          img.iptcdata = iptcdata || {};
+          if (callback) {
+              callback.call(img);
+          }
+      }
+
+      if (img.src) {
+          if (/^data\:/i.test(img.src)) { // Data URI
+              var arrayBuffer = base64ToArrayBuffer(img.src);
+              handleBinaryFile(arrayBuffer);
+
+          } else if (/^blob\:/i.test(img.src)) { // Object URL
+              var fileReader = new FileReader();
+              fileReader.onload = function(e) {
+                  handleBinaryFile(e.target.result);
+              };
+              objectURLToBlob(img.src, function (blob) {
+                  fileReader.readAsArrayBuffer(blob);
+              });
+          } else {
+              var http = new XMLHttpRequest();
+              http.onload = function() {
+                  if (this.status == 200 || this.status === 0) {
+                      handleBinaryFile(http.response);
+                  } else {
+                      throw "Could not load image";
+                  }
+                  http = null;
+              };
+              http.open("GET", img.src, true);
+              http.responseType = "arraybuffer";
+              http.send(null);
+          }
+      } else if (window.FileReader && (img instanceof window.Blob || img instanceof window.File)) {
+          var fileReader = new FileReader();
+          fileReader.onload = function(e) {
+              if (debug) console.log("Got file of length " + e.target.result.byteLength);
+              handleBinaryFile(e.target.result);
+          };
+
+          fileReader.readAsArrayBuffer(img);
+      }
+  }
+
+  function findEXIFinJPEG(file) {
+      var dataView = new DataView(file);
+
+      if (debug) console.log("Got file of length " + file.byteLength);
+      if ((dataView.getUint8(0) != 0xFF) || (dataView.getUint8(1) != 0xD8)) {
+          if (debug) console.log("Not a valid JPEG");
+          return false; // not a valid jpeg
+      }
+
+      var offset = 2,
+          length = file.byteLength,
+          marker;
+
+      while (offset < length) {
+          if (dataView.getUint8(offset) != 0xFF) {
+              if (debug) console.log("Not a valid marker at offset " + offset + ", found: " + dataView.getUint8(offset));
+              return false; // not a valid marker, something is wrong
+          }
+
+          marker = dataView.getUint8(offset + 1);
+          if (debug) console.log(marker);
+
+          // we could implement handling for other markers here,
+          // but we're only looking for 0xFFE1 for EXIF data
+
+          if (marker == 225) {
+              if (debug) console.log("Found 0xFFE1 marker");
+
+              return readEXIFData(dataView, offset + 4, dataView.getUint16(offset + 2) - 2);
+
+              // offset += 2 + file.getShortAt(offset+2, true);
+
+          } else {
+              offset += 2 + dataView.getUint16(offset+2);
+          }
+
+      }
+
+  }
+
+  function findIPTCinJPEG(file) {
+      var dataView = new DataView(file);
+
+      if (debug) console.log("Got file of length " + file.byteLength);
+      if ((dataView.getUint8(0) != 0xFF) || (dataView.getUint8(1) != 0xD8)) {
+          if (debug) console.log("Not a valid JPEG");
+          return false; // not a valid jpeg
+      }
+
+      var offset = 2,
+          length = file.byteLength;
+
+      var isFieldSegmentStart = function(dataView, offset){
+          return (
+              dataView.getUint8(offset) === 0x38 &&
+              dataView.getUint8(offset+1) === 0x42 &&
+              dataView.getUint8(offset+2) === 0x49 &&
+              dataView.getUint8(offset+3) === 0x4D &&
+              dataView.getUint8(offset+4) === 0x04 &&
+              dataView.getUint8(offset+5) === 0x04
+          );
+      };
+
+      while (offset < length) {
+
+          if ( isFieldSegmentStart(dataView, offset )){
+
+              // Get the length of the name header (which is padded to an even number of bytes)
+              var nameHeaderLength = dataView.getUint8(offset+7);
+              if(nameHeaderLength % 2 !== 0) nameHeaderLength += 1;
+              // Check for pre photoshop 6 format
+              if(nameHeaderLength === 0) {
+                  // Always 4
+                  nameHeaderLength = 4;
+              }
+
+              var startOffset = offset + 8 + nameHeaderLength;
+              var sectionLength = dataView.getUint16(offset + 6 + nameHeaderLength);
+
+              return readIPTCData(file, startOffset, sectionLength);
+
+              break;
+
+          }
+
+          // Not the marker, continue searching
+          offset++;
+
+      }
+
+  }
+  var IptcFieldMap = {
+      0x78 : 'caption',
+      0x6E : 'credit',
+      0x19 : 'keywords',
+      0x37 : 'dateCreated',
+      0x50 : 'byline',
+      0x55 : 'bylineTitle',
+      0x7A : 'captionWriter',
+      0x69 : 'headline',
+      0x74 : 'copyright',
+      0x0F : 'category'
+  };
+  function readIPTCData(file, startOffset, sectionLength){
+      var dataView = new DataView(file);
+      var data = {};
+      var fieldValue, fieldName, dataSize, segmentType, segmentSize;
+      var segmentStartPos = startOffset;
+      while(segmentStartPos < startOffset+sectionLength) {
+          if(dataView.getUint8(segmentStartPos) === 0x1C && dataView.getUint8(segmentStartPos+1) === 0x02){
+              segmentType = dataView.getUint8(segmentStartPos+2);
+              if(segmentType in IptcFieldMap) {
+                  dataSize = dataView.getInt16(segmentStartPos+3);
+                  segmentSize = dataSize + 5;
+                  fieldName = IptcFieldMap[segmentType];
+                  fieldValue = getStringFromDB(dataView, segmentStartPos+5, dataSize);
+                  // Check if we already stored a value with this name
+                  if(data.hasOwnProperty(fieldName)) {
+                      // Value already stored with this name, create multivalue field
+                      if(data[fieldName] instanceof Array) {
+                          data[fieldName].push(fieldValue);
+                      }
+                      else {
+                          data[fieldName] = [data[fieldName], fieldValue];
+                      }
+                  }
+                  else {
+                      data[fieldName] = fieldValue;
+                  }
+              }
+
+          }
+          segmentStartPos++;
+      }
+      return data;
+  }
+
+  function readTags(file, tiffStart, dirStart, strings, bigEnd) {
+      var entries = file.getUint16(dirStart, !bigEnd),
+          tags = {},
+          entryOffset, tag,
+          i;
+
+      for (i=0;i<entries;i++) {
+          entryOffset = dirStart + i*12 + 2;
+          tag = strings[file.getUint16(entryOffset, !bigEnd)];
+          if (!tag && debug) console.log("Unknown tag: " + file.getUint16(entryOffset, !bigEnd));
+          tags[tag] = readTagValue(file, entryOffset, tiffStart, dirStart, bigEnd);
+      }
+      return tags;
+  }
+
+  function readTagValue(file, entryOffset, tiffStart, dirStart, bigEnd) {
+      var type = file.getUint16(entryOffset+2, !bigEnd),
+          numValues = file.getUint32(entryOffset+4, !bigEnd),
+          valueOffset = file.getUint32(entryOffset+8, !bigEnd) + tiffStart,
+          offset,
+          vals, val, n,
+          numerator, denominator;
+
+      switch (type) {
+          case 1: // byte, 8-bit unsigned int
+          case 7: // undefined, 8-bit byte, value depending on field
+              if (numValues == 1) {
+                  return file.getUint8(entryOffset + 8, !bigEnd);
+              } else {
+                  offset = numValues > 4 ? valueOffset : (entryOffset + 8);
+                  vals = [];
+                  for (n=0;n<numValues;n++) {
+                      vals[n] = file.getUint8(offset + n);
+                  }
+                  return vals;
+              }
+
+          case 2: // ascii, 8-bit byte
+              offset = numValues > 4 ? valueOffset : (entryOffset + 8);
+              return getStringFromDB(file, offset, numValues-1);
+
+          case 3: // short, 16 bit int
+              if (numValues == 1) {
+                  return file.getUint16(entryOffset + 8, !bigEnd);
+              } else {
+                  offset = numValues > 2 ? valueOffset : (entryOffset + 8);
+                  vals = [];
+                  for (n=0;n<numValues;n++) {
+                      vals[n] = file.getUint16(offset + 2*n, !bigEnd);
+                  }
+                  return vals;
+              }
+
+          case 4: // long, 32 bit int
+              if (numValues == 1) {
+                  return file.getUint32(entryOffset + 8, !bigEnd);
+              } else {
+                  vals = [];
+                  for (n=0;n<numValues;n++) {
+                      vals[n] = file.getUint32(valueOffset + 4*n, !bigEnd);
+                  }
+                  return vals;
+              }
+
+          case 5:    // rational = two long values, first is numerator, second is denominator
+              if (numValues == 1) {
+                  numerator = file.getUint32(valueOffset, !bigEnd);
+                  denominator = file.getUint32(valueOffset+4, !bigEnd);
+                  val = new Number(numerator / denominator);
+                  val.numerator = numerator;
+                  val.denominator = denominator;
+                  return val;
+              } else {
+                  vals = [];
+                  for (n=0;n<numValues;n++) {
+                      numerator = file.getUint32(valueOffset + 8*n, !bigEnd);
+                      denominator = file.getUint32(valueOffset+4 + 8*n, !bigEnd);
+                      vals[n] = new Number(numerator / denominator);
+                      vals[n].numerator = numerator;
+                      vals[n].denominator = denominator;
+                  }
+                  return vals;
+              }
+
+          case 9: // slong, 32 bit signed int
+              if (numValues == 1) {
+                  return file.getInt32(entryOffset + 8, !bigEnd);
+              } else {
+                  vals = [];
+                  for (n=0;n<numValues;n++) {
+                      vals[n] = file.getInt32(valueOffset + 4*n, !bigEnd);
+                  }
+                  return vals;
+              }
+
+          case 10: // signed rational, two slongs, first is numerator, second is denominator
+              if (numValues == 1) {
+                  return file.getInt32(valueOffset, !bigEnd) / file.getInt32(valueOffset+4, !bigEnd);
+              } else {
+                  vals = [];
+                  for (n=0;n<numValues;n++) {
+                      vals[n] = file.getInt32(valueOffset + 8*n, !bigEnd) / file.getInt32(valueOffset+4 + 8*n, !bigEnd);
+                  }
+                  return vals;
+              }
+      }
+  }
+
+  function getStringFromDB(buffer, start, length) {
+      var outstr = "";
+      for (var n = start; n < start+length; n++) {
+          outstr += String.fromCharCode(buffer.getUint8(n));
+      }
+      return outstr;
+  }
+
+  function readEXIFData(file, start) {
+      if (getStringFromDB(file, start, 4) != "Exif") {
+          if (debug) console.log("Not valid EXIF data! " + getStringFromDB(file, start, 4));
+          return false;
+      }
+
+      var bigEnd,
+          tags, tag,
+          exifData, gpsData,
+          tiffOffset = start + 6;
+
+      // test for TIFF validity and endianness
+      if (file.getUint16(tiffOffset) == 0x4949) {
+          bigEnd = false;
+      } else if (file.getUint16(tiffOffset) == 0x4D4D) {
+          bigEnd = true;
+      } else {
+          if (debug) console.log("Not valid TIFF data! (no 0x4949 or 0x4D4D)");
+          return false;
+      }
+
+      if (file.getUint16(tiffOffset+2, !bigEnd) != 0x002A) {
+          if (debug) console.log("Not valid TIFF data! (no 0x002A)");
+          return false;
+      }
+
+      var firstIFDOffset = file.getUint32(tiffOffset+4, !bigEnd);
+
+      if (firstIFDOffset < 0x00000008) {
+          if (debug) console.log("Not valid TIFF data! (First offset less than 8)", file.getUint32(tiffOffset+4, !bigEnd));
+          return false;
+      }
+
+      tags = readTags(file, tiffOffset, tiffOffset + firstIFDOffset, TiffTags, bigEnd);
+
+      if (tags.ExifIFDPointer) {
+          exifData = readTags(file, tiffOffset, tiffOffset + tags.ExifIFDPointer, ExifTags, bigEnd);
+          for (tag in exifData) {
+              switch (tag) {
+                  case "LightSource" :
+                  case "Flash" :
+                  case "MeteringMode" :
+                  case "ExposureProgram" :
+                  case "SensingMethod" :
+                  case "SceneCaptureType" :
+                  case "SceneType" :
+                  case "CustomRendered" :
+                  case "WhiteBalance" :
+                  case "GainControl" :
+                  case "Contrast" :
+                  case "Saturation" :
+                  case "Sharpness" :
+                  case "SubjectDistanceRange" :
+                  case "FileSource" :
+                      exifData[tag] = StringValues[tag][exifData[tag]];
+                      break;
+
+                  case "ExifVersion" :
+                  case "FlashpixVersion" :
+                      exifData[tag] = String.fromCharCode(exifData[tag][0], exifData[tag][1], exifData[tag][2], exifData[tag][3]);
+                      break;
+
+                  case "ComponentsConfiguration" :
+                      exifData[tag] =
+                          StringValues.Components[exifData[tag][0]] +
+                          StringValues.Components[exifData[tag][1]] +
+                          StringValues.Components[exifData[tag][2]] +
+                          StringValues.Components[exifData[tag][3]];
+                      break;
+              }
+              tags[tag] = exifData[tag];
+          }
+      }
+
+      if (tags.GPSInfoIFDPointer) {
+          gpsData = readTags(file, tiffOffset, tiffOffset + tags.GPSInfoIFDPointer, GPSTags, bigEnd);
+          for (tag in gpsData) {
+              switch (tag) {
+                  case "GPSVersionID" :
+                      gpsData[tag] = gpsData[tag][0] +
+                          "." + gpsData[tag][1] +
+                          "." + gpsData[tag][2] +
+                          "." + gpsData[tag][3];
+                      break;
+              }
+              tags[tag] = gpsData[tag];
+          }
+      }
+
+      return tags;
+  }
+
+  this.getData = function(img, callback) {
+      if ((img instanceof Image || img instanceof HTMLImageElement) && !img.complete) return false;
+
+      if (!imageHasData(img)) {
+          getImageData(img, callback);
+      } else {
+          if (callback) {
+              callback.call(img);
+          }
+      }
+      return true;
+  }
+
+  this.getTag = function(img, tag) {
+      if (!imageHasData(img)) return;
+      return img.exifdata[tag];
+  }
+
+  this.getAllTags = function(img) {
+      if (!imageHasData(img)) return {};
+      var a,
+          data = img.exifdata,
+          tags = {};
+      for (a in data) {
+          if (data.hasOwnProperty(a)) {
+              tags[a] = data[a];
+          }
+      }
+      return tags;
+  }
+
+  this.pretty = function(img) {
+      if (!imageHasData(img)) return "";
+      var a,
+          data = img.exifdata,
+          strPretty = "";
+      for (a in data) {
+          if (data.hasOwnProperty(a)) {
+              if (typeof data[a] == "object") {
+                  if (data[a] instanceof Number) {
+                      strPretty += a + " : " + data[a] + " [" + data[a].numerator + "/" + data[a].denominator + "]\r\n";
+                  } else {
+                      strPretty += a + " : [" + data[a].length + " values]\r\n";
+                  }
+              } else {
+                  strPretty += a + " : " + data[a] + "\r\n";
+              }
+          }
+      }
+      return strPretty;
+  }
+
+  this.readFromBinaryFile = function(file) {
+      return findEXIFinJPEG(file);
+  }
+}]);
+
+crop.factory('cropHost', ['$document', 'cropAreaCircle', 'cropAreaSquare', 'cropEXIF', function($document, CropAreaCircle, CropAreaSquare, cropEXIF) {
+  /* STATIC FUNCTIONS */
+
+  // Get Element's Offset
+  var getElementOffset=function(elem) {
+      var box = elem.getBoundingClientRect();
+
+      var body = document.body;
+      var docElem = document.documentElement;
+
+      var scrollTop = window.pageYOffset || docElem.scrollTop || body.scrollTop;
+      var scrollLeft = window.pageXOffset || docElem.scrollLeft || body.scrollLeft;
+
+      var clientTop = docElem.clientTop || body.clientTop || 0;
+      var clientLeft = docElem.clientLeft || body.clientLeft || 0;
+
+      var top  = box.top +  scrollTop - clientTop;
+      var left = box.left + scrollLeft - clientLeft;
+
+      return { top: Math.round(top), left: Math.round(left) };
+  };
+
+  return function(elCanvas, opts, events){
+    /* PRIVATE VARIABLES */
+
+    // Object Pointers
+    var ctx=null,
+        image=null,
+        theArea=null;
+
+    // Dimensions
+    var minCanvasDims=[100,100],
+        maxCanvasDims=[300,300];
+
+    // Result Image size
+    var resImgSize=200;
+
+    // Result Image type
+    var resImgFormat='image/png';
+
+    // Result Image quality
+    var resImgQuality=null;
+
+    /* PRIVATE FUNCTIONS */
+
+    // Draw Scene
+    function drawScene() {
+      // clear canvas
+      ctx.clearRect(0, 0, ctx.canvas.width, ctx.canvas.height);
+
+      if(image!==null) {
+        // draw source image
+        ctx.drawImage(image, 0, 0, ctx.canvas.width, ctx.canvas.height);
+
+        ctx.save();
+
+        // and make it darker
+        ctx.fillStyle = 'rgba(0, 0, 0, 0.65)';
+        ctx.fillRect(0, 0, ctx.canvas.width, ctx.canvas.height);
+
+        ctx.restore();
+
+        // draw Area
+        theArea.draw();
+      }
+    }
+
+    // Resets CropHost
+    var resetCropHost=function() {
+      if(image!==null) {
+        theArea.setImage(image);
+        var imageDims=[image.width, image.height],
+            imageRatio=image.width/image.height,
+            canvasDims=imageDims;
+
+        if(canvasDims[0]>maxCanvasDims[0]) {
+          canvasDims[0]=maxCanvasDims[0];
+          canvasDims[1]=canvasDims[0]/imageRatio;
+        } else if(canvasDims[0]<minCanvasDims[0]) {
+          canvasDims[0]=minCanvasDims[0];
+          canvasDims[1]=canvasDims[0]/imageRatio;
+        }
+        if(canvasDims[1]>maxCanvasDims[1]) {
+          canvasDims[1]=maxCanvasDims[1];
+          canvasDims[0]=canvasDims[1]*imageRatio;
+        } else if(canvasDims[1]<minCanvasDims[1]) {
+          canvasDims[1]=minCanvasDims[1];
+          canvasDims[0]=canvasDims[1]*imageRatio;
+        }
+        elCanvas.prop('width',canvasDims[0]).prop('height',canvasDims[1]).css({'margin-left': -canvasDims[0]/2+'px', 'margin-top': -canvasDims[1]/2+'px'});
+
+        theArea.setX(ctx.canvas.width/2);
+        theArea.setY(ctx.canvas.height/2);
+        theArea.setSize(Math.min(200, ctx.canvas.width/2, ctx.canvas.height/2));
+      } else {
+        elCanvas.prop('width',0).prop('height',0).css({'margin-top': 0});
+      }
+
+      drawScene();
+    };
+
+    /**
+     * Returns event.changedTouches directly if event is a TouchEvent.
+     * If event is a jQuery event, return changedTouches of event.originalEvent
+     */
+    var getChangedTouches=function(event){
+      if(angular.isDefined(event.changedTouches)){
+        return event.changedTouches;
+      }else{
+        return event.originalEvent.changedTouches;
+      }
+    };
+
+    var onMouseMove=function(e) {
+      if(image!==null) {
+        var offset=getElementOffset(ctx.canvas),
+            pageX, pageY;
+        if(e.type === 'touchmove') {
+          pageX=getChangedTouches(e)[0].pageX;
+          pageY=getChangedTouches(e)[0].pageY;
+        } else {
+          pageX=e.pageX;
+          pageY=e.pageY;
+        }
+        theArea.processMouseMove(pageX-offset.left, pageY-offset.top);
+        drawScene();
+      }
+    };
+
+    var onMouseDown=function(e) {
+      e.preventDefault();
+      e.stopPropagation();
+      if(image!==null) {
+        var offset=getElementOffset(ctx.canvas),
+            pageX, pageY;
+        if(e.type === 'touchstart') {
+          pageX=getChangedTouches(e)[0].pageX;
+          pageY=getChangedTouches(e)[0].pageY;
+        } else {
+          pageX=e.pageX;
+          pageY=e.pageY;
+        }
+        theArea.processMouseDown(pageX-offset.left, pageY-offset.top);
+        drawScene();
+      }
+    };
+
+    var onMouseUp=function(e) {
+      if(image!==null) {
+        var offset=getElementOffset(ctx.canvas),
+            pageX, pageY;
+        if(e.type === 'touchend') {
+          pageX=getChangedTouches(e)[0].pageX;
+          pageY=getChangedTouches(e)[0].pageY;
+        } else {
+          pageX=e.pageX;
+          pageY=e.pageY;
+        }
+        theArea.processMouseUp(pageX-offset.left, pageY-offset.top);
+        drawScene();
+      }
+    };
+
+    this.getResultImageDataURI=function() {
+      var temp_ctx, temp_canvas;
+      temp_canvas = angular.element('<canvas></canvas>')[0];
+      temp_ctx = temp_canvas.getContext('2d');
+      temp_canvas.width = resImgSize;
+      temp_canvas.height = resImgSize;
+      if(image!==null){
+        temp_ctx.drawImage(image, (theArea.getX()-theArea.getSize()/2)*(image.width/ctx.canvas.width), (theArea.getY()-theArea.getSize()/2)*(image.height/ctx.canvas.height), theArea.getSize()*(image.width/ctx.canvas.width), theArea.getSize()*(image.height/ctx.canvas.height), 0, 0, resImgSize, resImgSize);
+      }
+      if (resImgQuality!==null ){
+        return temp_canvas.toDataURL(resImgFormat, resImgQuality);
+      }
+      return temp_canvas.toDataURL(resImgFormat);
+    };
+
+this.setNewImageSource = function (imageSource) {
+        image = null;
+        resetCropHost();
+        events.trigger('image-updated');
+        if (!!imageSource) {
+            var newImage = new Image();
+            if (imageSource.substring(0, 4).toLowerCase() === 'http') {
+                newImage.crossOrigin = 'anonymous';
+            }
+
+            newImage.onload = function () {
+                events.trigger('load-done');
+
+                cropEXIF.getData(newImage, function () {
+
+                    var orientation = cropEXIF.getTag(newImage, 'Orientation');
+
+                    if ([3, 6, 8].indexOf(orientation) > -1) {
+                        var canvas = document.createElement("canvas"),
+                        ctx = canvas.getContext("2d"),
+                        cw = newImage.width, ch = newImage.height, cx = 0, cy = 0, deg = 0, rw = 0, rh = 0;
+                        rw = cw;
+                        rh = ch;
+                        switch (orientation) {
+                            case 3:
+                                cx = -newImage.width;
+                                cy = -newImage.height;
+                                deg = 180;
+                                break;
+                            case 6:
+                                cw = newImage.height;
+                                ch = newImage.width;
+                                cy = -newImage.height;
+                                rw = ch;
+                                rh = cw;
+                                deg = 90;
+                                break;
+                            case 8:
+                                cw = newImage.height;
+                                ch = newImage.width;
+                                cx = -newImage.width;
+                                rw = ch;
+                                rh = cw;
+                                deg = 270;
+                                break;
+                        }
+
+                        //// canvas.toDataURL will only work if the canvas isn't too large. Resize to 1000px.
+                        var maxWorH = 1000;
+                        if (cw > maxWorH || ch > maxWorH) {
+                            var p = 0;
+                            if (cw > maxWorH) {
+                                p = (maxWorH) / cw;
+                                cw = maxWorH;
+                                ch = p * ch;
+                            } else if (ch > maxWorH) {
+                                p = (maxWorH) / ch;
+                                ch = maxWorH;
+                                cw = p * cw;
+                            }
+                            
+                            cy = p * cy;
+                            cx = p * cx;
+                            rw = p * rw;
+                            rh = p * rh;
+                        }
+
+                        canvas.width = cw;
+                        canvas.height = ch;
+                        ctx.rotate(deg * Math.PI / 180);
+                        ctx.drawImage(newImage, cx, cy, rw, rh);
+
+                        image = new Image();
+                        image.onload = function () {
+                            resetCropHost();
+                            events.trigger('image-updated');
+                        };
+
+                        image.src = canvas.toDataURL("image/png");
+
+                    } else {
+                        image = newImage;
+                    }
+
+                    resetCropHost();
+                    events.trigger('image-updated');
+                });
+            };
+            newImage.onerror = function () {
+                events.trigger('load-error');
+            };
+            events.trigger('load-start');
+            newImage.src = imageSource;
+        }
+    };
+
+    this.setMaxDimensions=function(width, height) {
+      maxCanvasDims=[width,height];
+
+      if(image!==null) {
+        var curWidth=ctx.canvas.width,
+            curHeight=ctx.canvas.height;
+
+        var imageDims=[image.width, image.height],
+            imageRatio=image.width/image.height,
+            canvasDims=imageDims;
+
+        if(canvasDims[0]>maxCanvasDims[0]) {
+          canvasDims[0]=maxCanvasDims[0];
+          canvasDims[1]=canvasDims[0]/imageRatio;
+        } else if(canvasDims[0]<minCanvasDims[0]) {
+          canvasDims[0]=minCanvasDims[0];
+          canvasDims[1]=canvasDims[0]/imageRatio;
+        }
+        if(canvasDims[1]>maxCanvasDims[1]) {
+          canvasDims[1]=maxCanvasDims[1];
+          canvasDims[0]=canvasDims[1]*imageRatio;
+        } else if(canvasDims[1]<minCanvasDims[1]) {
+          canvasDims[1]=minCanvasDims[1];
+          canvasDims[0]=canvasDims[1]*imageRatio;
+        }
+        elCanvas.prop('width',canvasDims[0]).prop('height',canvasDims[1]).css({'margin-left': -canvasDims[0]/2+'px', 'margin-top': -canvasDims[1]/2+'px'});
+
+        var ratioNewCurWidth=ctx.canvas.width/curWidth,
+            ratioNewCurHeight=ctx.canvas.height/curHeight,
+            ratioMin=Math.min(ratioNewCurWidth, ratioNewCurHeight);
+
+        theArea.setX(theArea.getX()*ratioNewCurWidth);
+        theArea.setY(theArea.getY()*ratioNewCurHeight);
+        theArea.setSize(theArea.getSize()*ratioMin);
+      } else {
+        elCanvas.prop('width',0).prop('height',0).css({'margin-top': 0});
+      }
+
+      drawScene();
+
+    };
+
+    this.setAreaMinSize=function(size) {
+      size=parseInt(size,10);
+      if(!isNaN(size)) {
+        theArea.setMinSize(size);
+        drawScene();
+      }
+    };
+
+    this.setResultImageSize=function(size) {
+      size=parseInt(size,10);
+      if(!isNaN(size)) {
+        resImgSize=size;
+      }
+    };
+
+    this.setResultImageFormat=function(format) {
+      resImgFormat = format;
+    };
+
+    this.setResultImageQuality=function(quality){
+      quality = parseFloat(quality);
+      if (!isNaN(quality) && quality>=0 && quality<=1){
+        resImgQuality = quality;
+      }
+    };
+
+    this.setAreaType=function(type) {
+      var curSize=theArea.getSize(),
+          curMinSize=theArea.getMinSize(),
+          curX=theArea.getX(),
+          curY=theArea.getY();
+
+      var AreaClass=CropAreaCircle;
+      if(type==='square') {
+        AreaClass=CropAreaSquare;
+      }
+      theArea = new AreaClass(ctx, events);
+      theArea.setMinSize(curMinSize);
+      theArea.setSize(curSize);
+      theArea.setX(curX);
+      theArea.setY(curY);
+
+      // resetCropHost();
+      if(image!==null) {
+        theArea.setImage(image);
+      }
+
+      drawScene();
+    };
+
+    /* Life Cycle begins */
+
+    // Init Context var
+    ctx = elCanvas[0].getContext('2d');
+
+    // Init CropArea
+    theArea = new CropAreaCircle(ctx, events);
+
+    // Init Mouse Event Listeners
+    $document.on('mousemove',onMouseMove);
+    elCanvas.on('mousedown',onMouseDown);
+    $document.on('mouseup',onMouseUp);
+
+    // Init Touch Event Listeners
+    $document.on('touchmove',onMouseMove);
+    elCanvas.on('touchstart',onMouseDown);
+    $document.on('touchend',onMouseUp);
+
+    // CropHost Destructor
+    this.destroy=function() {
+      $document.off('mousemove',onMouseMove);
+      elCanvas.off('mousedown',onMouseDown);
+      $document.off('mouseup',onMouseMove);
+
+      $document.off('touchmove',onMouseMove);
+      elCanvas.off('touchstart',onMouseDown);
+      $document.off('touchend',onMouseMove);
+
+      elCanvas.remove();
+    };
+  };
+
+}]);
+
+
+crop.factory('cropPubSub', [function() {
+  return function() {
+    var events = {};
+    // Subscribe
+    this.on = function(names, handler) {
+      names.split(' ').forEach(function(name) {
+        if (!events[name]) {
+          events[name] = [];
+        }
+        events[name].push(handler);
+      });
+      return this;
+    };
+    // Publish
+    this.trigger = function(name, args) {
+      angular.forEach(events[name], function(handler) {
+        handler.call(null, args);
+      });
+      return this;
+    };
+  };
+}]);
+
+crop.directive('imgCrop', ['$timeout', 'cropHost', 'cropPubSub', function($timeout, CropHost, CropPubSub) {
+  return {
+    restrict: 'E',
+    scope: {
+      image: '=',
+      resultImage: '=',
+
+      changeOnFly: '=',
+      areaType: '@',
+      areaMinSize: '=',
+      resultImageSize: '=',
+      resultImageFormat: '@',
+      resultImageQuality: '=',
+
+      onChange: '&',
+      onLoadBegin: '&',
+      onLoadDone: '&',
+      onLoadError: '&'
+    },
+    template: '<canvas></canvas>',
+    controller: ['$scope', function($scope) {
+      $scope.events = new CropPubSub();
+    }],
+    link: function(scope, element/*, attrs*/) {
+      // Init Events Manager
+      var events = scope.events;
+
+      // Init Crop Host
+      var cropHost=new CropHost(element.find('canvas'), {}, events);
+
+      // Store Result Image to check if it's changed
+      var storedResultImage;
+
+      var updateResultImage=function(scope) {
+        var resultImage=cropHost.getResultImageDataURI();
+        if(storedResultImage!==resultImage) {
+          storedResultImage=resultImage;
+          if(angular.isDefined(scope.resultImage)) {
+            scope.resultImage=resultImage;
+          }
+          scope.onChange({$dataURI: scope.resultImage});
+        }
+      };
+
+      // Wrapper to safely exec functions within $apply on a running $digest cycle
+      var fnSafeApply=function(fn) {
+        return function(){
+          $timeout(function(){
+            scope.$apply(function(scope){
+              fn(scope);
+            });
+          });
+        };
+      };
+
+      // Setup CropHost Event Handlers
+      events
+        .on('load-start', fnSafeApply(function(scope){
+          scope.onLoadBegin({});
+        }))
+        .on('load-done', fnSafeApply(function(scope){
+          scope.onLoadDone({});
+        }))
+        .on('load-error', fnSafeApply(function(scope){
+          scope.onLoadError({});
+        }))
+        .on('area-move area-resize', fnSafeApply(function(scope){
+          if(!!scope.changeOnFly) {
+            updateResultImage(scope);
+          }
+        }))
+        .on('area-move-end area-resize-end image-updated', fnSafeApply(function(scope){
+          updateResultImage(scope);
+        }));
+
+      // Sync CropHost with Directive's options
+      scope.$watch('image',function(){
+        cropHost.setNewImageSource(scope.image);
+      });
+      scope.$watch('areaType',function(){
+        cropHost.setAreaType(scope.areaType);
+        updateResultImage(scope);
+      });
+      scope.$watch('areaMinSize',function(){
+        cropHost.setAreaMinSize(scope.areaMinSize);
+        updateResultImage(scope);
+      });
+      scope.$watch('resultImageSize',function(){
+        cropHost.setResultImageSize(scope.resultImageSize);
+        updateResultImage(scope);
+      });
+      scope.$watch('resultImageFormat',function(){
+        cropHost.setResultImageFormat(scope.resultImageFormat);
+        updateResultImage(scope);
+      });
+      scope.$watch('resultImageQuality',function(){
+        cropHost.setResultImageQuality(scope.resultImageQuality);
+        updateResultImage(scope);
+      });
+
+      // Update CropHost dimensions when the directive element is resized
+      scope.$watch(
+        function () {
+          return [element[0].clientWidth, element[0].clientHeight];
+        },
+        function (value) {
+          cropHost.setMaxDimensions(value[0],value[1]);
+          updateResultImage(scope);
+        },
+        true
+      );
+
+      // Destroy CropHost Instance when the directive is destroying
+      scope.$on('$destroy', function(){
+          cropHost.destroy();
+      });
+    }
+  };
+}]);
+}());

@@ -9824,11 +9824,13 @@ h1, h2, h3, h4, h5, h6, .h1, .h2, .h3, .h4, .h5, .h6 {
       color: #2d2d2d; }
 
 .side-menu-left.has-header {
-  top: 215px; }
+  top: 0px;
+  position: relative; }
 
 .menu-left .bar.bar-stable {
   min-height: 200px;
-  background-color: #0295d6 !important; }
+  background-color: #0295d6 !important;
+  position: relative; }
 
 .item p {
   color: #FFF; }
@@ -9851,10 +9853,7 @@ h1, h2, h3, h4, h5, h6, .h1, .h2, .h3, .h4, .h5, .h6 {
     background-color: #0c60ee; }
 
 .has-header {
-  top: 45px; }
-
-.page-uploadphoto .has-header {
-  top: 35px; }
+  top: 63px; }
 
 .page-profile .profile-header {
   margin-top: 3px;
@@ -9897,7 +9896,7 @@ h1, h2, h3, h4, h5, h6, .h1, .h2, .h3, .h4, .h5, .h6 {
 
 .button-label {
   color: #FFF;
-  font-size: 14px;
+  font-size: 11px;
   margin-top: -10px; }
 
 .input-label {
@@ -10049,8 +10048,8 @@ img-crop canvas {
   max-width: 100%; }
 
 .page-myphoto .myphoto-caption {
-  padding: 20px;
-  font-size: 18px; }
+  padding: 10px 15px;
+  font-size: 14px; }
 
 .page-myphoto .myphoto-options {
   padding: 0 20px;
@@ -10078,7 +10077,7 @@ img-crop canvas {
 .page-login .scroll, .page-signup .scroll {
   height: 445px;
   position: absolute;
-  top: -45px;
+  top: 45px;
   bottom: 0;
   left: 0;
   right: 0;
@@ -10139,8 +10138,7 @@ img-crop canvas {
       text-indent: 0; }
 
 .separator {
-  border: #2ab4f1 dotted 1px;
-  margin-top: 40px; }
+  border: #2ab4f1 dotted 1px; }
 
 .bar-footer .list {
   width: 100%; }
@@ -10156,16 +10154,106 @@ img-crop canvas {
   font-size: 16px;
   color: #387ef5; }
 
-.buddies-active h2 {
-  font-size: 20px;
-  text-align: center;
-  margin-bottom: 25px; }
-
-.buddies-active .item-avatar {
-  padding-left: 45px; }
+.buddies-active {
+  background-color: #FFF !important; }
+  .buddies-active h2 {
+    font-size: 20px;
+    text-align: center;
+    margin-bottom: 25px;
+    color: #2d2d2d; }
+  .buddies-active .item-avatar {
+    padding-left: 0;
+    background-color: #FFF !important;
+    float: left;
+    min-width: 40px;
+    margin: 0 auto; }
+    .buddies-active .item-avatar img {
+      position: relative;
+      top: 0;
+      left: 0; }
+  .buddies-active .profile-username {
+    display: block;
+    color: #2d2d2d;
+    font-size: 10px; }
 
 .page-messages .item-input-inset {
   width: 100%; }
 
 .page-messages h2 a {
   color: #FFF; }
+
+#loading-bar-spinner {
+  top: 50%;
+  left: 50%;
+  z-index: 9999; }
+
+#loading-bar-spinner {
+  width: 40px;
+  height: 40px;
+  margin: 100px auto;
+  background-color: #333;
+  border-radius: 100%;
+  -webkit-animation: sk-scaleout 1.0s infinite ease-in-out;
+  animation: sk-scaleout 1.0s infinite ease-in-out; }
+
+@-webkit-keyframes sk-scaleout {
+  0% {
+    -webkit-transform: scale(0); }
+  100% {
+    -webkit-transform: scale(1);
+    opacity: 0; } }
+
+@keyframes sk-scaleout {
+  0% {
+    -webkit-transform: scale(0);
+    transform: scale(0); }
+  100% {
+    -webkit-transform: scale(1);
+    transform: scale(1);
+    opacity: 0; } }
+
+.page-buddies .scroll-content {
+  margin-bottom: 85px; }
+
+body, .pane {
+  background-color: #02a6ee; }
+
+.item-social {
+  float: left; }
+
+.item-edit {
+  float: right;
+  padding-right: 20px; }
+
+.edit-post .item-input {
+  background-color: #FFF !important; }
+
+.edit-post .input-label {
+  color: #2d2d2d; }
+
+.edit-post-icons {
+  padding: 10px 15px;
+  font-size: 18px;
+  color: #02a6ee; }
+  .edit-post-icons .icon {
+    margin-right: 7px; }
+
+.popup-head {
+  display: none; }
+
+.pull-right {
+  text-align: right; }
+
+.post-caption {
+  font-size: 12px;
+  padding-bottom: 10px; }
+
+.buddy-container {
+  margin: 0 auto;
+  width: 320px;
+  overflow: hidden; }
+
+.profile-follow {
+  position: absolute;
+  right: 20px;
+  top: 15px; }

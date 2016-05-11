@@ -4,7 +4,7 @@
         <div class="list card" ng-repeat="p in t = angular.equals(t, showPhotos()) ? t : showPhotos()"">
 
           <div class="item item-avatar">
-            <img ng-src="{{getUserPhoto()}}">
+            <img ui-sref="nido.profile({ id: user.id })" ng-src="{{getUserPhoto()}}">
             <h2 style="font-weight:500;">{{user.firstName}}</h2>
             <p>{{p.created | date:'MMMM dd, yyyy h:mma'}}</p>
           </div>
@@ -15,8 +15,12 @@
              {{p.caption}}
             </p>
             <p class="item-social">
-              <a href="#" class="subdued"><i class="icon ion-thumbsup"></i> 0 Like</a>
-              <a href="#" class="subdued pull-right"><i class="icon ion-ios-folder"></i> Sneaker Tag</a>
+              <a href="#" class="subdued"><i class="icon ion-thumbsup" ng-click="addLike(p.likes)"></i> 
+                {{likes}} Likes</a>
+              <a href="#" class="subdued pull-right"><i class="icon ion-ios-folder"></i> {{showCategory(p.category)}}</a>
+            </p>
+            <p class="item-edit">
+              <a href="#" class="subdued" ng-click="gotoPhoto({{p.id}})"><i class="icon ion-more"></i> 
             </p>
           </div>
         </div>

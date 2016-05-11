@@ -284,7 +284,6 @@ angular.module('app.controllers', [])
     $rootScope.bodyClass = "";
     var vm = this;
     var login = this;
-
     vm.signup = signUp;
 
     function signUp(){
@@ -304,7 +303,6 @@ angular.module('app.controllers', [])
             });
     }
 
-
     function onLogin() {
         $rootScope.$broadcast('authorized');
         login.username = Backand.getUsername();
@@ -317,12 +315,9 @@ angular.module('app.controllers', [])
         Restangular.all("users").getList({ filter: JSON.stringify($localStorage.userQuery) }).then(function (users) {
             $localStorage.user = users[0];
             $rootScope.user = $localStorage.user; 
-            //console.log($rootScope.user.photo);
-            $state.go('uploadphoto');
-        }); 
-        
+            $state.go('uploadPhoto');
+        });
     }
-
 
     vm.email = '';
     vm.password ='';
@@ -332,7 +327,7 @@ angular.module('app.controllers', [])
     vm.errorMessage = '';
 })
    
-.controller('buddyProfileCtrl', function ($scope, $rootScope) {
+.controller('userProfileCtrl', function ($scope, $rootScope) {
     $rootScope.bodyClass = "";
 })
 
@@ -345,13 +340,13 @@ angular.module('app.controllers', [])
     $rootScope.bodyClass = "";
 })
 
-.controller('buddiesCtrl', function (Backand, $scope, $rootScope, BuddyRequestsModel, $localStorage, Restangular, UsersModel) {
+.controller('buddiesCtrl', function ($http, Backand, $scope, $rootScope, BuddyRequestsModel, $localStorage, Restangular, UsersModel) {
     $scope.users = {}; 
     $scope.query = {};
     $scope.queryBy = '$';
     $scope.filter = {};
     $scope.buddyRequest = {};
-    $scope.followStatus = "Follow";
+    $scope.followStatus = "follow";
     $scope.followClass = "";
     
     $scope.inviteBuddy = function(to_id) {
@@ -363,10 +358,37 @@ angular.module('app.controllers', [])
         console.log($scope.buddyRequest);
     };
 
+    //isFollowed(); 
+
+    $scope.showFollowStatus = function(list_id) {
+        var followStatus = 'Invite';
+        //isFollowed();
+        return followStatus;
+    };
+
+    /*
+    isFollowed = function() {
+        getFollowStatus().then(function(results) {
+            console.log('results: ' + results);
+        });
+    };
+
+    getFollowStatus = function() {
+        return $http ({
+          method: 'GET',
+          url: Backand.getApiUrl() + '/1/query/data/GetFollowStatus',
+          params: {
+            parameters: {
+              currentId: '2'
+            }
+          }
+        });
+    };
+    */
+
     UsersModel.all()
         .then(function (result) {
             $scope.users = result.data.data;
-            console.log($scope.users); 
         });
 
     $scope.orderProp="firstName"; 
@@ -374,9 +396,7 @@ angular.module('app.controllers', [])
     $scope.updateAccount = function() {
         BuddyRequestsModel.create($scope.buddyRequest)
             .then(function (result) {
-                $scope.followStatus = "Invite sent";
-                $scope.followClass = "button-dark";
-                console.log(result); 
+                $scope.followStatus = "pending";
             });
     };
 
@@ -388,11 +408,10 @@ angular.module('app.controllers', [])
 
     getUser(); 
 
-    //console.log($scope.user);
-
     $rootScope.bodyClass = "";
     $scope.getPhoto = function() {
-        console.log($localStorage);
+        if ($localStorage.user.photo == null)
+            $localStorage.user.photo = "/img/avatar.png";
         return $localStorage.user.photo;
     };
 
@@ -440,20 +459,75 @@ angular.module('app.controllers', [])
 
 })
 
-.controller('myPhotoCtrl', function ($stateParams, $scope, $rootScope, $state, Backand, PhotosModel, UsersModel, $http, $localStorage) {
+.controller('myPhotoCtrl', function ($stateParams, $scope, $rootScope, $state, Backand, PhotosModel, UsersModel, $http, $localStorage, $ionicPopup) {
     var photo_id = $stateParams.id; 
+    $scope.editClass = 'hide'; 
+    
     PhotosModel.fetch(photo_id).then(function(result){
-        $scope.photo = result.data; 
+        $scope.photo = result.data;
+        if (!$scope.photo.caption) { $scope.photo.caption = '...'; } 
         console.log($scope.photo); 
     });
 
-    $scope.editPhoto = function() {
+    /*
+    $scope.showPopup = function() {
+      $scope.data = {};
+
+      // An elaborate, custom popup
+      var myPopup = $ionicPopup.show({
+        template: '',
+        title: '',
+        subTitle: '',
+        scope: $scope,
+        buttons: [
+          {
+            text: '<b>Edit</b>',
+            type: 'button-positive',
+            onTap: function(e) {
+              if (!$scope.data.wifi) {
+                //don't allow the user to close unless he enters wifi password
+                e.preventDefault();
+              } else {
+                return $scope.data.wifi;
+              }
+            }
+          },
+          {
+            text: '<b>Delete</b>',
+            type: 'button-assertive',
+            onTap: function(e) {
+              if (!$scope.data.wifi) {
+                //don't allow the user to close unless he enters wifi password
+                e.preventDefault();
+              } else {
+                return $scope.data.wifi;
+              }
+            }
+          }
+        ]
+      });
+    };
+    */
+
+    $scope.editPost = function() {
+        $scope.editClass = ''; //show 
+        $scope.captionClass = 'hide'; 
         //unhide input text field
         //unhide Save button, hide Edit button
         //change button label from "Edit" to "Save"
         //fire DB save() on onclick on unhidden Save button 
         //reload myphoto/:photo_id page 
     };
+
+    $scope.savePost = function() {
+        $scope.editClass = 'hide'; 
+        $scope.captionClass = '';
+
+        PhotosModel.update($scope.photo.id, $scope.photo).then(function(result){
+            console.log(result);
+        }); 
+
+    }
 
     $scope.deletePhoto = function() {
         // install angular-modal: https://github.com/btford/angular-modal
@@ -471,11 +545,20 @@ angular.module('app.controllers', [])
 
 })
 
-.controller('profileCtrl', function ($scope, $rootScope, $state, Backand, PhotosModel, UsersModel, $http, $localStorage) {
+.controller('profileCtrl', function ($stateParams, $scope, $rootScope, $state, Backand, PhotosModel, UsersModel, $http, $localStorage) {
     $rootScope.bodyClass = "add-item";
+    $scope.followStatus = "Follow";
+    $scope.followStatusClass = 'button-light';
     var _self = this; 
+    var userId = null; 
     $scope.user = {};
-    UsersModel.fetch($localStorage.user.id).then(function(result){
+
+    if (!$stateParams.id)
+        userId = $localStorage.user.id; 
+    else 
+        userId = $stateParams.id; 
+
+    UsersModel.fetch(userId).then(function(result){
         $scope.user = result.data; 
         getPhotos().then(function(results) {
             $scope.user.photos = results.data.data;
@@ -483,6 +566,25 @@ angular.module('app.controllers', [])
             console.log($scope.user.photos); 
         });
     });
+
+    $scope.getProfilePhoto = function() {
+        if ($scope.user.photo == null)
+            $scope.user.photo = "/img/avatar.png";
+        return $scope.user.photo;
+    }
+
+    $scope.follow = function() {
+        $scope.followStatus = "Following";
+        $scope.followStatusClass = 'button-positive';
+
+        var toBeFollowed = null;
+        var currentUser = null; 
+
+        toBeFollowed = $stateParams.id;
+        currentUser = $localStorage.user.id; 
+
+        console.log('to be followed' + toBeFollowed + 'current user ' + currentUser); 
+    }
 
     getPhotos = function() {
         return $http ({
@@ -495,7 +597,7 @@ angular.module('app.controllers', [])
               {
                 fieldName: 'user',
                 operator: 'in',
-                value: $localStorage.user.id,
+                value: userId,
               }
             ],
             sort: '[{fieldName:\'id\', order:\'desc\'}]'
@@ -511,36 +613,80 @@ angular.module('app.controllers', [])
 
 .controller('activityFeedCtrl', function ($state, $stateParams, $scope, $rootScope, Backand, PhotosModel, UsersModel, $http, $localStorage) {
     var _self = this; 
+    $scope.likes = 0;
     $rootScope.bodyClass = "add-item";
     $scope.user = {};
     var user_photo = ''; 
     //$localStorage.user.id = $stateParams.id; 
     UsersModel.fetch($localStorage.user.id).then(function(result){
+
         $scope.user = result.data;
         $localStorage.user = $scope.user; 
         $rootScope.user = result.data; 
         getPhotos().then(function(results) {
             $scope.user.photos = results.data.data;
-            console.log($scope.user.photos); 
+            
+            var lastKey = results.data.data.length + 1;
+            /* ADD FIRST or WELCOME POST */ 
+            $scope.user.photos[lastKey] = {};
+            $scope.user.photos[lastKey].data = '/img/timeline-drluna.png'; 
+            $scope.user.photos[lastKey].id = 9999999999;
+            $scope.user.photos[lastKey].created = Date.now().toString();
+            $scope.user.photos[lastKey].caption = 'Greetings! My name is Dr. Luna, founder of NIDO.LIFE. Let me be the first to welcome you. May this app help you foster and maintain healthy habits through community.'; 
+            $scope.user.photos[lastKey].category = "";
+            $scope.user.photos[lastKey].comments = Date.now().toString(); 
+            $scope.user.photos[lastKey].likes = ''; 
+            $scope.user.photos[lastKey].user = '2';  
+            
         });
     });
 
+    $scope.addLike = function(count) {
+        var countLikes = ''; 
+        var countLikes = count + 1;
+        $scope.likes = countLikes; 
+        var countText = countLikes;
+        return countText;
+    }
+
+    $scope.showCategory = function(category) {
+        var categoryText = '';
+        if (category == null) { categoryText = 'No tag.'; }
+        switch(category) {
+            case "1":
+                categoryText = 'Meal Tag';
+                break;
+            case "2":
+                categoryText = 'Sneaker Tag';
+                break;
+            case "3":
+                categoryText = 'Motivation Tag';
+                break;
+            case "4":
+                categoryText = 'Physical Activity';
+                break;
+            default:
+                categoryText = 'No tag.';
+        }
+        return categoryText;
+    };
+    
+
     $scope.showPhotos = function() {
+        console.log($scope.user.photos);
         return $scope.user.photos;
     };
 
     $scope.getUserPhoto = function() {
-        if($localStorage.user.photo) {
-            user_photo = $localStorage.user.photo;
-        }
-        return user_photo;
+        if ($localStorage.user.photo == null)
+            $localStorage.user.photo = "/img/avatar.png";
+        return $localStorage.user.photo;
     }
 
     $scope.getPhoto = function() {
-        if($localStorage.user.photo) {
-            user_photo = $localStorage.user.photo;
-        }
-        return user_photo;
+        if ($localStorage.user.photo == null)
+            $localStorage.user.photo = "/img/avatar.png";
+        return $localStorage.user.photo;
     }; 
 
     getPhotos = function() {

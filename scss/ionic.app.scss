@@ -105,11 +105,12 @@ h1, h2, h3, h4, h5, h6, .h1, .h2, .h3, .h4, .h5, .h6 {
     	}
 	}
 }
-.side-menu-left.has-header { top: 215px; }
+.side-menu-left.has-header { top: 0px; position: relative; }
 .menu-left {
 	.bar.bar-stable { 
 		min-height: 200px; 
 		background-color: #0295d6!important;
+		position: relative;
 	}
 }
 .item p { color: #FFF; }
@@ -126,8 +127,7 @@ h1, h2, h3, h4, h5, h6, .h1, .h2, .h3, .h4, .h5, .h6 {
         @include item-active-style($item-positive-active-bg, $item-positive-active-border);
    }   
 }
-.has-header { top: 45px; }
-.page-uploadphoto .has-header { top: 35px; }
+.has-header { top: 63px; }
 
 .page-profile {
 	.profile-header { 
@@ -158,7 +158,7 @@ h1, h2, h3, h4, h5, h6, .h1, .h2, .h3, .h4, .h5, .h6 {
 }
 .button-label {
 	color: #FFF;
-	font-size: 14px;
+	font-size: 11px;
 	margin-top: -10px;
 }
 .input-label { color: #FFF; }
@@ -287,8 +287,8 @@ img-crop{width:100%;height:100%;display:block;position:relative;overflow:hidden}
 		max-width: 100%;
 	}
 	.myphoto-caption {
-	    padding: 20px;
-	    font-size: 18px;
+	    padding: 10px 15px;
+	    font-size: 14px;
 	}
 	.myphoto-options {
 		padding: 0 20px;
@@ -316,7 +316,7 @@ img-crop{width:100%;height:100%;display:block;position:relative;overflow:hidden}
 	.scroll {
 	    height: 445px;
 	    position: absolute;
-	    top: -45px;
+	    top: 45px;
 	    bottom: 0;
 	    left: 0;
 	    right: 0;
@@ -360,7 +360,6 @@ img-crop{width:100%;height:100%;display:block;position:relative;overflow:hidden}
 }
 .separator { 
 	border: #2ab4f1 dotted 1px; 
-	margin-top: 40px;
 }
 .bar-footer {
 	.list { width: 100%; }
@@ -373,16 +372,110 @@ img-crop{width:100%;height:100%;display:block;position:relative;overflow:hidden}
     color: #387ef5;
 }
 .buddies-active { 
+	background-color: #FFF!important;
 	h2 { 
 		font-size: 20px;
 		text-align: center; 
 		margin-bottom: 25px;
+		color: #2d2d2d;
 	}
-	.item-avatar { padding-left: 45px; }
+	.item-avatar { 
+	    padding-left: 0;
+	    background-color: #FFF !important;
+	    float: left;
+	    min-width: 40px;
+	    margin: 0 auto; 
+	    img { 
+	    	position: relative; 
+	    	top: 0;
+	    	left: 0; 
+	    }
+	}
+	.profile-username { 
+		display: block;
+		color: #2d2d2d;
+		font-size: 10px;  
+	}
 }
 .page-messages  {
 	.item-input-inset { width: 100%; }
 	h2 {
 		a { color: #FFF; }
 	}
+}
+#loading-bar-spinner {
+  top: 50%;
+  left: 50%;
+  z-index:9999;
+}
+#loading-bar-spinner {
+  width: 40px;
+  height: 40px;
+  margin: 100px auto;
+  background-color: #333;
+
+  border-radius: 100%;  
+  -webkit-animation: sk-scaleout 1.0s infinite ease-in-out;
+  animation: sk-scaleout 1.0s infinite ease-in-out;
+}
+
+@-webkit-keyframes sk-scaleout {
+  0% { -webkit-transform: scale(0) }
+  100% {
+    -webkit-transform: scale(1.0);
+    opacity: 0;
+  }
+}
+
+@keyframes sk-scaleout {
+  0% { 
+    -webkit-transform: scale(0);
+    transform: scale(0);
+  } 100% {
+    -webkit-transform: scale(1.0);
+    transform: scale(1.0);
+    opacity: 0;
+  }
+}
+
+.page-buddies {
+	.scroll-content { margin-bottom: 85px; }
+}
+body, .pane { 
+	background-color: #02a6ee;
+}
+.item-social {
+	float: left;
+}
+.item-edit {
+	float: right;
+	padding-right: 20px;  
+}
+.edit-post {
+	.item-input { background-color: #FFF!important; }
+	.input-label { color: #2d2d2d; }
+}
+.edit-post-icons {
+    padding: 10px 15px;
+    font-size: 18px;
+    color: #02a6ee;
+    .icon {
+    	margin-right: 7px; 
+    }
+}
+.popup-head { display: none; }
+.pull-right { text-align: right; }
+.post-caption {
+	font-size: 12px;
+    padding-bottom: 10px;
+}
+.buddy-container {
+	margin: 0 auto; 
+	width: 320px; 
+	overflow: hidden;
+}
+.profile-follow {
+    position: absolute;
+    right: 20px;
+    top: 15px;
 }

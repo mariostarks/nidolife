@@ -1,8 +1,11 @@
 <ion-view title="" id="page6" class="no-title page-profile">
     <ion-content padding="false" class="">
         <div class="profile-header">
+            <button class="profile-follow button-small button {{followStatusClass}}" ng-click="follow()" ng-binding>
+              {{followStatus}}
+            </button>
             <div class="row">
-                <img data-ng-src="{{getPhoto()}}" class="profile-image"/>
+                <img data-ng-src="{{getProfilePhoto()}}" class="profile-image"/>
             </div>
             <div class="profile-title">
                 <div class="profile-name">{{user.lastName}} (@{{user.firstName}})</div>
@@ -21,6 +24,10 @@
             <a ui-sref="nido.buddies" id="profile-button6" class="button button-followers  button-block">
                 <div class="button-count">0</div>
                 <div class="button-label">Buddies</div>
+            </a>
+            <a ui-sref="nido.buddies" id="profile-button6" class="button button-challenges  button-block">
+                <div class="button-count">0</div>
+                <div class="button-label">Followers</div>
             </a>
         </div>
         <div class="list card">

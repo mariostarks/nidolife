@@ -41,27 +41,17 @@ angular.module('app.routes', [])
 
   .state('uploadphoto', {
     url: '/uploadphoto',
-    templateUrl: 'templates/uploadphoto.html',
+    templateUrl: 'templates/uploadPhoto.html',
     controller: 'uploadPhotoCtrl'
   })
 
   .state('nido.profile', {
-    url: '/myprofile',
+    url: '/user/:id',
     cache: false,
     views: {
       'side-menu21': {
         templateUrl: 'templates/profile.html',
         controller: 'profileCtrl'
-      }
-    }
-  })
-
-  .state('nido.buddyProfile', {
-    url: '/buddy-profile',
-    views: {
-      'side-menu21': {
-        templateUrl: 'templates/buddyProfile.html',
-        controller: 'buddyProfileCtrl'
       }
     }
   })

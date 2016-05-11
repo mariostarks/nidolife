@@ -1,15 +1,23 @@
 <ion-view title="Photo" id="page16" class="page-myphoto">
     <ion-content padding="false" class="has-header">
+      <form>
         <img ng-src="{{photo.data}}" class="myphoto-detail"/>
-        <div class="myphoto-caption">
-            {{photo.caption}}
+
+        <div class="edit-post-icons row {{captionClass}}">
+          <i class="col-50 post-caption">{{photo.caption}}</i>
+          <i class="icon ion-edit col-50 pull-right" ng-click="editPost()"></i>
         </div>
-        <div class="myphoto-options">
-            <div class="button-bar">
-              <a class="button button-dark">Edit</a>
-              <a class="button button-assertive">Delete</a>
-              <a class="button button-stable" ng-click="$back()">Go Back</a>
-            </div>
+
+        <div class="bar bar-footer item-input-inset {{editClass}}">
+          <label class="item-input-wrapper">
+            <i class="icon ion-edit placeholder-icon"></i>
+            <input type="text" placeholder="Photo Caption" value="{{photo.caption}}" ng-model="photo.caption" >
+          </label>
+          <button class="button button-positive icon ion-arrow-right-b" ng-click="savePost()">
+            
+          </button>
         </div>
+
+      </form>
     </ion-content>
 </ion-view>

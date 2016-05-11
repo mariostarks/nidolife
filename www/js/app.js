@@ -7,6 +7,9 @@
 // 'starter.controllers' is found in controllers.js
 angular.module('app', ['angular-toArrayFilter', 'ionic', 'backand', 'app.controllers', 'app.routes', 'app.services', 'app.directives', 'ngImgCrop', 'ngLodash', 'restangular', 'ngStorage', 'angular-loading-bar'])
 
+.config(['cfpLoadingBarProvider', function(cfpLoadingBarProvider) {
+    cfpLoadingBarProvider.includeSpinner = true;
+}])
 .config(function ($provide, BackandProvider,  $stateProvider, $urlRouterProvider, $httpProvider, RestangularProvider) {
     BackandProvider.setAppName('nidolife');
     BackandProvider.setSignUpToken('a1435da8-9411-46b1-897a-77623eb9599c');
@@ -19,6 +22,7 @@ angular.module('app', ['angular-toArrayFilter', 'ionic', 'backand', 'app.control
     RestangularProvider.setResponseExtractor(function(response, operation) {
         return response.data;
     });
+
 
    $provide.decorator('$state', function($delegate, $stateParams) {
         $delegate.forceReload = function() {

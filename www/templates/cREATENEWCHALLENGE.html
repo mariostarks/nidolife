@@ -1,6 +1,50 @@
 <ion-view title="Create New Challenge" id="page17">
     <ion-content padding="true" class="has-header">
         <form class="list">
+            <label class="item item-input ">
+               <div class="input-label">
+                  Group Name
+                </div>
+                <input type="text" ng-model="user.firstName" placeholder="First Name">
+            </label>
+            <label class="item item-input ">
+               <div class="input-label">
+                  Describe Challenge:
+                </div>
+                <textarea></textarea>
+                <input type="text" ng-model="user.lastName" placeholder="Last Name">
+            </label>
+            <label class="item item-input">
+               <div class="input-label">
+                  Email
+                </div>
+                <input type="email" ng-model="user.email" placeholder="excellence@nido.life">
+            </label>
+            <label class="item item-input">
+               <div class="input-label">
+                  Date of Birth
+                </div>
+                <input type="date" ng-model="user.birthdate" placeholder="MM/DD/YYY">
+            </label>
+            <label class="item item-input">
+               <div class="input-label">
+                  Location
+                </div>
+                <input type="text" ng-model="user.location" placeholder="City, State - or - Country">
+            </label>
+            <label class="item item-input item-select">
+                <div class="input-label">
+                  Gender
+                </div>
+                <select ng-model="user.gender">
+                  <option value="m">Male</option>
+                  <option value="f">Female</option>
+                </select>
+            </label>
+        </form>
+        <a ng-click="updateAccount()" id="account-button35" style="font-weight:;" class="button button-positive  button-block">SAVE CHANGES</a>
+
+        <form class="list">
             <label class="item item-input">
                 <span class="input-label">Challenge Name:</span>
                 <input type="text" placeholder="">
