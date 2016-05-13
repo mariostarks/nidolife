@@ -1,4 +1,4 @@
-<ion-view title="Find Buddies" id="page7" class="page-buddies">
+<ion-view title="People" id="page7" class="page-buddies">
     <ion-content padding="true" class="has-header">
         <div class="list list-inset">
           <label class="item item-input input-search">
@@ -36,11 +36,11 @@
         <hr class="separator"/>
         <div class="card">
           <div class="item item-text-wrap buddies-active">
-            <h2>My Buddies</h2>
+            <h2>Following</h2>
             <div class="buddy-container">
-                <div class="item item-avatar" style="display:block;" ng-repeat="u in users">
-                    <img ui-sref="nido.profile({ id: u.id })" ng-src="{{u.photo || '/img/avatar.png'}}">
-                    <div class="profile-username" ui-sref="nido.profile({ id: u.id })">{{u.firstName}}</div>
+                <div class="item item-avatar" style="display:block;" ng-repeat="f in followers">
+                    <img ui-sref="nido.profile({ id: f.id })" ng-src="{{f.photo || '/img/avatar.png'}}">
+                    <div class="profile-username" ui-sref="nido.profile({ id: f.id })">{{f.firstName}}</div>
                 </div>
             </div>
           </div>

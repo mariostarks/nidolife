@@ -1,11 +1,11 @@
 
-<ion-view title="Timeline" id="page19" class="page-newsfeed">
+<ion-view title="NIDO.LIFE" id="page19" class="page-newsfeed">
     <ion-content padding="false" class="has-header">
         <div class="list card" ng-repeat="p in t = angular.equals(t, showPhotos()) ? t : showPhotos()"">
 
-          <div class="item item-avatar">
-            <img ui-sref="nido.profile({ id: user.id })" ng-src="{{getUserPhoto()}}">
-            <h2 style="font-weight:500;">{{user.firstName}}</h2>
+          <div class="item item-avatar" >
+            <img ui-sref="nido.profile({ id: p.user })" ng-src="{{p.photo}}">
+            <h2 style="font-weight:500;">{{p.username}}</h2>
             <p>{{p.created | date:'MMMM dd, yyyy h:mma'}}</p>
           </div>
 
@@ -19,8 +19,8 @@
                 {{likes}} Likes</a>
               <a href="#" class="subdued pull-right"><i class="icon ion-ios-folder"></i> {{showCategory(p.category)}}</a>
             </p>
-            <p class="item-edit">
-              <a href="#" class="subdued" ng-click="gotoPhoto({{p.id}})"><i class="icon ion-more"></i> 
+            <p class="item-edit" ng-click="gotoPhoto({{p.id}})">
+              <a href="#" class="subdued"><i class="icon ion-more"></i> 
             </p>
           </div>
         </div>

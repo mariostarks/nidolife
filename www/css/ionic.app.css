@@ -9824,13 +9824,17 @@ h1, h2, h3, h4, h5, h6, .h1, .h2, .h3, .h4, .h5, .h6 {
       color: #2d2d2d; }
 
 .side-menu-left.has-header {
-  top: 0px;
+  top: 20px;
   position: relative; }
 
-.menu-left .bar.bar-stable {
-  min-height: 200px;
-  background-color: #0295d6 !important;
-  position: relative; }
+.menu-left {
+  background-color: #0295d6 !important; }
+  .menu-left .bar.bar-stable {
+    min-height: 200px;
+    background-color: #0295d6 !important;
+    position: relative; }
+  .menu-left .item, .menu-left .item-content {
+    background-color: #0295d6 !important; }
 
 .item p {
   color: #FFF; }
@@ -10007,6 +10011,13 @@ img-crop canvas {
   position: absolute;
   right: 10px;
   top: 10px; }
+
+.add-item .title {
+  /*
+		background: url('../img/logo-header.png') no-repeat; 
+		width: 140px;
+		height: 50px; 
+		*/ }
 
 .page-upload-post label.item {
   padding: 10px 20px 30px 20px !important;
@@ -10257,3 +10268,16 @@ body, .pane {
   position: absolute;
   right: 20px;
   top: 15px; }
+
+.page-challenge label {
+  background-color: #FFF !important; }
+
+.page-challenge .item-floating-label .input-label.has-input {
+  color: #2d2d2d; }
+
+.forgot-password {
+  text-align: center;
+  color: #68ccf8; }
+
+.page-newsfeed .scroll .item-avatar {
+  background: #0295d6 !important; }

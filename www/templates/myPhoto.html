@@ -5,7 +5,7 @@
 
         <div class="edit-post-icons row {{captionClass}}">
           <i class="col-50 post-caption">{{photo.caption}}</i>
-          <i class="icon ion-edit col-50 pull-right" ng-click="editPost()"></i>
+          <i class="{{isAllowedEdit}} icon ion-edit col-50 pull-right" ng-click="editPost()"></i>
         </div>
 
         <div class="bar bar-footer item-input-inset {{editClass}}">
@@ -13,8 +13,8 @@
             <i class="icon ion-edit placeholder-icon"></i>
             <input type="text" placeholder="Photo Caption" value="{{photo.caption}}" ng-model="photo.caption" >
           </label>
-          <button class="button button-positive icon ion-arrow-right-b" ng-click="savePost()">
-            
+          <button class="button button-positive" ng-click="savePost()">
+            SAVE
           </button>
         </div>
 
