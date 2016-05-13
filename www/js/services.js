@@ -1,4 +1,26 @@
 angular.module('app.services', [])
+
+	.service('isFollowing', function($stateParams, $localStorage, Backand, $http) {
+        var currentUser;
+        var userViewed;
+        userViewed = $stateParams.id;
+        currentUser = $localStorage.user.id;
+
+        if (userViewed) {
+            return $http ({
+              method: 'GET',
+              url: Backand.getApiUrl() + '/1/query/data/IsFollowed',
+              params: {
+                parameters: {
+                  currentUser: currentUser,
+                  userViewed: userViewed
+                }
+              }
+            }); 
+        }
+        else { return false; }
+	})
+
 	.service('APIInterceptor', function ($rootScope, $q) {
 	    var service = this;
 

@@ -603,16 +603,16 @@ angular.module('app.controllers', [])
 
 })
 
-.controller('profileCtrl', function (FollowersModel, $stateParams, $scope, $rootScope, $state, Backand, PhotosModel, UsersModel, $http, $localStorage) {
+.controller('profileCtrl', function ( FollowersModel, $stateParams, $scope, $rootScope, $state, Backand, PhotosModel, UsersModel, $http, $localStorage) {
     $rootScope.bodyClass = "add-item";
+    //var isFollowing = function();
     $scope.followStatus = "FOLLOW";
     $scope.followStatusClass = 'button-light button-outline';
     var _self = this; 
     var userId = null; 
     $scope.user = {};
 
-
-    $scope.isFollowing = function() {
+    isFollowing = function() {
         var currentUser;
         var userViewed;
         userViewed = $stateParams.id;
@@ -631,16 +631,16 @@ angular.module('app.controllers', [])
             }); 
         }
         else { return false; }
+    } 
 
-    }
-
-    $scope.isFollowing().then(function(result){
+    isFollowing().then(function(result){
         if (result.data.length !== 0) {
             $scope.followStatus = 'FOLLOWING';
             $scope.followStatusClass = 'button-outline button-light';
         }
         
     });
+
 
     if (!$stateParams.id)
         userId = $localStorage.user.id; 
