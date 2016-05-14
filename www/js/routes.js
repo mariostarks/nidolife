@@ -23,6 +23,7 @@ angular.module('app.routes', [])
 
   .state('addpost', {
     url: '/add-post-upload',
+    cache: false,
     templateUrl: 'templates/addPostUpload.html',
     controller: 'addPostUploadCtrl'
   })
@@ -58,6 +59,7 @@ angular.module('app.routes', [])
 
   .state('nido.buddies', {
     url: '/buddies',
+    cache: false,
     views: {
       'side-menu21': {
         templateUrl: 'templates/buddies.html',

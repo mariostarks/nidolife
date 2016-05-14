@@ -1,17 +1,17 @@
 angular.module('app.controllers', [])
 
 .controller('mainCtrl', function($rootScope, $scope, $location) {
-    $scope.addItemClass = function() {
+    $scope.showBodyClass = function() {
 
         var bodyClasses = ''; 
         if ($location.path().replace("/", "").slice(0, -2)=='side-menu/activity') {
-            bodyClasses = 'add-item'; 
+            bodyClasses = 'page-timeline'; 
         }
         if ($location.path().replace("/", "")=='side-menu/activity') {
-            bodyClasses = 'add-item'; 
+            bodyClasses = 'page-timeline'; 
         }
         if ($location.path().replace("/", "")=='side-menu/activity/') {
-            bodyClasses = 'add-item'; 
+            bodyClasses = 'page-timeline'; 
         }
         if ($location.path().replace("/", "")=='home') {
             bodyClasses = 'hide-nav-bar';
@@ -56,7 +56,7 @@ angular.module('app.controllers', [])
     
     // File Storage Save & DB CREATE 
     $rootScope.save = function() {
-        var post_filename = $localStorage.user.id + '-post-' + Math.random().toString(36).replace(/[^a-z]+/g, '').substr(0, 12) + '.png';
+        var post_filename = $localStorage.user.id + '-post-' + Math.random().toString(36).replace(/[^a-z]+/g, '').substr(0, 12) + '.jpg';
         upload(post_filename, $scope.post.croppedImage).then(function(res) {
             $scope.imageUrl = res.data.url;
             console.log($scope.imageUrl);
@@ -106,8 +106,9 @@ angular.module('app.controllers', [])
 
 .controller('menuCtrl', function ($scope, $window, $localStorage, $location) {
     var user_photo = '';
-    $scope.user = $localStorage.user;
-    console.log($localStorage.user); 
+    //$scope.user = $localStorage.user;
+    //console.log('scope user: ');
+    //console.log($scope.user); 
     $scope.getPhoto = function() {
         if($localStorage.user.photo) {
             user_photo = $localStorage.user.photo;
@@ -154,7 +155,8 @@ angular.module('app.controllers', [])
             var photoname = 'profile-photo-' + $rootScope.user.id + '.png';
             upload(photoname, $rootScope.image.croppedImage).then(function(res) {
                 $scope.imageUrl = res.data.url + "?" + Date.now();
-                $rootScope.user.photo = $scope.imageUrl; 
+                $rootScope.user.photo = $scope.imageUrl;
+                $scope.user.photo = $scope.imageUrl; 
                 $localStorage.user.photo = $scope.imageUrl;
                 console.log($scope.imageUrl);
             }, function(err){
@@ -194,7 +196,7 @@ angular.module('app.controllers', [])
 
 })
       
-.controller('loginCtrl', function (Backand, $state, $rootScope, LoginService, $localStorage, Restangular) {
+.controller('loginCtrl', function (Backand, $state, $scope, $rootScope, LoginService, $localStorage, Restangular) {
     $rootScope.bodyClass = "";
     var login = this;
 
@@ -228,7 +230,8 @@ angular.module('app.controllers', [])
 
         Restangular.all("users").getList({ filter: JSON.stringify($localStorage.userQuery) }).then(function (users) {
             $localStorage.user = users[0];
-            $rootScope.user = $localStorage.user; 
+            $rootScope.user = $localStorage.user;
+            $scope.user = $localStorage.user; 
             //console.log($rootScope.user.photo);
             $state.go('nido.activityFeed', {id: $localStorage.user.id}, {reload: true});
 
@@ -515,7 +518,9 @@ angular.module('app.controllers', [])
     $scope.editClass = 'hide'; 
     
     PhotosModel.fetch(photo_id).then(function(result){
+        //result.data.user = parseInt(result.data.user);
         $scope.photo = result.data;
+        //$scope.photo.user = parseInt($scope.photo.user);
         if (!$scope.photo.caption) { $scope.photo.caption = '...'; } 
         console.log($scope.photo); 
     });
@@ -567,6 +572,23 @@ angular.module('app.controllers', [])
     };
     */
 
+     // A confirm dialog
+     $scope.showConfirmDelete = function() {
+       var confirmPopup = $ionicPopup.confirm({
+         title: 'Delete Photo',
+         template: 'Are you sure you want to delete this photo?'
+       });
+
+       confirmPopup.then(function(res) {
+         if(res) {
+            $scope.deletePhoto();
+         } else {
+           //console.log('You are not sure');
+         }
+       });
+
+     };
+
     $scope.editPost = function() {
         $scope.editClass = ''; //show 
         $scope.captionClass = 'hide'; 
@@ -588,6 +610,12 @@ angular.module('app.controllers', [])
     }
 
     $scope.deletePhoto = function() {
+        var photoId = $stateParams.id;
+        PhotosModel.delete(photoId).then(function(result){
+            console.log(result);
+            $state.go('nido.activityFeed', {}, {reload: true}); 
+        }); 
+        //console.log('about to delete');
         // install angular-modal: https://github.com/btford/angular-modal
         // in modal (pass id of photo): are you sure you want to delete?
         // onclick "YES" - fire db delete() on photo with ID
@@ -607,10 +635,14 @@ angular.module('app.controllers', [])
     $rootScope.bodyClass = "add-item";
     //var isFollowing = function();
     $scope.followStatus = "FOLLOW";
-    $scope.followStatusClass = 'button-light button-outline';
+    $scope.followStatusClass = 'button-light';
+    $scope.profileFollowers = {};
+
     var _self = this; 
     var userId = null; 
-    $scope.user = {};
+    $scope.profile = {};
+    //$scope.user.id = 2; 
+    $scope.user = $localStorage.user;
 
     isFollowing = function() {
         var currentUser;
@@ -633,38 +665,109 @@ angular.module('app.controllers', [])
         else { return false; }
     } 
 
-    isFollowing().then(function(result){
-        if (result.data.length !== 0) {
-            $scope.followStatus = 'FOLLOWING';
-            $scope.followStatusClass = 'button-outline button-light';
-        }
-        
-    });
+
 
 
     if (!$stateParams.id)
-        userId = $localStorage.user.id; 
+        $state.go('nido.profile', {id: $scope.id}, {reload: true});
+        //redirect home - they need an id as part of URL 
+       // userId = $localStorage.user.id; 
     else 
         userId = $stateParams.id; 
 
+
     UsersModel.fetch(userId).then(function(result){
-        $scope.user = result.data; 
+        $scope.profile = result.data; 
+        $scope.profile.followingCount = 0;
+        $scope.profile.followerCount = 0;
         getPhotos().then(function(results) {
-            $scope.user.photos = results.data.data;
-            $scope.user.postCount = results.data.data.length;
-            console.log($scope.user.photos); 
+            $scope.profile.photos = results.data.data;
+            $scope.profile.postCount = results.data.data.length;
+            //console.log($scope.user.photos); 
+            console.log($scope.profile);
         });
+        $scope.getProfilePhoto(); 
+
+        //Is the user followed
+        isFollowing().then(function(result){
+            if (result.data.length !== 0) {
+                //$scope.profile.followingCount = result.data.length;
+                $scope.followStatus = 'FOLLOWING';
+                $scope.followStatusClass = 'button-outline button-light ion-checkmark-round';
+                $scope.profileFollowers = result.data;
+            }
+            else {
+                //$scope.profile.followingCount = 0;
+            }
+            //console.log($scope.profileFollowers);
+            console.log($scope.profile);
+
+        });
+
+        //Get following Count
+        apiGetFollowingList($scope.profile.id).then(function(result) {
+            if (result.data.length !== 0) {
+                $scope.profile.followingCount = result.data.length;
+            }
+            else {
+                $scope.profile.followingCount = 0;
+            }
+        });
+
+        //Get follower Count
+        apiGetFollowersList($scope.profile.id).then(function(result) {
+            if (result.data.length !== 0) {
+                $scope.profile.followerCount = result.data.length;
+            }
+            else {
+                $scope.profile.followerCount = 0;
+            }
+        });
+
     });
 
     $scope.getProfilePhoto = function() {
-        if ($scope.user.photo == null)
-            $scope.user.photo = "/img/avatar.png";
-        return $scope.user.photo;
+        var userphoto = '/img/avatar.png'; 
+        console.log($scope.profile);
+
+        if ($scope.profile.id == $scope.user.id) {
+            userphoto = $localStorage.user.photo;
+        }
+        else {
+            if ($scope.profile.photo != '') {
+                userphoto = $scope.profile.photo;
+            }
+        }
+    
+        return userphoto;
     }
 
+    apiGetFollowingList = function(id) {
+        return $http ({
+          method: 'GET',
+          url: Backand.getApiUrl() + '/1/query/data/getFollowers',
+          params: {
+            parameters: {
+              currentUser: id,
+              deep: true
+            }
+          }
+        });
+    };
+
+    apiGetFollowersList = function(id) {
+        return $http ({
+          method: 'GET',
+          url: Backand.getApiUrl() + '/1/query/data/getFollowersFollowing',
+          params: {
+            parameters: {
+              currentUser: id
+            }
+          }
+        });
+    };
+
     $scope.follow = function() {
-        $scope.followStatus = "FOLLOWING";
-        $scope.followStatusClass = 'button-positive button-outline disabled';
 
         var toBeFollowed = null;
         var currentUser = null;
@@ -674,9 +777,18 @@ angular.module('app.controllers', [])
         follower.from_id = $localStorage.user.id;
         follower.created = new Date();  
 
-        console.log(follower);
-
-        saveFollow(follower); 
+        if ($scope.followStatus == "FOLLOW") {
+            saveFollow(follower); 
+            $scope.followStatus = "FOLLOWING";
+            $scope.followStatusClass = 'button-light button-outline ion-checkmark-round';
+            $scope.profile.followerCount++;
+        }
+        else if ($scope.followStatus == "FOLLOWING") {
+            deleteFollow(); 
+            $scope.followStatus = "FOLLOW";
+            $scope.followStatusClass = 'button-light';
+            $scope.profile.followerCount--;
+        }
 
     }
 
@@ -684,8 +796,18 @@ angular.module('app.controllers', [])
         FollowersModel.create(object)
             .then(function (result) {
                 console.log(result);
-                //$state.go('nido.activityFeed', {}, {reload: true}); 
             });
+    }
+
+    deleteFollow = function() {
+        if ($scope.profileFollowers != null) {
+            angular.forEach($scope.profileFollowers, function(value, key) {
+                FollowersModel.delete(value.id)
+                    .then(function (result) {
+                        console.log(result);
+                    });
+            });  
+        }
     }
 
 
@@ -714,7 +836,7 @@ angular.module('app.controllers', [])
 
 })
 
-.controller('activityFeedCtrl', function ($state, $stateParams, $scope, $rootScope, Backand, PhotosModel, UsersModel, $http, $localStorage) {
+.controller('activityFeedCtrl', function ($ionicLoading, $ionicPopup, $state, $stateParams, $scope, $rootScope, Backand, PhotosModel, UsersModel, $http, $localStorage) {
     var _self = this; 
     $scope.likes = 0;
     $rootScope.bodyClass = "add-item";
@@ -727,7 +849,7 @@ angular.module('app.controllers', [])
     UsersModel.fetch($localStorage.user.id).then(function(result){
 
         $scope.user = result.data;
-        $localStorage.user = $scope.user; 
+        //$localStorage.user = $scope.user; 
         $rootScope.user = result.data;
 
         //get user's followers
@@ -787,7 +909,7 @@ angular.module('app.controllers', [])
                             if ($scope.user.photos[key].photo === '')
                                 $scope.user.photos[key].photo = "/img/avatar.png";
                             $scope.user.photos[key].username = result.data.firstName; 
-
+                            console.log('it ran for ' + key);
                         });
                     }
  
@@ -877,5 +999,34 @@ angular.module('app.controllers', [])
     $scope.gotoPhoto = function(photo_id) {
         $state.go('nido.myPhoto', {id: photo_id});
     }
+
+    $scope.showEditBox = function(photo_id) {
+      $scope.data = {};
+
+      // An elaborate, custom popup
+      var myPopup = $ionicPopup.show({
+        template: '',
+        title: '',
+        subTitle: '',
+        scope: $scope,
+        buttons: [
+          {
+            text: '<b>Edit</b>',
+            type: 'button-positive',
+            onTap: function(e) {
+                $scope.gotoPhoto(photo_id);
+            }
+          },
+          {
+            text: '<b>Delete</b>',
+            type: 'button-light',
+            onTap: function(e) {
+
+            }
+          }
+        ]
+      });
+    };
+
 })
  

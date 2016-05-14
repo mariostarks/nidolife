@@ -1,11 +1,15 @@
 <ion-view title="Photo" id="page16" class="page-myphoto">
     <ion-content padding="false" class="has-header">
       <form>
-        <img ng-src="{{photo.data}}" class="myphoto-detail"/>
+        <img ng-src="{{photo.data}}" class="myphoto-detail hide-on-keyboard-open"/>
 
         <div class="edit-post-icons row {{captionClass}}">
-          <i class="col-50 post-caption">{{photo.caption}}</i>
-          <i class="{{isAllowedEdit}} icon ion-edit col-50 pull-right" ng-click="editPost()"></i>
+
+          <div class="col-50 post-caption">{{photo.caption}}</div>
+          <div class="col-50 post-edit pull-right" ng-show="(photo.user|num) === (user.id|num)">
+            <button class="button button-small button-stable icon ion-edit" ng-click="editPost()">&nbsp; Edit</button>
+            <button class="button button-small button-stable icon ion-close-circled" ng-click="showConfirmDelete()"></button>
+          </div>
         </div>
 
         <div class="bar bar-footer item-input-inset {{editClass}}">

@@ -1,38 +1,39 @@
 <ion-view title="" id="page6" class="no-title page-profile">
+
     <ion-content padding="false" class="">
         <div class="profile-header">
-            <button class="profile-follow button-small button {{followStatusClass}}" ng-click="follow()" ng-binding>
+            <button class="profile-follow button-small button {{followStatusClass}}" ng-click="follow()" ng-binding ng-show="(user.id|num) != (profile.id|num)">
               {{followStatus}}
             </button>
             <div class="row">
-                <img data-ng-src="{{getProfilePhoto()}}" class="profile-image"/>
+                <img ui-sref="nido.account" src="{{getProfilePhoto()}}" class="profile-image"/>
             </div>
             <div class="profile-title">
-                <div class="profile-name">{{user.lastName}} (@{{user.firstName}})</div>
-                <div class="profile-location">{{user.location}}</div>
+                <div class="profile-name">{{profile.lastName}} (@{{profile.firstName}})</div>
+                <div class="profile-location">{{profile.location}}</div>
             </div>
         </div>
         <div class="button-bar">
             <a ui-sref="nido.challenges" id="profile-button4" class="button button-challenges button-block">
-                <div class="button-count">{{user.postCount}}</div>
+                <div class="button-count">{{profile.postCount}}</div>
                 <div class="button-label">Posts</div>
             </a>
             <a ui-sref="nido.buddies" id="profile-button5" class="button button-following  button-block">
                 <div class="button-count">0</div>
                 <div class="button-label">Challenges</div>
             </a>
-            <a ui-sref="nido.buddies" id="profile-button6" class="button button-followers  button-block">
-                <div class="button-count">0</div>
-                <div class="button-label">Buddies</div>
-            </a>
             <a ui-sref="nido.buddies" id="profile-button6" class="button button-challenges  button-block">
-                <div class="button-count">0</div>
+                <div class="button-count">{{profile.followerCount}}</div>
                 <div class="button-label">Followers</div>
+            </a>
+            <a ui-sref="nido.buddies" id="profile-button6" class="button button-followers  button-block">
+                <div class="button-count">{{profile.followingCount}}</div>
+                <div class="button-label">Following</div>
             </a>
         </div>
         <div class="list card">
             <div class="item item-body">
-                    <img ng-repeat="p in user.photos" ng-click="gotoPhoto({{p.id}})" class="item-photo" ng-src="{{p.data}}" title="{{p.caption}}" />
+                    <img ng-repeat="p in profile.photos" ng-click="gotoPhoto({{p.id}})" class="item-photo" ng-src="{{p.data}}" title="{{p.caption}}" />
             </div>
         </div>
     </ion-content>

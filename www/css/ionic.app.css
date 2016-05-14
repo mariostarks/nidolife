@@ -10012,13 +10012,6 @@ img-crop canvas {
   right: 10px;
   top: 10px; }
 
-.add-item .title {
-  /*
-		background: url('../img/logo-header.png') no-repeat; 
-		width: 140px;
-		height: 50px; 
-		*/ }
-
 .page-upload-post label.item {
   padding: 10px 20px 30px 20px !important;
   background-color: #2d2d2d !important; }
@@ -10234,7 +10227,9 @@ body, .pane {
 
 .item-edit {
   float: right;
-  padding-right: 20px; }
+  margin-right: 20px;
+  padding: 0 10px;
+  top: 10px; }
 
 .edit-post .item-input {
   background-color: #FFF !important; }
@@ -10243,14 +10238,14 @@ body, .pane {
   color: #2d2d2d; }
 
 .edit-post-icons {
-  padding: 10px 15px;
+  padding: 10px;
   font-size: 18px;
   color: #02a6ee; }
   .edit-post-icons .icon {
     margin-right: 7px; }
 
-.popup-head {
-  display: none; }
+.popup-head h3 {
+  color: #2d2d2d; }
 
 .pull-right {
   text-align: right; }
@@ -10281,3 +10276,13 @@ body, .pane {
 
 .page-newsfeed .scroll .item-avatar {
   background: #0295d6 !important; }
+
+.page-timeline .bar-header .title {
+  background: url("../img/logo-header.png") no-repeat;
+  background-size: contain;
+  width: 120px;
+  top: 5px !important;
+  position: absolute;
+  margin: 0 auto;
+  left: 0px !important;
+  right: 0; }

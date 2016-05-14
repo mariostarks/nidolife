@@ -5,12 +5,9 @@
 // the 2nd parameter is an array of 'requires'
 // 'starter.services' is found in services.js
 // 'starter.controllers' is found in controllers.js
-angular.module('app', ['ngCookies', 'angular-toArrayFilter', 'ionic', 'backand', 'app.controllers', 'app.routes', 'app.services', 'app.directives', 'ngImgCrop', 'ngLodash', 'restangular', 'ngStorage', 'angular-loading-bar'])
+angular.module('app', ['ionic-ajax-interceptor', 'ngCookies', 'angular-toArrayFilter', 'ionic', 'backand', 'app.controllers', 'app.routes', 'app.services', 'app.directives', 'ngImgCrop', 'ngLodash', 'restangular', 'ngStorage'])
 
-.config(['cfpLoadingBarProvider', function(cfpLoadingBarProvider) {
-    cfpLoadingBarProvider.includeSpinner = true;
-}])
-.config(function ($provide, BackandProvider,  $stateProvider, $urlRouterProvider, $httpProvider, RestangularProvider) {
+.config(function (AjaxInterceptorProvider, $provide, BackandProvider,  $stateProvider, $urlRouterProvider, $httpProvider, RestangularProvider) {
     BackandProvider.setAppName('nidolife');
     BackandProvider.setSignUpToken('a1435da8-9411-46b1-897a-77623eb9599c');
     BackandProvider.setAnonymousToken('589837be-36cf-4ec0-8871-5d947dcd670a');
@@ -21,6 +18,11 @@ angular.module('app', ['ngCookies', 'angular-toArrayFilter', 'ionic', 'backand',
     // add a response intereceptor
     RestangularProvider.setResponseExtractor(function(response, operation) {
         return response.data;
+    });
+
+    AjaxInterceptorProvider.config({
+        title: "Bummer",
+        defaultMessage: "I crashed :("
     });
 
 
@@ -52,7 +54,13 @@ angular.module('app', ['ngCookies', 'angular-toArrayFilter', 'ionic', 'backand',
     
 })
 
-.run(function($ionicPlatform, $rootScope, $state, LoginService, Backand) {
+.filter('num', function() {
+    return function(input) {
+      return parseInt(input, 10);
+    };
+})
+
+.run(function (AjaxInterceptor, $ionicPlatform, $rootScope, $state, LoginService, Backand) {
   $ionicPlatform.ready(function() {
     // Hide the accessory bar by default (remove this to show the accessory bar above the keyboard
     // for form inputs)
@@ -92,6 +100,9 @@ angular.module('app', ['ngCookies', 'angular-toArrayFilter', 'ionic', 'backand',
             unauthorized();
         }
     });
+
+    AjaxInterceptor.run();
+
   });
 })
 

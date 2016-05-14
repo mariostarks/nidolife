@@ -31,7 +31,7 @@
                         <p>TIMELINE</p>
                     </div>
                 </ion-item>
-                <ion-item ui-sref="nido.profile({ id: user.id })" ui-sref-active="active" class="button" menu-close="">
+                <ion-item ui-sref="nido.profile({ id: user.id })" ui-sref-opts="{reload: true, notify: true}" ui-sref-active="active" class="button" menu-close="">
                     <div class="item-icon-left">
                         <i class="icon ion-person"></i>
                         <p>PROFILE</p>
@@ -40,7 +40,7 @@
                 <ion-item ui-sref="nido.buddies" ui-sref-active="active" class="button" menu-close="">
                     <div class="item-icon-left">
                         <i class="icon ion-person-stalker"></i>
-                        <p>PEOPLE</p>
+                        <p>FOLLOWERS</p>
                     </div>
                 </ion-item>
                 <!--

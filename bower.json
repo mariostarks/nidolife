@@ -8,6 +8,7 @@
     "restangular": "^1.5.2",
     "lodash": "^4.11.2",
     "ng-lodash": "^0.4.0",
-    "angular-toArrayFilter": "^1.0.1"
+    "angular-toArrayFilter": "^1.0.1",
+    "ionic-ajax-interceptor": "^1.1.0"
   }
 }

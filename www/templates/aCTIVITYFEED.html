@@ -1,11 +1,10 @@
-
-<ion-view title="NIDO.LIFE" id="page19" class="page-newsfeed">
+<ion-view title="" id="page19" class="page-newsfeed" hide-back-button="true">
     <ion-content padding="false" class="has-header">
         <div class="list card" ng-repeat="p in t = angular.equals(t, showPhotos()) ? t : showPhotos()">
 
           <div class="item item-avatar">
             <img ui-sref="nido.profile({ id: p.user })" ng-src="{{p.photo}}">
-            <h2 style="font-weight:500;">{{p.username}}</h2>
+            <h2  ui-sref="nido.profile({ id: p.user })" style="font-weight:500;">{{p.username}}</h2>
             <p>{{p.created | date:'MMMM dd, yyyy h:mma'}}</p>
           </div>
 
@@ -19,13 +18,11 @@
                 {{likes}} Likes</a>
               <a href="#" class="subdued pull-right"><i class="icon ion-ios-folder"></i> {{showCategory(p.category)}}</a>
             </p>
-            <p class="item-edit" ng-click="gotoPhoto({{p.id}})">
-              <a href="#" class="subdued"><i class="icon ion-more"></i> 
-            </p>
+            <button class="item-edit button button-small button-stable icon ion-edit" ng-click="gotoPhoto({{p.id}})" ng-show="{{p.user == user.id}}">&nbsp; Edit</button>
           </div>
         </div>
     </ion-content>
-    <div class="bar bar-footer bar-energized" ui-sref="addpost">
-      <div class="title" style="margin: 0 auto;"><i class="dark icon light ion-plus-circled" style="font-size: 30px;"></i></div>
+    <div class="bar bar-footer bar-positive" ui-sref="addpost">
+      <div class="title" style="margin: 0 auto;"><i class="icon light ion-camera" style="font-size: 30px;"></i></div>
     </div>
 </ion-view>
