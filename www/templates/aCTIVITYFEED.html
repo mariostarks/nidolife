@@ -4,21 +4,30 @@
 
           <div class="item item-avatar">
             <img ui-sref="nido.profile({ id: p.user })" ng-src="{{p.photo}}">
-            <h2  ui-sref="nido.profile({ id: p.user })" style="font-weight:500;">{{p.username}}</h2>
+            <h2  ui-sref="nido.profile({ id: p.user })" style="font-weight:500;">{{p.firstName}}</h2>
             <p>{{p.created | date:'MMMM dd, yyyy h:mma'}}</p>
           </div>
 
           <div class="item item-body">
             <img class="full-image" ng-click="gotoPhoto({{p.id}})" ng-src="{{p.data}}">
-            <p class="item-caption">
-             {{p.caption}}
+            <div class="item-interact row">
+              <div class="col-50">
+                <button class="icon ion-happy-outline button  button-light" ng-click="toggleLike(p.id, $index)" ng-show="p.liked!=true"></button>
+                <button class="icon ion-happy button  button-light" ng-click="toggleLike(p.id, $index)" ng-show="p.liked==true"></button>
+                <!--<button class="icon ion-ios-chatboxes-outline button  button-light"></button>-->
+                <button class="button button-light icon ion-edit" ng-click="gotoPhoto({{p.id}})" ng-show="{{p.user == user.id}}"></button>
+              </div>
+              <div class="col-50">
+                <p class="item-social">
+                  <a href="#" class="subdued" ng-show="p.likes>0"><i class="icon ion-happy"></i> 
+                    {{p.likes}} Likes</a>
+                  <a href="#" class="subdued pull-right" ng-show="p.category!=null"><i class="icon ion-ios-folder"></i> &nbsp; {{showCategory(p.category)}}</a>
+                </p>
+              </div>
+            </div>
+            <p class="item-caption" ng-show="{{p.caption!=null}}">
+             <strong ui-sref="nido.profile({ id: p.user })">{{p.firstName}}</strong> {{p.caption}}
             </p>
-            <p class="item-social">
-              <a href="#" class="subdued"><i class="icon ion-thumbsup" ng-click="addLike(p.likes)"></i> 
-                {{likes}} Likes</a>
-              <a href="#" class="subdued pull-right"><i class="icon ion-ios-folder"></i> {{showCategory(p.category)}}</a>
-            </p>
-            <button class="item-edit button button-small button-stable icon ion-edit" ng-click="gotoPhoto({{p.id}})" ng-show="{{p.user == user.id}}">&nbsp; Edit</button>
           </div>
         </div>
     </ion-content>

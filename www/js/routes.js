@@ -170,7 +170,8 @@ angular.module('app.routes', [])
 
   .state('nido.activityFeed', {
     url: '/activity/:id',
-    cache: false,
+    cache: true,
+    //cache: false,
     views: {
       'side-menu21': {
         templateUrl: 'templates/activityFeed.html',

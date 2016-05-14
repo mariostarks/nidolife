@@ -9948,15 +9948,6 @@ h1, h2, h3, h4, h5, h6, .h1, .h2, .h3, .h4, .h5, .h6 {
   color: #FFF;
   font-weight: 400; }
 
-.item-social {
-  padding: 0 16px 16px;
-  background-color: #FFF;
-  color: #2d2d2d; }
-
-.item-caption {
-  padding: 0px 16px 0px 16px;
-  color: #000; }
-
 /* IMAGE CROP */
 img-crop {
   width: 100%;
@@ -10223,12 +10214,11 @@ body, .pane {
   background-color: #02a6ee; }
 
 .item-social {
-  float: left; }
+  float: right; }
 
 .item-edit {
   float: right;
-  margin-right: 20px;
-  padding: 0 10px;
+  margin-right: 10px;
   top: 10px; }
 
 .edit-post .item-input {
@@ -10286,3 +10276,21 @@ body, .pane {
   margin: 0 auto;
   left: 0px !important;
   right: 0; }
+
+.item-interact {
+  padding: 0;
+  margin-bottom: 0; }
+
+.item-social {
+  padding: 0 15px 15px;
+  background-color: #FFF;
+  color: #2d2d2d; }
+  .item-social a, .item-social a > i {
+    font-size: 11px !important; }
+
+.item-caption {
+  margin-top: -5px !important;
+  padding: 10px 15px 0px 15px;
+  margin-bottom: 10px !important;
+  color: #000;
+  border-top: 1px dotted #eee; }

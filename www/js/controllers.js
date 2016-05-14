@@ -106,7 +106,7 @@ angular.module('app.controllers', [])
 
 .controller('menuCtrl', function ($scope, $window, $localStorage, $location) {
     var user_photo = '';
-    //$scope.user = $localStorage.user;
+    $scope.user = $localStorage.user;
     //console.log('scope user: ');
     //console.log($scope.user); 
     $scope.getPhoto = function() {
@@ -122,76 +122,71 @@ angular.module('app.controllers', [])
     $rootScope.bodyClass = "";
 })
 
-.controller('uploadPhotoCtrl', function ($state, AuthService, $rootScope, $scope, Restangular, $localStorage, $http, Backand) {
-    console.log(JSON.stringify($localStorage.userQuery));
-    $rootScope.bodyClass = "";
-    var baseUrl = '/1/objects/';
-    var baseActionUrl = baseUrl + 'action/'
-    var objectName = 'photos';
-    var filesActionName = 'files';
-    Restangular.all("users").getList({ filter: JSON.stringify($localStorage.userQuery) }).then(function (users) {
-        $rootScope.user = users[0];
-        $rootScope.image = {
-           originalImage: '',
-           croppedImage: ''
-        };
+.controller('uploadPhotoCtrl', function ($state, AuthService, $rootScope, $scope, $localStorage, $http, Backand, UsersModel) {
+    // Get user information 
+    $scope.user = $localStorage.user; 
 
-        // Upload & Crop Image Functionality
-        var handleFileSelect=function(evt) {
-          var file=evt.currentTarget.files[0];
-          var reader = new FileReader();
-          reader.onload = function (evt) {
-            $rootScope.$apply(function($rootScope){
-              $rootScope.image.originalImage=evt.target.result;
+    // Create image object
+    $scope.image = { 
+        originalImage: '', 
+        croppedImage: ''
+    };
+
+    // Upload & Crop Image Functionality
+    var handleFileSelect=function(evt) {
+      var file=evt.currentTarget.files[0];
+      var reader = new FileReader();
+      reader.onload = function (evt) {
+        $scope.$apply(function($scope){
+          $scope.image.originalImage=evt.target.result;
+        });
+      };
+      reader.readAsDataURL(file);
+    };
+
+    angular.element(document.querySelector('#fileInput')).on('change',handleFileSelect);
+    
+    // Save Photo
+    $scope.savePhoto = function() {
+        var photoname = 'profile-photo-' + $scope.user.id + '.png';
+        upload(photoname, $scope.image.croppedImage).then(function(res) {
+            $scope.imageUrl = res.data.url + "?" + Date.now();
+            $scope.user.photo = $scope.imageUrl;
+            $localStorage.user.photo = $scope.imageUrl;
+            console.log($scope.imageUrl);
+        }, function(err){
+            console.log(err.data);
+        });
+
+        //update usermodel with $scope.user. 
+
+        UsersModel.update($scope.user.id, $scope.user)
+            .then(function (result) {
+                console.log(result);
+                $state.go('nido.account', {}, {reload: true}); 
             });
-          };
-          reader.readAsDataURL(file);
-        };
 
-        angular.element(document.querySelector('#fileInput')).on('change',handleFileSelect);
-        
-        // Save Photo
-        $rootScope.savePhoto = function() {
-            var photoname = 'profile-photo-' + $rootScope.user.id + '.png';
-            upload(photoname, $rootScope.image.croppedImage).then(function(res) {
-                $scope.imageUrl = res.data.url + "?" + Date.now();
-                $rootScope.user.photo = $scope.imageUrl;
-                $scope.user.photo = $scope.imageUrl; 
-                $localStorage.user.photo = $scope.imageUrl;
-                console.log($scope.imageUrl);
-            }, function(err){
-                console.log(err.data);
-            });
+    };
 
-            $rootScope.user.save().then( function(resp) {
-                console.log(resp);
-                $state.go('nido.account', {}, {reload: true});
-            }, function() {
-                console.log('There was an error saving.');
-            }); 
-        };
-
-        function upload(filename, filedata) {
-            // By calling the files action with POST method in will perform 
-            // an upload of the file into Backand Storage
-            return $http({
-              method: 'POST',
-              url : Backand.getApiUrl() + baseActionUrl +  objectName,
-              params:{
-                "name": filesActionName
-              },
-              headers: {
-                'Content-Type': 'application/json'
-              },
-              // you need to provide the file name and the file data
-              data: {
-                "filename": filename,
-                "filedata": filedata.substr(filedata.indexOf(',') + 1, filedata.length) //need to remove the file prefix type
-              }
-            });
-        };
-
-    });
+    function upload(filename, filedata) {
+        // By calling the files action with POST method in will perform 
+        // an upload of the file into Backand Storage
+        return $http({
+          method: 'POST',
+          url : Backand.getApiUrl() + '/1/objects/action/photos',
+          params:{
+            "name": 'files'
+          },
+          headers: {
+            'Content-Type': 'application/json'
+          },
+          // you need to provide the file name and the file data
+          data: {
+            "filename": filename,
+            "filedata": filedata.substr(filedata.indexOf(',') + 1, filedata.length) //need to remove the file prefix type
+          }
+        });
+    };
 
 
 })
@@ -575,8 +570,8 @@ angular.module('app.controllers', [])
      // A confirm dialog
      $scope.showConfirmDelete = function() {
        var confirmPopup = $ionicPopup.confirm({
-         title: 'Delete Photo',
-         template: 'Are you sure you want to delete this photo?'
+         title: 'Delete Photo Confirmation',
+         template: 'Are you sure you want to delete this photo? This cannot be undone.'
        });
 
        confirmPopup.then(function(res) {
@@ -728,14 +723,16 @@ angular.module('app.controllers', [])
 
     $scope.getProfilePhoto = function() {
         var userphoto = '/img/avatar.png'; 
-        console.log($scope.profile);
+        $scope.user = $localStorage.user; 
 
-        if ($scope.profile.id == $scope.user.id) {
-            userphoto = $localStorage.user.photo;
-        }
-        else {
-            if ($scope.profile.photo != '') {
-                userphoto = $scope.profile.photo;
+        if (typeof $scope.profile !== 'undefined') {
+            if ($scope.profile.id == $scope.user.id) {
+                userphoto = $localStorage.user.photo;
+            }
+            else {
+                if ($scope.profile.photo != '') {
+                    userphoto = $scope.profile.photo;
+                }
             }
         }
     
@@ -836,7 +833,7 @@ angular.module('app.controllers', [])
 
 })
 
-.controller('activityFeedCtrl', function ($ionicLoading, $ionicPopup, $state, $stateParams, $scope, $rootScope, Backand, PhotosModel, UsersModel, $http, $localStorage) {
+.controller('activityFeedCtrl', function ($ionicLoading, $ionicPopup, $state, $stateParams, $scope, $rootScope, Backand, PhotosModel, UsersModel, $http, $localStorage, LikesModel) {
     var _self = this; 
     $scope.likes = 0;
     $rootScope.bodyClass = "add-item";
@@ -896,26 +893,11 @@ angular.module('app.controllers', [])
 
             getPhotos($scope.followersList).then(function(results) {
                 $scope.user.photos = results.data;
+                console.log($scope.user.photos);
 
                 angular.forEach($scope.user.photos, function(value, key) {
- 
-                    //Get User Details based on Timeline Photos
-                    //Prevent from executing data query if value is already set
-                    if( typeof $scope.user.photos[key].username !== 'undefined' || $scope.user.photos[key].username !== null ){
-                        UsersModel.fetch(value.user).then(function(result){
-            
-                            $scope.user.photos[key].photo = result.data.photo;
-                            // Set default image if user has no profile photo uploaded 
-                            if ($scope.user.photos[key].photo === '')
-                                $scope.user.photos[key].photo = "/img/avatar.png";
-                            $scope.user.photos[key].username = result.data.firstName; 
-                            console.log('it ran for ' + key);
-                        });
-                    }
- 
+                    $scope.getLikes(value.id, key);
                 });
-
-                console.log($scope.user.photos);
 
                 /* ADD FIRST or WELCOME POST */ 
                 var lastKey = results.data.length + 1;
@@ -928,46 +910,110 @@ angular.module('app.controllers', [])
                 $scope.user.photos[lastKey].comments = Date.now().toString(); 
                 $scope.user.photos[lastKey].likes = ''; 
                 $scope.user.photos[lastKey].user = '2';  
+
                 
             });
         });
 
     });
 
-    $scope.addLike = function(count) {
-        var countLikes = ''; 
-        var countLikes = count + 1;
-        $scope.likes = countLikes; 
-        var countText = countLikes;
-        return countText;
+    $scope.getLikes = function(photoId, index) {
+ 
+        if (photoId && index) {
+            LikesModel.fetchByPhoto(photoId).then(function(results){
+                var likes = 0; 
+                if (results.data.totalRows > 0) {
+                    $scope.user.photos[index].likes = results.data.totalRows; 
+                    likes = $scope.user.photos[index].likes;
+                    $scope.user.photos[index].likeData = results.data.data;
+                    /*
+                    return Promise.all(results.rows.map(function (row) {
+                        console.log(row);
+                    }));
+                    */
+
+                    angular.forEach($scope.user.photos[index].likeData, function(value, key) {
+                        if (value.user == $localStorage.user.id)
+                            $scope.user.photos[index].liked = true;
+                            $scope.user.photos[index].likedId = value.id;
+                    });
+                }
+                else {
+                    $scope.user.photos[index].likes = 0;
+                }
+
+                console.log($scope.user.photos[index]);
+                return likes;
+            }, function (response) {
+                console.log(response);
+                $rootScope.$destroy();
+            }); 
+        }
+    }
+
+    $scope.toggleLike = function(photoId, index) {
+        // Add new like 
+        if ($scope.user.photos[index].liked!=true) {
+            $scope.like = {};
+            $scope.like.user = $scope.user.id; //$localStorage.user.id;
+            $scope.like.photo = photoId;
+            $scope.like.created = Date.now().toString();
+
+            LikesModel.create($scope.like).then(function(results){
+                $scope.user.photos[index].likedId = parseInt(results.data.__metadata.id);
+                $scope.user.photos[index].liked = true;
+                $scope.user.photos[index].likes++; 
+                console.log(results);
+            });  
+        }
+
+        if ($scope.user.photos[index].liked==true) {
+            $scope.like = {};
+            $scope.like.user = $scope.user.id; //$localStorage.user.id;
+            $scope.like.photo = photoId;
+            $scope.like.created = Date.now().toString();
+
+            LikesModel.delete($scope.user.photos[index].likedId).then(function(results){
+                $scope.user.photos[index].liked = false;
+                $scope.user.photos[index].likes--; 
+                console.log(results);
+            });  
+        }
+        //refresh like check 
+
+        //create new record 
+        //code
+
+        //add like counter
+        
+
+        console.log($scope.user.photos[index]);
     }
 
     $scope.showCategory = function(category) {
         var categoryText = '';
-        if (category == null) { categoryText = 'No tag.'; }
+        if (category == null) { categoryText = ''; }
         switch(category) {
             case "1":
-                categoryText = 'Meal Tag';
+                categoryText = 'Meal';
                 break;
             case "2":
-                categoryText = 'Sneaker Tag';
+                categoryText = 'Sneaker';
                 break;
             case "3":
-                categoryText = 'Motivation Tag';
+                categoryText = 'Motivation';
                 break;
             case "4":
-                categoryText = 'Physical Activity';
+                categoryText = 'Activity';
                 break;
             default:
-                categoryText = 'No tag.';
+                categoryText = '';
         }
         return categoryText;
     };
     
 
     $scope.showPhotos = function() {
-        //debug: 
-        //console.log($scope.user.photos);
         return $scope.user.photos;
     };
 
