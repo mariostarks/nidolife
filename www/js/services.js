@@ -167,25 +167,6 @@ angular.module('app.services', [])
 	        return $http.delete(getUrlForId(id));
 	    };
 
-	    service.fetchByPhoto = function(id) {
-
-	    	if (Backand.getApiUrl()) {
-				return $http ({
-				  method: 'GET',
-				  url: getUrl(),
-				  params: {
-				    filter: [
-				      {
-				        fieldName: 'photo',
-				        operator: 'in',
-				        value: id
-				      }
-				    ],
-				    sort: ''
-				  }
-				});
-			}
-	    };
 	})
 
 	.service('UsersModel', function ($http, Backand) {

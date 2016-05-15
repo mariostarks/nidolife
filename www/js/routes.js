@@ -14,6 +14,26 @@ angular.module('app.routes', [])
     controller: 'homeCtrl'
   })
 
+  .state('nido.following', {
+    url: '/following/:id',
+    views: {
+      'side-menu21': {
+        templateUrl: 'templates/following.html',
+        controller: 'followingCtrl'
+      }
+    }
+  })
+
+  .state('nido.followers', {
+    url: '/followers/:id',
+    views: {
+      'side-menu21': {
+        templateUrl: 'templates/followers.html',
+        controller: 'followersCtrl'
+      }
+    }
+  })
+
   .state('nido', {
     url: '/side-menu',
     templateUrl: 'templates/menu.html',
@@ -97,6 +117,8 @@ angular.module('app.routes', [])
       }
     }
   })
+
+
 
   .state('nido.signout', {
     url: '/signout',

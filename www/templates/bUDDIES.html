@@ -1,5 +1,11 @@
-<ion-view title="People" id="page7" class="page-buddies">
+<ion-view title="Find Buddies" id="page7" class="page-buddies">
     <ion-content padding="true" class="has-header">
+        <div class="button-bar">
+          <a class="button button-stable icon ion-ios-personadd" ui-sref="nido.following({ id: user.id })">&nbsp; Following</a>
+          <a class="button button-stable icon ion-ios-people" ui-sref="nido.followers({ id: user.id })">&nbsp; Followers</a>
+        </div>
+        <hr class="separator"/>
+
         <div class="list list-inset">
           <label class="item item-input input-search">
             <i class="icon ion-search placeholder-icon"></i>
@@ -33,14 +39,16 @@
         <!--<a ui-sref="nido.addBuddy" id="buddies-button32" style="font-weight:bolder;font-size:30px;" class="button button-positive  button-block">+</a>-->
 
 
-        <hr class="separator"/>
+        
+
+
         <div class="card">
           <div class="item item-text-wrap buddies-active">
-            <h2>Following</h2>
+            <h2>Recently Joined</h2>
             <div class="buddy-container">
-                <div class="item item-avatar" style="display:block;" ng-repeat="f in followers">
-                    <img ui-sref="nido.profile({ id: f.id })" ng-src="{{f.photo || '/img/avatar.png'}}">
-                    <div class="profile-username" ui-sref="nido.profile({ id: f.id })">{{f.firstName}}</div>
+                <div class="everybody-container" style="display:block;" ng-repeat="u in users">
+                    <img ng-src="{{u.photo || '/img/avatar.png'}}" class="everybody-image" ui-sref="nido.profile({ id: u.id })">
+                    <div class="everybody-username" ui-sref="nido.profile({ id: u.id })">{{u.firstName}}</div>
                 </div>
             </div>
           </div>
@@ -49,11 +57,12 @@
 
     </ion-content>
 
+    <!--
     <div class="bar bar-footer bar-positive">
         <div class="list">
             <span>New to NIDO? Invite your friends by email. </span>
             <div class="item item-input-inset">
-                <label class="item-input-wrapper ion-email icon style="color:#000;">
+                <label class="item-input-wrapper ion-email icon" style="color:#000;">
                   <input type="text" placeholder="&nbsp;Email">
                 </label>
                 <button class="button button-small">
@@ -62,6 +71,7 @@
             </div>
         </div>
     </div>
+    -->
 
 </ion-view>
 

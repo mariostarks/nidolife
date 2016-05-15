@@ -1,0 +1,24 @@
+<ion-view title="Who You're Following" id="page7" class="page-list page-following">
+    <ion-content padding="true" class="has-header">
+        <div class="button-bar">
+          <a class="button button-stable" ui-sref="nido.followers({ id: currentUser })">Followers</a>
+          <a class="button button-positive">Following</a>
+        </div>
+
+        <div class="list">
+
+            <a class="item item-avatar" href="#" ng-repeat="f in followers" ui-sref="nido.profile({ id: f.id })">
+              <img ui-sref="nido.profile({ id: f.id })" ng-src="{{f.photo || '/img/avatar.png'}}">
+              <h2>{{f.firstName}}</h2>
+              <p>{{f.lastName}}</p>
+
+            </a>
+
+
+        </div>
+
+
+    </ion-content>
+
+</ion-view>
+

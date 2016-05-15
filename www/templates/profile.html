@@ -14,19 +14,19 @@
             </div>
         </div>
         <div class="button-bar">
-            <a ui-sref="nido.challenges" id="profile-button4" class="button button-challenges button-block">
+            <a id="profile-button4" class="button button-challenges button-block">
                 <div class="button-count">{{profile.postCount}}</div>
                 <div class="button-label">Posts</div>
             </a>
-            <a ui-sref="nido.buddies" id="profile-button5" class="button button-following  button-block">
+            <a ui-sref="nido.challenges" id="profile-button5" class="button button-following  button-block">
                 <div class="button-count">0</div>
                 <div class="button-label">Challenges</div>
             </a>
-            <a ui-sref="nido.buddies" id="profile-button6" class="button button-challenges  button-block">
+            <a id="profile-button6" class="button button-challenges button-block" ui-sref="nido.followers({ id: profile.id })" >
                 <div class="button-count">{{profile.followerCount}}</div>
                 <div class="button-label">Followers</div>
             </a>
-            <a ui-sref="nido.buddies" id="profile-button6" class="button button-followers  button-block">
+            <a id="profile-button6" class="button button-followers button-block" ui-sref="nido.following({ id: profile.id })" >
                 <div class="button-count">{{profile.followingCount}}</div>
                 <div class="button-label">Following</div>
             </a>

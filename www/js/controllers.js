@@ -338,6 +338,111 @@ angular.module('app.controllers', [])
     $rootScope.bodyClass = "";
 })
 
+.controller('followersCtrl', function ($http, Backand, $scope, $rootScope, BuddyRequestsModel, $localStorage, Restangular, UsersModel, $stateParams) {
+
+    $scope.currentUser = $stateParams.id; 
+
+    tempFollowersList = [];
+    followersList = [];
+
+    apiGetFollowersDetails = function(followersList) {
+        return $http ({
+          method: 'GET',
+          url: Backand.getApiUrl() + '/1/query/data/getFollowersUserDetails',
+          params: {
+            parameters: {
+              followersList: followersList,
+              deep: true
+            }
+          }
+        });
+    }
+
+    apiGetFollowersList = function(id) {
+        return $http ({
+          method: 'GET',
+          url: Backand.getApiUrl() + '/1/query/data/getFollowersFollowing',
+          params: {
+            parameters: {
+              currentUser: id
+            }
+          }
+        });
+    };
+
+    apiGetFollowersList($scope.currentUser).then(function(results) {
+        $scope.followersIds = results.data;
+        $scope.followersCount = results.data.length; 
+
+        //Build temp followers list from DB
+        angular.forEach($scope.followersIds, function(value, key) {
+            this.push(value.from_id);
+        }, tempFollowersList);
+
+        //String value passed to get follower details 
+        $scope.followersList = tempFollowersList.join(',');
+        
+        apiGetFollowersDetails($scope.followersList).then(function(results) {
+            $scope.followers = results.data;
+        });
+
+    });
+
+})
+
+.controller('followingCtrl', function ($http, Backand, $scope, $rootScope, BuddyRequestsModel, $localStorage, Restangular, UsersModel, $stateParams) {
+    $scope.currentUser = $stateParams.id; 
+    tempFollowersList = [];
+    followersList = [];
+
+    apiGetFollowersList = function() {
+        return $http ({
+          method: 'GET',
+          url: Backand.getApiUrl() + '/1/query/data/getFollowers',
+          params: {
+            parameters: {
+              currentUser: $scope.currentUser,
+              deep: true
+            }
+          }
+        });
+    };
+
+    apiGetFollowersDetails = function(followersList) {
+        return $http ({
+          method: 'GET',
+          url: Backand.getApiUrl() + '/1/query/data/getFollowersUserDetails',
+          params: {
+            parameters: {
+              followersList: followersList,
+              deep: true
+            }
+          }
+        });
+    }
+
+    apiGetFollowersList().then(function(results) {
+        $scope.followersIds = results.data;
+        $scope.followersCount = results.data.length; 
+
+        //Build temp followers list from DB
+        angular.forEach($scope.followersIds, function(value, key) {
+            this.push(value.to_id);
+        }, tempFollowersList);
+
+        //Add user's self 
+        //tempFollowersList.push($localStorage.user.id);
+
+        //String value passed to get follower details 
+        $rootScope.followersList = tempFollowersList.join(',');
+
+        apiGetFollowersDetails($rootScope.followersList).then(function(results) {
+            $scope.followers = results.data;
+        });
+
+    });
+})
+
 .controller('buddiesCtrl', function ($http, Backand, $scope, $rootScope, BuddyRequestsModel, $localStorage, Restangular, UsersModel) {
     $scope.users = {}; 
     $scope.query = {};
@@ -896,10 +1001,13 @@ angular.module('app.controllers', [])
                 console.log($scope.user.photos);
 
                 angular.forEach($scope.user.photos, function(value, key) {
-                    $scope.getLikes(value.id, key);
+                    if (value.id != null && key != null ) {
+                        $scope.getLikes(value.id, key);
+                    }
                 });
 
                 /* ADD FIRST or WELCOME POST */ 
+                /*
                 var lastKey = results.data.length + 1;
                 $scope.user.photos[lastKey] = {};
                 $scope.user.photos[lastKey].data = '/img/timeline-drluna.png'; 
@@ -910,17 +1018,36 @@ angular.module('app.controllers', [])
                 $scope.user.photos[lastKey].comments = Date.now().toString(); 
                 $scope.user.photos[lastKey].likes = ''; 
                 $scope.user.photos[lastKey].user = '2';  
-
+                */
                 
             });
         });
 
     });
 
+    apiFetchByPhoto = function(id) {
+        if (Backand.getApiUrl !='https://0.0.0.1') {
+            $http.defaults.cache = true; 
+            return $http ({
+              method: 'GET',
+              url: Backand.getApiUrl() + '/1/objects/likes',
+              params: {
+                filter: [
+                  {
+                    fieldName: 'photo',
+                    operator: 'in',
+                    value: id
+                  }
+                ],
+                sort: ''
+              }
+            });
+        }
+    }
+
     $scope.getLikes = function(photoId, index) {
  
-        if (photoId && index) {
-            LikesModel.fetchByPhoto(photoId).then(function(results){
+            apiFetchByPhoto(photoId).then(function(results){
                 var likes = 0; 
                 if (results.data.totalRows > 0) {
                     $scope.user.photos[index].likes = results.data.totalRows; 
@@ -933,7 +1060,9 @@ angular.module('app.controllers', [])
                     */
 
                     angular.forEach($scope.user.photos[index].likeData, function(value, key) {
-                        if (value.user == $localStorage.user.id)
+                        console.log($scope.user.photos[index].likeData);
+                        console.log($localStorage.user.id);
+                        if (parseInt(value.user) == $localStorage.user.id)
                             $scope.user.photos[index].liked = true;
                             $scope.user.photos[index].likedId = value.id;
                     });
@@ -948,7 +1077,7 @@ angular.module('app.controllers', [])
                 console.log(response);
                 $rootScope.$destroy();
             }); 
-        }
+        
     }
 
     $scope.toggleLike = function(photoId, index) {
@@ -967,6 +1096,7 @@ angular.module('app.controllers', [])
             });  
         }
 
+        // Unlike
         if ($scope.user.photos[index].liked==true) {
             $scope.like = {};
             $scope.like.user = $scope.user.id; //$localStorage.user.id;
