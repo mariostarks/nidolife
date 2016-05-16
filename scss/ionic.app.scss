@@ -200,8 +200,19 @@ h1, h2, h3, h4, h5, h6, .h1, .h2, .h3, .h4, .h5, .h6 {
 		padding: 0; 
 		p { color: #000;  }
 	}
-	.card { margin: 0 0 0 0; }
-	h2 { color: #FFF; font-weight: 400; }
+	.item-avatar {
+		p { font-size: 10px; }
+	}
+	.card:first-child { margin-top: -1px; }
+	.card { margin: 0 0 10px 0; }
+	h2 { 
+		color: #FFF; 
+		font-weight: bold!important; 
+		font-size: 12px;
+		margin-bottom: 0px;
+		margin-top: 5px;
+	}
+	.scroll-content { background-color: #eee!important; }
 }
 
 /* IMAGE CROP */
@@ -539,6 +550,9 @@ body, .pane {
 	.button-positive {
 		text-decoration: underline;
 		font-weight: 500;
+	}
+	.button-stable {
+		font-size: 12px;
 	}
 }
 .back-button:before {

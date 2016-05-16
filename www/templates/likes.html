@@ -1,0 +1,14 @@
+<ion-view title="Likes" id="page7" class="page-list page-likes">
+    <ion-content padding="true" class="has-header">
+      <div class="list">
+          <a class="item item-avatar" href="#" ng-repeat="l in likeUsers" ui-sref="nido.profile({ id: l.id })">
+            <img ui-sref="nido.profile({ id: l.id })" ng-src="{{l.photo || '/img/avatar.png'}}">
+            <h2>{{l.firstName}}</h2>
+            <p>{{l.lastName}}</p>
+          </a>
+      </div>
+
+    </ion-content>
+
+</ion-view>
+

@@ -9941,12 +9941,24 @@ h1, h2, h3, h4, h5, h6, .h1, .h2, .h3, .h4, .h5, .h6 {
   .page-newsfeed .item-body p, .page-uploadphoto .item-body p {
     color: #000; }
 
+.page-newsfeed .item-avatar p, .page-uploadphoto .item-avatar p {
+  font-size: 10px; }
+
+.page-newsfeed .card:first-child, .page-uploadphoto .card:first-child {
+  margin-top: -1px; }
+
 .page-newsfeed .card, .page-uploadphoto .card {
-  margin: 0 0 0 0; }
+  margin: 0 0 10px 0; }
 
 .page-newsfeed h2, .page-uploadphoto h2 {
   color: #FFF;
-  font-weight: 400; }
+  font-weight: bold !important;
+  font-size: 12px;
+  margin-bottom: 0px;
+  margin-top: 5px; }
+
+.page-newsfeed .scroll-content, .page-uploadphoto .scroll-content {
+  background-color: #eee !important; }
 
 /* IMAGE CROP */
 img-crop {
@@ -10310,6 +10322,9 @@ body, .pane {
 .page-list .button-positive {
   text-decoration: underline;
   font-weight: 500; }
+
+.page-list .button-stable {
+  font-size: 12px; }
 
 .back-button:before {
   font-size: 15px !important;

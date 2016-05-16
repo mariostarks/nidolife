@@ -31,14 +31,15 @@
             </label>
           </div>
 
-          <p class="photo-options">
-            <a ng-click="save()" class="button button-positive">Submit</a>
-            <a ui-sref="nido.activityFeed" class="button button-dark">Cancel</a>
 
-          </p>
         </form>
 
       </div>
-
     </ion-content>
+    <div class="bar bar-footer bar-calm" ui-sref="addpost">
+      <p class="photo-options">
+        <a ng-click="save()" class="button button-positive">Submit</a>
+        <a ui-sref="nido.activityFeed" class="button button-dark">Cancel</a>
+      </p>
+    </div>
 </ion-view>

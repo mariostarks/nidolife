@@ -1,10 +1,10 @@
 <ion-view title="" id="page19" class="page-newsfeed" hide-back-button="true">
     <ion-content padding="false" class="has-header">
-        <div class="list card" ng-repeat="p in t = angular.equals(t, showPhotos()) ? t : showPhotos()">
+        <div class="list card" ng-repeat="p in user.photos">
 
           <div class="item item-avatar">
-            <img ui-sref="nido.profile({ id: p.user })" ng-src="{{p.photo}}">
-            <h2  ui-sref="nido.profile({ id: p.user })" style="font-weight:500;">{{p.firstName}}</h2>
+            <img ui-sref="nido.profile({ id: p.user })" ng-src="{{user.usersFollowed[p.user].photo}}">
+            <h2  ui-sref="nido.profile({ id: p.user })" style="font-weight:500;">{{user.usersFollowed[p.user].firstName|lowercase}}</h2>
             <p>{{p.created | date:'MMMM dd, yyyy h:mma'}}</p>
           </div>
 
@@ -12,15 +12,16 @@
             <img class="full-image" ng-click="gotoPhoto({{p.id}})" ng-src="{{p.data}}">
             <div class="item-interact row">
               <div class="col-50">
-                <button class="icon ion-happy-outline button  button-light" ng-click="toggleLike(p.id, $index)" ng-show="p.liked!=true"></button>
-                <button class="icon ion-happy button  button-light" ng-click="toggleLike(p.id, $index)" ng-show="p.liked==true"></button>
+                <button class="icon ion-happy-outline button  button-light" ng-click="toggleLike(p.id, $index)" ng-show="photosWithLikes[p.id].liked!=true"></button>
+                <button class="icon ion-happy button  button-light" ng-click="toggleLike(p.id, $index)" ng-show="photosWithLikes[p.id].liked==true"></button>
                 <!--<button class="icon ion-ios-chatboxes-outline button  button-light"></button>-->
                 <button class="button button-light icon ion-edit" ng-click="gotoPhoto({{p.id}})" ng-show="{{p.user == user.id}}"></button>
               </div>
               <div class="col-50">
                 <p class="item-social">
-                  <a href="#" class="subdued" ng-show="p.likes>0"><i class="icon ion-happy"></i> 
-                    {{p.likes}} Likes</a>
+                  <a href="#" class="subdued" ng-show="photosWithLikes[p.id].likeCounter>0"><i class="icon ion-happy"></i> 
+                    
+                    {{photosWithLikes[p.id].likeCounter}} Likes</a>
                   <a href="#" class="subdued pull-right" ng-show="p.category!=null"><i class="icon ion-ios-folder"></i> &nbsp; {{showCategory(p.category)}}</a>
                 </p>
               </div>

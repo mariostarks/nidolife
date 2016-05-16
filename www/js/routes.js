@@ -24,6 +24,17 @@ angular.module('app.routes', [])
     }
   })
 
+
+  .state('nido.likes', {
+    url: '/likes/:id',
+    views: {
+      'side-menu21': {
+        templateUrl: 'templates/likes.html',
+        controller: 'likesCtrl'
+      }
+    }
+  })
+
   .state('nido.followers', {
     url: '/followers/:id',
     views: {
@@ -192,8 +203,7 @@ angular.module('app.routes', [])
 
   .state('nido.activityFeed', {
     url: '/activity/:id',
-    cache: true,
-    //cache: false,
+    cache: false,
     views: {
       'side-menu21': {
         templateUrl: 'templates/activityFeed.html',
