@@ -1,6 +1,6 @@
 angular.module('app.controllers', [])
 
-.controller('mainCtrl', function($rootScope, $scope, $location) {
+.controller('mainCtrl', function ($location, $timeout, $rootScope, $scope, $location) {
     $scope.showBodyClass = function() {
 
         var bodyClasses = ''; 
@@ -23,10 +23,12 @@ angular.module('app.controllers', [])
     $scope.$back = function() { 
         window.history.back();
     };
+
 })
 
-.controller('addPostUploadCtrl', function ($state, AuthService, $rootScope, $scope, Restangular, $localStorage, $http, Backand, PhotosModel) {
+.controller('addPostUploadCtrl', function ($ionicHistory, $state, AuthService, $rootScope, $scope, Restangular, $localStorage, $http, Backand, PhotosModel) {
     var _self = this; 
+    $scope.currentUser = $localStorage.user.id;
     $scope.post = {}; //object for new post being created 
     $scope.post.caption = '';
 
@@ -76,6 +78,10 @@ angular.module('app.controllers', [])
 
 
     };
+
+    $scope.goBack = function() {
+        $ionicHistory.goBack();
+    }
 
     function create(object) {
         PhotosModel.create(object)
@@ -331,10 +337,6 @@ angular.module('app.controllers', [])
 
    
 .controller('challengesCtrl', function($scope, $rootScope) {
-    $rootScope.bodyClass = "";
-})
-   
-.controller('messagesCtrl', function($scope, $rootScope) {
     $rootScope.bodyClass = "";
 })
 
@@ -665,14 +667,308 @@ angular.module('app.controllers', [])
 .controller('addBuddyCtrl', function($scope) {
 
 })
-   
-.controller('newMessageCtrl', function($scope) {
+  
+.controller('messagesCtrl', function (ConversationsModel, ConversationRepliesModel, $http, Backand, $scope, $rootScope, BuddyRequestsModel, $localStorage, Restangular, UsersModel, $stateParams) {
+    $rootScope.bodyClass = "";
+
+    currentUser = $localStorage.user.id; 
+    $scope.conversations = {};
+    //$scope.getConvos(); 
+
+    $scope.init = function() {
+        getConversationList(currentUser).then(function(results) {
+            if (results.status == 200) {
+                if (results.data.length > 0) {
+                    $scope.conversations = results.data;
+                    angular.forEach($scope.conversations, function(value, key) {
+                        getLastReply(value.conversation_id).then(function(results) {
+                            if (results.status == 200) {
+                                $scope.conversations[key].lastReply = results.data[0].reply;
+                                $scope.conversations[key].last_updated = results.data[0].created;
+                                $scope.conversations[key].lastReplyId = results.data[0].id;
+                            }
+                        });
+                    }); 
+                } 
+            }
+        }); 
+    };
+
+    getLastReply = function(conversation_id) {
+        return $http ({
+          method: 'GET',
+          url: Backand.getApiUrl() + '/1/query/data/getLastReply',
+          params: {
+            parameters: {
+              conversation_id: conversation_id
+            }
+          }
+        });
+    }
+
+    getConversationList = function(user_id) {
+        return $http ({
+          method: 'GET',
+          url: Backand.getApiUrl() + '/1/query/data/getConversationList',
+          params: {
+            parameters: {
+              user_id: user_id
+            }
+          }
+        });
+    }
+})
+
+.controller('readMessageCtrl', function ($ionicLoading, $location, $timeout, $ionicScrollDelegate, ConversationsModel, ConversationRepliesModel, $http, Backand, $scope, $rootScope, BuddyRequestsModel, $localStorage, Restangular, UsersModel, $stateParams) {
+
+    $scope.currentUser = $localStorage.user.id;
+    $scope.conversation_id = $stateParams.id; 
+    $scope.replies = {};
+    $scope.messageBuddy = {};
+
+    $scope.$on('$locationChangeStart', function(){
+        $timeout.cancel($scope.promise);
+        $rootScope.hideLoading = false;
+    });
+
+    $scope.init = function() {
+        $scope.tickCounter = 0; //initialize 
+        $scope.pollRefresh = 7; //every seconds
+        $scope.maxSession = 5; //max minutes 
+        console.log(Math.ceil((60 / $scope.pollRefresh)*$scope.maxSession));
+        $rootScope.hideLoading = true; 
+        if ($scope.conversation_id && $scope.currentUser) {
+
+           (function tick() {
+                if ($scope.tickCounter < ((60 / $scope.pollRefresh)*$scope.maxSession)) { // stop updating after 10 minutes
+                    getThread($scope.conversation_id).then(function(results) {
+                        $rootScope.hideLoading = true; 
+                        $scope.replies = results.data;
+                        $scope.tickCounter++;
+                        console.log($scope.tickCounter);
+                        $scope.promise = $timeout(tick, 1000 * $scope.pollRefresh);
+                    });
+                }
+            })();
+
+            getConversationBuddy($scope.conversation_id, $scope.currentUser).then(function(results) {
+                if (results.status == 200) {
+                    $scope.messageBuddy = results.data[0];
+                    console.log(results);
+                    console.log($scope.messageBuddy);
+                }
+            });
+        }
+    }
+
+    // Show last reply at bottom of window, move scrollbar automagically
+    $scope.$watch('replies', function(newValue, oldValue) {
+        $rootScope.hideLoading = true; 
+        $ionicScrollDelegate.$getByHandle('mainScroll').scrollBottom(false);
+    }, true);
+
+
+    getThread = function(conversation_id) {
+        return $http ({
+          method: 'GET',
+          url: Backand.getApiUrl() + '/1/query/data/getConversationUpdates',
+          params: {
+            parameters: {
+              conversation_id: conversation_id
+            }
+          }
+        });
+    }
+
+    getConversationBuddy = function(conversation_id, user_id) {
+        return $http ({
+          method: 'GET',
+          url: Backand.getApiUrl() + '/1/query/data/getConversationBuddy',
+          params: {
+            parameters: {
+              conversation_id: conversation_id,
+              user_id: user_id
+            }
+          }
+        });
+    }
+
+    $scope.createReply = function() {
+        if ($scope.currentUser && $scope.conversation_id) {
+            $scope.reply = {};
+            $scope.reply.user_id = $scope.currentUser;
+            $scope.reply.created = new Date();
+            $scope.reply.status = '';
+            $scope.reply.reply = $scope.message; 
+            $scope.reply.conversation_id = $scope.conversation_id;
+
+            console.log($scope.reply);
+            
+            //and create reply in conversation_replies table 
+            ConversationRepliesModel.create($scope.reply).then(function(results) {
+                if (results.status == 200) {
+                    getThread($scope.conversation_id).then(function(results) {
+                        $scope.replies = results.data;
+                        $scope.message = "";
+                        console.log($scope.replies);
+                    });     
+                }
+            });
+        }
+    }
 
 })
-   
-.controller('readMessageCtrl', function($scope) {
 
+.controller('newMessageCtrl', function (ConversationsModel, ConversationRepliesModel, $http, Backand, $scope, $rootScope, BuddyRequestsModel, $localStorage, Restangular, UsersModel, $stateParams, $state) {
+    $scope.currentUser = $localStorage.user.id; 
+
+    tempFollowersList = [];
+    followersList = [];
+
+    $scope.tags = [];
+    $scope.userList = [];
+    $scope.search = {};
+
+    isConversationNew = function(user_a, user_b) {
+        return $http ({
+          method: 'GET',
+          url: Backand.getApiUrl() + '/1/query/data/getConversation',
+          params: {
+            parameters: {
+              user_a: user_a,
+              user_b: user_b
+            }
+          }
+        });
+    }
+
+    $scope.toUserSelected = function(username, userId, index) {
+        // Clear previous selections 
+        angular.forEach($scope.followers, function(value, key) {
+            value.selected = false;
+        });
+        $scope.tags = [];
+
+        $scope.followers[index].selected = true; 
+
+        console.log('me');
+        console.log($scope.followers);
+        $scope.tags.push({ text: username, id: userId });
+    };
+
+    $scope.createMessage = function() {
+
+        $scope.conversation = {};
+        $scope.conversation.user_a = $localStorage.user.id;
+        $scope.conversation.user_b = $scope.tags[0].id; 
+        $scope.conversation.created = new Date(); 
+        $scope.conversation.status = ''; 
+        $scope.conversation.reply = $scope.newMessage;
+        //check if conversation exists
+        isConversationNew($scope.conversation.user_a, $scope.conversation.user_b).then(function(results) {
+            console.log(results);
+            if (results.status == 200) {
+
+                if (results.data.length == 0) {
+                    console.log("we're creating a new conversation");
+                    //if new conversation, create entry into DB
+                    ConversationsModel.create($scope.conversation).then(function(results) {
+                        
+                        if (results.status == 200) {
+                            $scope.reply = {};
+                            $scope.reply.user_id = $scope.conversation.user_a;
+                            $scope.reply.created = new Date();
+                            $scope.reply.status = '';
+                            $scope.reply.reply = $scope.conversation.reply; 
+                            $scope.reply.conversation_id = results.data.__metadata.id;
+                            
+                            //and create reply in conversation_replies table 
+                            ConversationRepliesModel.create($scope.reply).then(function(results) {
+                                if (results.status == 200) {
+                                    $state.go('nido.readMessage', { id: $scope.reply.conversation_id }, {reload: true});
+                                    console.log('reply has been added');
+                                    console.log(results);        
+                                }
+                            });
+                        } 
+
+                    });  
+                }
+
+                else {
+                    $scope.reply = {};
+                    $scope.reply.conversation_id = results.data[0].id;
+                    $scope.reply.user_id = $scope.conversation.user_a;
+                    $scope.reply.created = new Date();
+                    $scope.reply.status = '';
+                    $scope.reply.reply = $scope.conversation.reply; 
+
+                    ConversationRepliesModel.create($scope.reply).then(function(results) {
+                        if (results.status == 200) {
+                            $state.go('nido.readMessage', { id: $scope.reply.conversation_id }, {reload: true});
+                            console.log('conversation already exist, reply added');
+                            console.log(results);     
+                        }
+                    });
+
+                }
+            }
+        });
+    };
+
+    apiGetFollowersList = function() {
+        return $http ({
+          method: 'GET',
+          url: Backand.getApiUrl() + '/1/query/data/getFollowers',
+          params: {
+            parameters: {
+              currentUser: $scope.currentUser,
+              deep: true
+            }
+          }
+        });
+    };
+
+    apiGetFollowersDetails = function(followersList) {
+        return $http ({
+          method: 'GET',
+          url: Backand.getApiUrl() + '/1/query/data/getFollowersUserDetails',
+          params: {
+            parameters: {
+              followersList: followersList,
+              deep: true
+            }
+          }
+        });
+    }
+
+    apiGetFollowersList().then(function(results) {
+        $scope.followersIds = results.data;
+        $scope.followersCount = results.data.length; 
+
+        //Build temp followers list from DB
+        angular.forEach($scope.followersIds, function(value, key) {
+            this.push(value.to_id);
+        }, tempFollowersList);
+
+        //Add user's self 
+        //tempFollowersList.push($localStorage.user.id);
+
+        //String value passed to get follower details 
+        $rootScope.followersList = tempFollowersList.join(',');
+
+        apiGetFollowersDetails($rootScope.followersList).then(function(results) {
+            $scope.followers = results.data;
+            angular.forEach($scope.followers, function(value, key) {
+                this.push({text: value.firstName});
+            }, $scope.userList);
+
+            console.log($scope.userList);
+        });
+
+    });
 })
+   
    
 .controller('createNewChallengeCtrl', function($scope) {
 
@@ -1009,6 +1305,16 @@ angular.module('app.controllers', [])
 
 .controller('activityFeedCtrl', function ($ionicLoading, $ionicPopup, $state, $stateParams, $scope, $rootScope, Backand, PhotosModel, UsersModel, $http, $localStorage, LikesModel) {
     var _self = this; 
+
+    $scope.go = function(location) {
+        if (location == 'nido-profile') {
+            $state.go(location, {id: $localStorage.user.id});
+        }
+        else {
+           $state.go(location); 
+        }
+    }
+
     $scope.likes = 0;
     $rootScope.bodyClass = "add-item";
     $scope.user = {};

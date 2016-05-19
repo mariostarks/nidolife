@@ -1,0 +1,4 @@
+AuthType Basic
+AuthName "NIDO APP TESTING"
+AuthUserFile /var/www/nidolife/testing/.htpasswd
+Require valid-user

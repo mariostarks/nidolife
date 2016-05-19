@@ -1,32 +1,24 @@
-<ion-view title="Messages" id="page9" class="page-messages">
-    <ion-content padding="true" class="has-header">
-        <a ui-sref="nido.newMessage" id="messages-button34" style="margin-top:10px;" class="button button-positive  button-block icon ion-plus-round"> &nbsp; New Message</a>
-        <div class="list card">
-            <div class="item item-avatar">
-                <img src="https://files.backand.io/nidolife/2-post-eyxaco.png">
-                <h2><a ui-sref="nido.readMessage">jluna02</a></h2>
-                <p>"Hi Jenny. I just checked out the app and I meant to mention" <a ui-sref="nido.readMessage">More..</a></p>
+<ion-view title="Messages" id="page9" class="page-messages" data-ng-init="init()">
+    <ion-content padding="true" class="has-header has-footer">
+
+        <div id="no-messages" class="list card" ng-show="conversations==null">
+            <div class="item">
+                <p>You have no messages. Invite your friends. <i class="icon ion-happy-outline"></i> </p>
             </div>
         </div>
 
-        <div class="list card">
-            <div class="item item-avatar">
-                <img src="https://files.backand.io/nidolife/2-post-fahqsxthuppr.png">
-                <h2><a ui-sref="nido.readMessage">jeromefitness</a></h2>
-                <p>"Great job with this meal plan sequence you've .." <a ui-sref="nido.readMessage">More..</a></p>
+        <div class="list card" ng-repeat="c in conversations">
+            <div class="item item-avatar"  ui-sref="nido.readMessage({ id: c.conversation_id })">
+                <img ng-src="{{c.profile_photo}}">
+                <h2><a ui-sref="nido.readMessage">{{c.screenname}}</a> <span class="message-date">{{c.last_updated | date:'MMMM dd, yyyy h:mma'}}</span></h2>
+                <p>"{{c.lastReply}}"</p>
             </div>
         </div>
 
     </ion-content>
 
-    <div class="bar bar-footer bar-light">
-      <div class="item item-input-inset">
-        <label class="item-input-wrapper icon ion-chatbubble-working">
-          <input type="text" placeholder="Type your message...">
-        </label>
-        <button class="button button-small">
-          Submit
-        </button>
-      </div>
+    <div class="bar bar-footer bar-positive" ui-sref="nido.newMessage">
+      <div class="title" style="margin: 0 auto;"><i class="icon light ion-plus-round" style="font-size: 30px;"></i></div>
     </div>
+
 </ion-view>

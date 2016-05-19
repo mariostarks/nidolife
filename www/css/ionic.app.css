@@ -10347,3 +10347,99 @@ body, .pane {
   color: #2d2d2d;
   font-size: 10px;
   text-align: center; }
+
+.page-new-message .to-name {
+  background-color: #FFF !important; }
+
+.page-new-message .scroll {
+  padding-top: 0; }
+
+.page-new-message .list {
+  margin: 0px 10px 10px !important; }
+
+.page-new-message .item-checkbox .checkbox {
+  right: 0;
+  left: auto; }
+
+.page-new-message .item-checkbox {
+  padding: 0; }
+
+.page-new-message .item-avatar img {
+  left: 0 !important; }
+
+.page-new-message .bar-footer .item-input-inset {
+  width: 100%; }
+
+.page-messages .item {
+  background-color: #FFF !important; }
+
+.page-messages h2 a, .page-messages p {
+  color: #2d2d2d;
+  font-size: 12px; }
+
+.page-messages h2 a {
+  text-decoration: none;
+  font-weight: bold;
+  font-size: 14px; }
+
+.page-messages .message-date {
+  font-size: 10px;
+  position: absolute;
+  right: 10px;
+  color: #939698; }
+
+.page-messages .list {
+  margin-top: 10px; }
+
+.page-read-message .card {
+  box-shadow: none !important;
+  margin: 5px 0 0 0; }
+
+.page-read-message .scroll-content {
+  background-color: #fff !important; }
+  .page-read-message .scroll-content .item {
+    border: 1px solid #eee !important;
+    border-radius: 10px !important; }
+
+.page-read-message img {
+  max-width: 35px !important;
+  max-height: 35px !important; }
+
+.page-read-message p {
+  font-size: 14px;
+  white-space: normal; }
+
+.page-read-message h2 {
+  margin-top: -5px; }
+  .page-read-message h2 a {
+    font-size: 10px;
+    font-weight: normal;
+    color: #2d2d2d; }
+  .page-read-message h2 .message-date {
+    display: none; }
+
+.page-read-message .message-own {
+  box-shadow: none !important; }
+  .page-read-message .message-own h2 {
+    display: none; }
+  .page-read-message .message-own .item {
+    background-color: #d1d9dc !important;
+    text-align: right;
+    min-height: auto !important; }
+  .page-read-message .message-own .message-date {
+    right: auto;
+    left: 20px; }
+  .page-read-message .message-own img {
+    display: none; }
+
+ti-tag-item {
+  float: left;
+  background-color: #066088;
+  padding: 0 5px;
+  border-radius: 5px;
+  font-size: 9px;
+  color: #fff;
+  margin: 10px 5px 10px 0; }
+
+.tags {
+  padding: 0 10px; }

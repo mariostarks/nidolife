@@ -9,6 +9,8 @@
     "lodash": "^4.11.2",
     "ng-lodash": "^0.4.0",
     "angular-toArrayFilter": "^1.0.1",
-    "ionic-ajax-interceptor": "^1.1.0"
+    "ionic-ajax-interceptor": "^1.1.0",
+    "ng-tags-input": "3.0.0",
+    "ngEmbed": "ng-embed#^2.0.4"
   }
 }

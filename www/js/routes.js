@@ -111,6 +111,7 @@ angular.module('app.routes', [])
 
   .state('nido.messages', {
     url: '/messages',
+    cache: false,
     views: {
       'side-menu21': {
         templateUrl: 'templates/messages.html',
@@ -153,6 +154,7 @@ angular.module('app.routes', [])
 
   .state('nido.newMessage', {
     url: '/new-message',
+    cache: false,
     views: {
       'side-menu21': {
         templateUrl: 'templates/newMessage.html',
@@ -162,7 +164,8 @@ angular.module('app.routes', [])
   })
 
   .state('nido.readMessage', {
-    url: '/read-message',
+    url: '/read/:id',
+    cache: false,
     views: {
       'side-menu21': {
         templateUrl: 'templates/readMessage.html',

@@ -1,5 +1,5 @@
 <ion-view title="Share Post" id="upload-post" class="page-uploadphoto page-upload-post">
-    <ion-content padding="false" class="has-header">
+    <ion-content padding="false" class="has-header has-footer">
       <div class="list card">
 
         <div class="item">
@@ -39,7 +39,7 @@
     <div class="bar bar-footer bar-calm" ui-sref="addpost">
       <p class="photo-options">
         <a ng-click="save()" class="button button-positive">Submit</a>
-        <a ui-sref="nido.activityFeed" class="button button-dark">Cancel</a>
+        <a ng-click="goBack()" class="button button-dark">Cancel</a>
       </p>
     </div>
 </ion-view>

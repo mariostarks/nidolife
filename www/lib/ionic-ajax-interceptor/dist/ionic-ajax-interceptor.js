@@ -77,13 +77,15 @@
                      */
                     var _showLoading = function() {
                         if (_ajaxRequestsInQ === 0 ) {
-                            $ionicLoading.show({
-                                content: 'Loading',
-                                animation: 'fade-in',
-                                showBackdrop: true,
-                                maxWidth: 200,
-                                showDelay: 0
-                            });
+                            if ($rootScope.hideLoading!=true) {
+                                $ionicLoading.show({
+                                    content: 'Loading',
+                                    animation: 'fade-in',
+                                    showBackdrop: true,
+                                    maxWidth: 200,
+                                    showDelay: 0
+                                });
+                            }
                         }
                         _ajaxRequestsInQ++;
                     };

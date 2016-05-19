@@ -1,16 +1,27 @@
-<ion-view title="Read Message" id="page15">
-    <ion-content padding="true" class="has-header">
-        <h1 id="readMessage-heading4" style="color:#000000;">Alex Trabec</h1>
-        <div id="readMessage-markdown6" style="color:#000000;">
-            <p>And here's where the text of the message will go. This is just a placeholder. This just just a placeholder. Of text. Because we need a placeholder. Of text. And here's where the text of the message will go. This is just a placeholder. This
-                just just a placeholder. Of text. Because we need a placeholder. Of text. And here's where the text of the message will go. This is just a placeholder. This just just a placeholder. Of text. Because we need a placeholder. Of text. And
-                here's where the text of the message will go. This is just a placeholder. This just just a placeholder. Of text. Because we need a placeholder. Of text. And here's where the text of the message will go. This is just a placeholder. This
-                just just a placeholder. Of text. Because we need a placeholder. Of text.</p>
-        </div>
-        <div class="button-bar">
-            <a ui-sref="nido.messages" id="readMessage-button46" class="button button-positive  button-block">reply</a>
-            <a ui-sref="nido.messages" id="readMessage-button47" class="button button-positive  button-block">delete</a>
-            <a ui-sref="nido.messages" id="readMessage-button48" class="button button-positive  button-block">report</a>
+<ion-view cache-view="false" data-ng-init="init()" id="page15" class="page-messages page-read-message">
+    <ion-nav-title>{{messageBuddy.screenname}}</ion-nav-title>
+    <ion-content padding="true" class="has-header has-footer" delegate-handle="mainScroll">
+        <div class="list card" ng-repeat="r in replies" ng-class="{'message-own': r.user == currentUser}">
+            <div class="item item-avatar">
+                <img ng-src="{{r.photo}}" ui-sref="nido.profile({ id: r.user })">
+                <h2><a  ui-sref="nido.profile({ id: r.user })">{{r.screenname}}</a> <span class="message-date">{{r.timestamp | date:'MMMM dd, yyyy h:mma'}}</span></h2>
+                <p>"{{r.reply}}"</p>
+            </div>
         </div>
     </ion-content>
+
+    <div class="bar bar-footer bar-light">
+      <div class="item item-input-inset">
+        <label class="item-input-wrapper icon ion-chatbubble-working">
+          <input type="text" placeholder="Type your message..." ng-model="message">
+        </label>
+        <button class="button button-small" ng-click="createReply()">
+          REPLY
+        </button>
+      </div>
+    </div>
+
 </ion-view>
+
+
+

@@ -1,20 +1,38 @@
-<ion-view title="New Message" id="page14">
-    <ion-content padding="true" class="has-header">
-        <form class="list">
-            <label class="item item-input">
-                <span class="input-label">To:</span>
-                <input type="text" placeholder="">
-            </label>
-            <label class="item item-input">
-                <span class="input-label">Subject:</span>
-                <input type="text" placeholder="">
-            </label>
-            <label class="item item-input">
-                <span class="input-label">Message</span>
-                <input type="text" placeholder="Write here.">
-            </label>
-            <ion-toggle toggle-class="toggle-positive" ng-checked="true">Get notification of replies.</ion-toggle>
-            <a ui-sref="nido.messages" id="newMessage-button45" class="button button-positive  button-block">Send Message</a>
-        </form>
+<ion-view title="New Message" id="page14" class="page-message page-new-message">
+    <ion-content padding="true" class="has-header has-footer">
+    
+    <span style="float: left; width: 10%; text-align: right;" class="light">To: </span>
+    <div class="list list-inset" style="float: left; width: 80%;">
+        <tags-input ng-model="tags" placeholder=" ." type="text" disabled>
+            <auto-complete source="userList"></auto-complete>
+        </tags>
+        <!--
+        <label class="item item-input to-name">
+            <i class="icon ion-search placeholder-icon"></i>
+            <input type="text" placeholder="Search" ng-model="search">
+        </label>
+        -->
+    </div>
+    <ion-list style="clear: both; display: block;">
+        <ion-checkbox ng-model="f.selected" ng-repeat="f in followers| filter:search" ng-change="toUserSelected(f.firstName, f.id, $index)" ng-checked="f.selected">
+            <a class="item item-avatar" href="#"  >
+                <img ui-sref="nido.profile({ id: f.id })" ng-src="{{f.photo || '/img/avatar.png'}}">
+                <h2>{{f.firstName}}</h2>
+                <p>{{f.lastName}}</p>
+            </a>
+        </ion-checkbox>
+    </ion-list>
+
     </ion-content>
+
+    <div class="bar bar-footer bar-light" ng-show="tags.length!=0">
+      <div class="item item-input-inset">
+        <label class="item-input-wrapper icon ion-chatbubble-working">
+          <input type="text" placeholder="Type your message..." ng-model="newMessage">
+        </label>
+        <button class="button button-small" ng-click="createMessage()">
+          SEND
+        </button>
+      </div>
+    </div>
 </ion-view>
