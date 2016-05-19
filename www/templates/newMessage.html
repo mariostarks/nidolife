@@ -28,7 +28,7 @@
     <div class="bar bar-footer bar-light" ng-show="tags.length!=0">
       <div class="item item-input-inset">
         <label class="item-input-wrapper icon ion-chatbubble-working">
-          <input type="text" placeholder="Type your message..." ng-model="newMessage">
+          <input type="text" placeholder="Type your message..." ng-model="newMessage" ng-bind-html="newMessage | embed">
         </label>
         <button class="button button-small" ng-click="createMessage()">
           SEND

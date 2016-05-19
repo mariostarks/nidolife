@@ -11,6 +11,7 @@
     "angular-toArrayFilter": "^1.0.1",
     "ionic-ajax-interceptor": "^1.1.0",
     "ng-tags-input": "3.0.0",
-    "ngEmbed": "ng-embed#^2.0.4"
+    "ngEmbed": "ng-embed#^2.0.4",
+    "ng-emoticons": "^2.0.1"
   }
 }

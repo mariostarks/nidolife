@@ -5,7 +5,7 @@
             <div class="item item-avatar">
                 <img ng-src="{{r.photo}}" ui-sref="nido.profile({ id: r.user })">
                 <h2><a  ui-sref="nido.profile({ id: r.user })">{{r.screenname}}</a> <span class="message-date">{{r.timestamp | date:'MMMM dd, yyyy h:mma'}}</span></h2>
-                <p>"{{r.reply}}"</p>
+                <p ng-bind-html="r.reply | embed">"{{r.reply}}"</p>
             </div>
         </div>
     </ion-content>
@@ -13,7 +13,7 @@
     <div class="bar bar-footer bar-light">
       <div class="item item-input-inset">
         <label class="item-input-wrapper icon ion-chatbubble-working">
-          <input type="text" placeholder="Type your message..." ng-model="message">
+          <input type="text" placeholder="Type your message..." ng-model="message" ng-bind-html="message | embed">
         </label>
         <button class="button button-small" ng-click="createReply()">
           REPLY
