@@ -13,7 +13,7 @@
     <div class="bar bar-footer bar-light">
       <div class="item item-input-inset">
         <label class="item-input-wrapper icon ion-chatbubble-working">
-          <input type="text" placeholder="Type your message..." ng-model="message" ng-bind-html="message | embed">
+            <textarea msd-elastic placeholder="Type your message..." ng-model="message" ng-bind-html="message | embed" required></textarea>
         </label>
         <button class="button button-small" ng-click="createReply()">
           REPLY

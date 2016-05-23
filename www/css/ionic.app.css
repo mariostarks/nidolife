@@ -9857,7 +9857,7 @@ h1, h2, h3, h4, h5, h6, .h1, .h2, .h3, .h4, .h5, .h6 {
     background-color: #0c60ee; }
 
 .has-header {
-  top: 63px; }
+  top: 55px; }
 
 .page-profile .profile-header {
   margin-top: 3px;
@@ -9980,7 +9980,7 @@ img-crop canvas {
   background: #E4E4E4;
   overflow: hidden;
   width: 100%;
-  height: 200px; }
+  height: 400px; }
 
 .uploadphoto-preview {
   width: 100px;
@@ -10220,15 +10220,17 @@ img-crop canvas {
     opacity: 0; } }
 
 .page-buddies .scroll-content {
-  margin-bottom: 85px; }
+  margin-bottom: 10px; }
 
 .page-buddies .button-bar > .button:first-child {
   border-radius: 4px 0px 0px 4px;
   border-right: 1px solid #017fb6; }
 
-body, .pane {
-  background-color: #02a6ee; }
-
+/*
+body, .pane { 
+	background-color: #02a6ee;
+}
+*/
 .item-social {
   float: right; }
 
@@ -10269,12 +10271,6 @@ body, .pane {
   right: 20px;
   top: 15px; }
 
-.page-challenge label {
-  background-color: #FFF !important; }
-
-.page-challenge .item-floating-label .input-label.has-input {
-  color: #2d2d2d; }
-
 .forgot-password {
   text-align: center;
   color: #68ccf8; }
@@ -10290,7 +10286,7 @@ body, .pane {
   position: absolute;
   margin: 0 auto;
   left: 0px !important;
-  right: 0; }
+  right: 0 !important; }
 
 .item-interact {
   padding: 0;
@@ -10389,14 +10385,17 @@ body, .pane {
   color: #939698; }
 
 .page-messages .list {
-  margin-top: 10px; }
+  margin-top: 5px;
+  margin-bottom: 0px; }
 
 .page-read-message .card {
   box-shadow: none !important;
   margin: 5px 0 0 0; }
 
 .page-read-message .scroll-content {
-  background-color: #fff !important; }
+  background-color: #fff !important;
+  padding-bottom: 50px;
+  margin-bottom: 20px; }
   .page-read-message .scroll-content .item {
     border: 1px solid #eee !important;
     border-radius: 10px !important; }
@@ -10443,3 +10442,37 @@ ti-tag-item {
 
 .tags {
   padding: 0 10px; }
+
+textarea {
+  background-color: transparent;
+  width: 100% !important;
+  padding: 10px !important; }
+
+.page-challenge label {
+  background-color: #FFF !important; }
+
+.page-challenge .scroll-content {
+  background-color: #FFF !important; }
+
+.page-challenge .item {
+  border-bottom: 1px dotted #2e2e2e !important;
+  margin: 1px 0 1px; }
+
+.page-challenge textarea {
+  padding: 0px !important; }
+
+.page-challenge .item-floating-label .input-label.has-input {
+  color: #02a6ee; }
+
+.page-challenge .input-label {
+  color: #2d2d2d; }
+
+.page-challenge .input-info {
+  padding: 15px;
+  font-size: 12px; }
+
+.page-challenges .item {
+  border-bottom: 1px dotted; }
+
+.page-challenges .scroll-content, .page-challenges .item {
+  background-color: #FFF !important; }

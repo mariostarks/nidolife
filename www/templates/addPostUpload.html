@@ -1,4 +1,5 @@
-<ion-view title="Share Post" id="upload-post" class="page-uploadphoto page-upload-post">
+<ion-view title="Upload Post" id="upload-post" class="page-uploadphoto page-upload-post">
+
     <ion-content padding="false" class="has-header has-footer">
       <div class="list card">
 
@@ -13,33 +14,46 @@
           <div class="cropArea">
             <img-crop image="post.originalImage" area-type="square" area-min-size="200" result-image-size="425" result-image="post.croppedImage" result-image-format="image/jpg" result-image-quality="0.95" change-on-fly="true" maximize-crop="true" result-image-aspect="1x1" class=""></img-crop>
           </div>
-          <div class="list">
-            <label class="item item-input item-stacked-label">
-              <span class="input-label">Description / Caption</span>
-              <input type="text" value="{{post.caption}}" ng-model="post.caption" placeholder="Tell us about your photo.">
-            </label>
 
-            <label class="item item-input item-stacked-label">
-              <span class="input-label">Category</span>
-              <select ng-model="post.category">
-                <option value="0">None Selected</option>
-                <option value="1">Meal</option>
-                <option value="2">Sneaker</option>
-                <option value="3">Motivation</option>
-                <option value="4">Physical Activity</option>
-              </select>
-            </label>
-          </div>
 
 
         </form>
-
       </div>
     </ion-content>
-    <div class="bar bar-footer bar-calm" ui-sref="addpost">
+    <div class="bar bar-footer bar-positive" ui-sref="addpost">
       <p class="photo-options">
-        <a ng-click="save()" class="button button-positive">Submit</a>
-        <a ng-click="goBack()" class="button button-dark">Cancel</a>
+        <a ng-click="goBack()" class="button button-small button-dark">Cancel</a>
+        <a ng-click="openModal()" class="button button-large button-calm">Next Step</a>
       </p>
     </div>
 </ion-view>
+
+<script id="caption.html" type="text/ng-template">
+    <ion-modal-view>
+      <ion-header-bar class="bar bar-header bar-positive">
+        <h1 class="title"></h1>
+        <button class="button button-clear button-primary" ng-click="modal.hide()">Cancel</button>
+      </ion-header-bar>
+      <ion-content class="padding" style="margin-top: -10px;">
+        <div class="list">
+          <label class="item item-input item-stacked-label">
+            <span class="input-label">Description / Caption</span>
+
+            <textarea msd-elastic placeholder="Type your message..." ng-model="post.caption" value="{{post.caption}}" ng-bind-html="post.caption | embed" required></textarea>
+
+          </label>
+          <label class="item item-input item-stacked-label">
+            <span class="input-label" style="display: block; width: 100%;">Category</span>
+            <select ng-model="post.category" required>
+              <option value="0">None Selected</option>
+              <option value="1">Meal</option>
+              <option value="2">Sneaker</option>
+              <option value="3">Motivation</option>
+              <option value="4">Physical Activity</option>
+            </select>
+          </label>
+          <button class="button button-full button-positive icon ion-paper-airplane" ng-click="save(newUser)">&nbsp; Submit Post</button>
+        </div>
+      </ion-content>
+    </ion-modal-view>
+  </script>

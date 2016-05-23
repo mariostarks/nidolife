@@ -5,12 +5,16 @@
 // the 2nd parameter is an array of 'requires'
 // 'starter.services' is found in services.js
 // 'starter.controllers' is found in controllers.js
-angular.module('app', ['ngEmbed', 'ngTagsInput', 'ionic-ajax-interceptor', 'ngCookies', 'angular-toArrayFilter', 'ionic', 'backand', 'app.controllers', 'app.routes', 'app.services', 'app.directives', 'ngImgCrop', 'ngLodash', 'restangular', 'ngStorage'])
+angular.module('app', ['monospaced.elastic', 'ngSanitize', 'ngEmbed', 'ngTagsInput', 'ionic-ajax-interceptor', 'ngCookies', 'angular-toArrayFilter', 'ionic', 'backand', 'app.controllers', 'app.routes', 'app.services', 'app.directives', 'ngImgCrop', 'ngLodash', 'restangular', 'ngStorage'])
 
 .config(function($ionicConfigProvider) {
     $ionicConfigProvider.tabs.position('bottom');
     $ionicConfigProvider.platform.android.tabs.style('standard');
 })
+
+.config(['msdElasticConfig', function(msdElasticConfig) {
+  msdElasticConfig.append = '\n';
+}])
 
 .config(function (AjaxInterceptorProvider, $provide, BackandProvider,  $stateProvider, $urlRouterProvider, $httpProvider, RestangularProvider) {
     BackandProvider.setAppName('nidolife');

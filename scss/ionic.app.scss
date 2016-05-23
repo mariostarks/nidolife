@@ -129,7 +129,7 @@ h1, h2, h3, h4, h5, h6, .h1, .h2, .h3, .h4, .h5, .h6 {
         @include item-active-style($item-positive-active-bg, $item-positive-active-border);
    }   
 }
-.has-header { top: 63px; }
+.has-header { top: 55px; }
 
 .page-profile {
 	.profile-header { 
@@ -192,6 +192,7 @@ h1, h2, h3, h4, h5, h6, .h1, .h2, .h3, .h4, .h5, .h6 {
 	    top: 50%;
 	    margin: auto 0;
 	}
+
 }
 .page-newsfeed, .page-uploadphoto {
 	.item-body { 
@@ -218,10 +219,10 @@ h1, h2, h3, h4, h5, h6, .h1, .h2, .h3, .h4, .h5, .h6 {
 /* IMAGE CROP */
 img-crop{width:100%;height:100%;display:block;position:relative;overflow:hidden}img-crop canvas{display:block;position:absolute;top:50%;left:50%;outline:0;-webkit-tap-highlight-color:transparent}
 .cropArea {
-  background: #E4E4E4;
-  overflow: hidden;
-  width: 100%;
-  height: 200px;
+    background: #E4E4E4;
+    overflow: hidden;
+    width: 100%;
+    height: 400px;
 }
 .uploadphoto-preview { 
 	width: 100px; 
@@ -451,15 +452,17 @@ img-crop{width:100%;height:100%;display:block;position:relative;overflow:hidden}
 }
 
 .page-buddies {
-	.scroll-content { margin-bottom: 85px; }
+	.scroll-content { margin-bottom: 10px; }
 	.button-bar > .button:first-child {
     	border-radius: 4px 0px 0px 4px;
     	border-right: 1px solid #017fb6;
     }
 }
+/*
 body, .pane { 
 	background-color: #02a6ee;
 }
+*/
 .item-social {
 	float: right;
 }
@@ -499,12 +502,7 @@ body, .pane {
     right: 20px;
     top: 15px;
 }
-.page-challenge {
-	label { background-color: #FFF!important; }
-	.item-floating-label .input-label.has-input {
-		color: #2d2d2d;
-	}
-}
+
 .forgot-password {
 	text-align: center;
 	color: #68ccf8;
@@ -524,7 +522,7 @@ body, .pane {
 		    position: absolute;
 		    margin: 0 auto;
 		    left: 0px!important;
-		    right: 0;
+		    right: 0!important;
 		}	
 	}
 }
@@ -606,8 +604,11 @@ body, .pane {
 	    right: 10px;
 	    color: #939698;
 	}
-	.list { margin-top: 10px; }
+	.list { margin-top: 5px; 
+			margin-bottom: 0px; }
+
 }
+
 .page-read-message {
 	.card { 
 		box-shadow: none!important;
@@ -615,6 +616,8 @@ body, .pane {
 	}
 	.scroll-content {
 		background-color: #fff!important;
+		padding-bottom: 50px; 
+		margin-bottom: 20px;
 		.item {
 		    border: 1px solid #eee!important;
 		    border-radius: 10px!important;
@@ -665,3 +668,28 @@ ti-tag-item {
 }
 
 .tags { padding: 0 10px; }
+
+textarea {
+    background-color: transparent;
+    width: 100%!important;
+    padding: 10px!important;
+}
+.page-challenge {
+	label { background-color: #FFF!important; }
+	.scroll-content { background-color: #FFF!important; }
+	.item { 
+	    border-bottom: 1px dotted #2e2e2e !important;
+	    margin: 1px 0 1px;
+	}
+	textarea { padding: 0px!important; }
+	.item-floating-label .input-label.has-input { color: #02a6ee; }
+	.input-label { color: #2d2d2d; }
+	.input-info {
+		padding: 15px;
+		font-size: 12px;
+	}
+}
+.page-challenges {
+	.item { border-bottom: 1px dotted; }
+	.scroll-content, .item { background-color: #FFF!important; }
+}

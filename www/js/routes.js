@@ -109,6 +109,17 @@ angular.module('app.routes', [])
     }
   })
 
+  .state('nido.viewChallenge', {
+    url: '/challenge/:id',
+    cache: false,
+    views: {
+      'side-menu21': {
+        templateUrl: 'templates/viewChallenge.html',
+        controller: 'viewChallengeCtrl'
+      }
+    }
+  })
+
   .state('nido.messages', {
     url: '/messages',
     cache: false,

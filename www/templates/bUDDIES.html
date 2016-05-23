@@ -15,31 +15,28 @@
         <ion-list ng-show="(filteredData = (users | toArray | filter:search)) && filteredData.length >= 0 && search && search.length >= 0">
 
             <div class="row item" ng-repeat="u in users | toArray | filter:search">
-              <div class="col item-avatar">
-                <img ng-src="{{u.photo || '/img/avatar.png'}}" ui-sref="nido.profile({ id: u.id })">
-            </div>
-              <div class="col user-details">
-                <h2 ui-sref="nido.profile({ id: u.id })">{{u.firstName}}</h2>
-                <p>{{u.location}}</p>
-              </div>
-              <div class="col"></div>
-              <div class="col">
-                <!--
-                <button class="button button-small button-light {{followClass}}" ng-click="inviteBuddy(u.id, $index)" ng-model="followStatus">
-                    <span>{{showFollowStatus(u.id)}}</span>
-                </button>
-                -->
-                <button class="button button-small button-light {{followClass}}"  ui-sref="nido.profile({ id: u.id })" ng-model="followStatus">
-                    <span>Profile</span>
-                </button>
-              </div>
+                <div class="col item-avatar">
+                    <img ng-src="{{u.photo || '/img/avatar.png'}}" ui-sref="nido.profile({ id: u.id })">
+                </div>
+                <div class="col user-details">
+                    <h2 ui-sref="nido.profile({ id: u.id })">{{u.firstName}}</h2>
+                    <p>{{u.location}}</p>
+                </div>
+                <div class="col"></div>
+                <div class="col">
+                    <!--
+                    <button class="button button-small button-light {{followClass}}" ng-click="inviteBuddy(u.id, $index)" ng-model="followStatus">
+                        <span>{{showFollowStatus(u.id)}}</span>
+                    </button>
+                    -->
+                    <button class="button button-small button-light {{followClass}}"  ui-sref="nido.profile({ id: u.id })" ng-model="followStatus">
+                        <span>Profile</span>
+                    </button>
+                </div>
             </div>
         </ion-list>
 
         <!--<a ui-sref="nido.addBuddy" id="buddies-button32" style="font-weight:bolder;font-size:30px;" class="button button-positive  button-block">+</a>-->
-
-
-        
 
 
         <div class="card">
@@ -56,22 +53,5 @@
 
 
     </ion-content>
-
-    <!--
-    <div class="bar bar-footer bar-positive">
-        <div class="list">
-            <span>New to NIDO? Invite your friends by email. </span>
-            <div class="item item-input-inset">
-                <label class="item-input-wrapper ion-email icon" style="color:#000;">
-                  <input type="text" placeholder="&nbsp;Email">
-                </label>
-                <button class="button button-small">
-                  Send
-                </button>
-            </div>
-        </div>
-    </div>
-    -->
-
 </ion-view>
 

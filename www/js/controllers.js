@@ -26,7 +26,7 @@ angular.module('app.controllers', [])
 
 })
 
-.controller('addPostUploadCtrl', function ($ionicHistory, $state, AuthService, $rootScope, $scope, Restangular, $localStorage, $http, Backand, PhotosModel) {
+.controller('addPostUploadCtrl', function ($ionicModal, $ionicHistory, $state, AuthService, $rootScope, $scope, Restangular, $localStorage, $http, Backand, PhotosModel) {
     var _self = this; 
     $scope.currentUser = $localStorage.user.id;
     $scope.post = {}; //object for new post being created 
@@ -37,6 +37,18 @@ angular.module('app.controllers', [])
        originalImage: '',
        croppedImage: ''
     };
+
+    $ionicModal.fromTemplateUrl('caption.html', {
+        scope: $scope,
+        animation: 'slide-in-up'
+        }).then(function(modal) {
+        $scope.modal = modal;
+    });
+
+    $scope.$on('$destroy', function() { $scope.modal.remove(); });
+
+    $scope.openModal = function() { $scope.modal.show(); };
+    $scope.closeModal = function() { $scope.modal.hide(); };
 
     var baseUrl = '/1/objects/';
     var baseActionUrl = baseUrl + 'action/'
@@ -335,9 +347,79 @@ angular.module('app.controllers', [])
     $rootScope.bodyClass = "";
 })
 
-   
-.controller('challengesCtrl', function($scope, $rootScope) {
-    $rootScope.bodyClass = "";
+.controller('viewChallengeCtrl', function ($timeout, ConversationsModel, ConversationRepliesModel, $http, Backand, $scope, $rootScope, BuddyRequestsModel, $localStorage, Restangular, UsersModel, $stateParams) {
+    
+    $scope.currentUser = $localStorage.user.id;
+    $scope.challenge_id = $stateParams.id; 
+
+    $scope.init = function() {
+        getChallenge($scope.challenge_id).then(function(results) {
+            if (results.data.totalRows > 0)
+                $scope.challenge = results.data.data[0];
+            else 
+                $scope.challenge = null; 
+
+            console.log($scope.challenge);
+        });
+    }
+
+    getChallenge = function(challenge_id) {
+        return $http ({
+          method: 'GET',
+          url: Backand.getApiUrl() + '/1/objects/challenges',
+          params: {
+            pageSize: 20,
+            pageNumber: 1,
+            filter: [
+              {
+                fieldName: 'id',
+                operator: 'equals',
+                value: challenge_id
+              }
+            ],
+            sort: ''
+          }
+        });
+    }
+
+})
+
+.controller('challengesCtrl', function ($timeout, ConversationsModel, ConversationRepliesModel, $http, Backand, $scope, $rootScope, BuddyRequestsModel, $localStorage, Restangular, UsersModel, $stateParams) {
+
+    currentUser = $localStorage.user.id; 
+    $scope.challenges = {};
+
+    $scope.init = function() {
+        getChallenges(currentUser).then(function(results) {
+            if (results.status == 200) {
+                if (results.data.totalRows > 0)
+                    $scope.challenges = results.data.data;
+                else 
+                    $scope.challenges = null;
+                console.log($scope.challenges);
+            }
+        });
+    }
+
+    getChallenges = function(user) {
+        return $http ({
+          method: 'GET',
+          url: Backand.getApiUrl() + '/1/objects/challenges',
+          params: {
+            pageSize: 20,
+            pageNumber: 1,
+            filter: [
+              {
+                fieldName: 'user',
+                operator: 'equals',
+                value: user
+              }
+            ],
+            sort: ''
+          }
+        });
+    };
+
 })
 
 .controller('likesCtrl', function ($http, Backand, $scope, $rootScope, BuddyRequestsModel, $localStorage, Restangular, UsersModel, $stateParams) {
@@ -668,30 +750,50 @@ angular.module('app.controllers', [])
 
 })
   
-.controller('messagesCtrl', function (ConversationsModel, ConversationRepliesModel, $http, Backand, $scope, $rootScope, BuddyRequestsModel, $localStorage, Restangular, UsersModel, $stateParams) {
-    $rootScope.bodyClass = "";
+.controller('messagesCtrl', function ($timeout, ConversationsModel, ConversationRepliesModel, $http, Backand, $scope, $rootScope, BuddyRequestsModel, $localStorage, Restangular, UsersModel, $stateParams) {
+   
+    $scope.$on('$locationChangeStart', function(){
+        $timeout.cancel($scope.promise);
+        $rootScope.hideLoading = false;
+    });
 
     currentUser = $localStorage.user.id; 
     $scope.conversations = {};
     //$scope.getConvos(); 
 
     $scope.init = function() {
-        getConversationList(currentUser).then(function(results) {
-            if (results.status == 200) {
-                if (results.data.length > 0) {
-                    $scope.conversations = results.data;
-                    angular.forEach($scope.conversations, function(value, key) {
-                        getLastReply(value.conversation_id).then(function(results) {
-                            if (results.status == 200) {
-                                $scope.conversations[key].lastReply = results.data[0].reply;
-                                $scope.conversations[key].last_updated = results.data[0].created;
-                                $scope.conversations[key].lastReplyId = results.data[0].id;
-                            }
-                        });
-                    }); 
-                } 
+        $scope.tickCounter = 0; //initialize 
+        $scope.pollRefresh = 20; //every seconds
+        $scope.maxSession = 5; //max minutes 
+        $rootScope.hideLoading = true; 
+
+        (function tick() {
+            if ($scope.tickCounter < Math.ceil((60 / $scope.pollRefresh)*$scope.maxSession)) { // stop updating after 10 minutes
+                getConversationList(currentUser).then(function(results) {
+                    if (results.status == 200) {
+                        if (results.data.length > 0) {
+                            $rootScope.hideLoading = true;
+                            $scope.conversations = results.data;
+
+                            // Set timeout on how many times this query gets run per page load //
+                            $scope.tickCounter++;
+                            $scope.promise = $timeout(tick, 1000 * $scope.pollRefresh);
+                            console.log($scope.tickCounter);
+
+                            angular.forEach($scope.conversations, function(value, key) {
+                                getLastReply(value.conversation_id).then(function(results) {
+                                    if (results.status == 200) {
+                                        $scope.conversations[key].lastReply = results.data[0].reply;
+                                        $scope.conversations[key].last_updated = results.data[0].created;
+                                        $scope.conversations[key].lastReplyId = results.data[0].id;
+                                    }
+                                });
+                            }); 
+                        } 
+                    }
+                }); 
             }
-        }); 
+        })();
     };
 
     getLastReply = function(conversation_id) {
@@ -719,17 +821,23 @@ angular.module('app.controllers', [])
     }
 })
 
-.controller('readMessageCtrl', function ($ionicLoading, $location, $timeout, $ionicScrollDelegate, ConversationsModel, ConversationRepliesModel, $http, Backand, $scope, $rootScope, BuddyRequestsModel, $localStorage, Restangular, UsersModel, $stateParams) {
+.controller('readMessageCtrl', function ($sce, $ionicLoading, $location, $timeout, $ionicScrollDelegate, ConversationsModel, ConversationRepliesModel, $http, Backand, $scope, $rootScope, BuddyRequestsModel, $localStorage, Restangular, UsersModel, $stateParams) {
 
     $scope.currentUser = $localStorage.user.id;
     $scope.conversation_id = $stateParams.id; 
     $scope.replies = {};
     $scope.messageBuddy = {};
 
+    //$scope.replies.reply = $sce.trustAsHtml($scope.replies.reply);
+
     $scope.$on('$locationChangeStart', function(){
         $timeout.cancel($scope.promise);
         $rootScope.hideLoading = false;
     });
+
+    $scope.preText = function(x) {
+        return $sce.trustAsHtml(x);
+    };
 
     $scope.init = function() {
         $scope.tickCounter = 0; //initialize 
@@ -969,9 +1077,62 @@ angular.module('app.controllers', [])
     });
 })
    
-   
-.controller('createNewChallengeCtrl', function($scope) {
+.controller('createNewChallengeCtrl', function ($state, ChallengesModel, $ionicModal, $sce, $ionicLoading, $location, $timeout, $ionicScrollDelegate, ConversationsModel, ConversationRepliesModel, $http, Backand, $scope, $rootScope, BuddyRequestsModel, $localStorage, Restangular, UsersModel, $stateParams) {
 
+    $scope.challenge = {}; 
+    $scope.challenge.name = '';
+    $scope.challenge.description = '';
+
+    $ionicModal.fromTemplateUrl('step-2.html', {
+        scope: $scope,
+        animation: 'slide-in-up'
+    }).then(function(modal) {
+        $scope.modal = modal;
+    });
+
+    $scope.step2 = function() {
+        $scope.modal.show();
+    };
+    $scope.close = function() {
+        $scope.modal.hide();
+    };
+
+    $scope.finalize = function() {
+
+        var errors = []; 
+        var isValid = true; 
+        $scope.errors = ''; 
+
+        // Create New Challenge Post in DB
+        $scope.challenge.photo = '';
+        $scope.challenge.status = 'waiting';
+        $scope.challenge.created = new Date();
+        $scope.challenge.user = $localStorage.user.id;
+
+        if ($scope.challenge.name.length < 4) {
+            errors.push('Please provide a challenge name. Longer than 3 characters.');
+            isValid = false;
+        }
+        if ($scope.challenge.description.length < 10) {
+            errors.push('Please provide a challenge description. Longer than 10 characters.');
+            isValid = false;
+        }
+
+        if (isValid) {
+            ChallengesModel.create($scope.challenge).then(function(results) {
+                if (results.status == 200) {
+                    console.log(results);
+                    console.log('challenge created');
+                    $scope.close(); 
+                    $state.go('nido.challenges', {}, {reload: true});
+                }
+            });
+        }
+        else {
+            // Send back with list of errors if invalid
+            $scope.errors = errors.join('\n'); 
+        }
+    };
 })
    
 .controller('challengeGroupCtrl', function($scope) {

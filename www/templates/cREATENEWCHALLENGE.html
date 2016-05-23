@@ -1,11 +1,111 @@
-<ion-view title="Create New Challenge" id="page17" class="page-challenge page-challenge-title">
+<ion-view title="New Challenge" id="page-challenge" class="page-challenge page-challenge-title">
     <ion-content padding="true" class="has-header">
+    <div class="list">
 
-          <label class="item item-input item-floating-label">
-            <span class="input-label">What is the title of your challenge?</span>
-            <input type="text" ng-model="challenge.title" value="{{challenge.title}}" placeholder="What is the title of your challenge?">
-          </label>
+      <label class="item item-input item-floating-label">
+        <span class="input-label">Challenge Name</span>
+        <input type="text" placeholder="Challenge Name" ng-model="challenge.name" required>
+      </label>
+      <label class="item item-input item-floating-label">
+        <span class="input-label">Description</span>
+        <textarea placeholder="Description" ng-model="challenge.description"></textarea required>
+      </label>
 
-        <a ui-sref="" id="createNewChallenge-button29" class="button button-positive  button-block">Next</a>
+    </div>
+
+    <div class="spacer"></div> 
+
+    <a ng-click="step2()" id="createNewChallenge-button29" class="button button-positive  button-block">Next</a>
     </ion-content>
 </ion-view>
+
+
+<script id="step-2.html" type="text/ng-template">
+    <ion-modal-view class="page-challenge">
+      <ion-header-bar class="bar bar-header bar-positive">
+        <h1 class="title">Daily Challenge Goal</h1>
+        <button class="button button-clear button-primary" ng-click="modal.hide()">Cancel</button>
+      </ion-header-bar>
+      <ion-content class="padding" style="margin-top: -10px;">
+      <p class="input-info">Set the type of posts and the number of posts per day that participants must upload to meet your challenge.</p>
+        <label class="item item-input item-select">
+            <div class="input-label">
+              Sneaker Tag
+            </div>
+            <select ng-model="challenge.tag_a">
+              <option selected>0</option>
+              <option selected>1</option>
+              <option>2</option>
+              <option>3</option>
+              <option>4</option>
+              <option>5</option>
+              <option>6</option>
+              <option>7</option>
+              <option>8</option>
+              <option>9</option>
+            </select>
+        </label>
+        <label class="item item-input item-select">
+            <div class="input-label">
+              Meal Tag
+            </div>
+            <select ng-model="challenge.tag_b">
+              <option selected>0</option>
+              <option>1</option>
+              <option>2</option>
+              <option>3</option>
+              <option>4</option>
+              <option>5</option>
+              <option>6</option>
+              <option>7</option>
+              <option>8</option>
+              <option>9</option>
+            </select>
+        </label>
+        <label class="item item-input item-select">
+            <div class="input-label">
+              Physical Activity
+            </div>
+            <select ng-model="challenge.tag_c">
+              <option selected>0</option>
+              <option>1</option>
+              <option>2</option>
+              <option>3</option>
+              <option>4</option>
+              <option>5</option>
+              <option>6</option>
+              <option>7</option>
+              <option>8</option>
+              <option>9</option>
+            </select>
+        </label>
+        <label class="item item-input item-select">
+            <div class="input-label">
+              Word Motivation
+            </div>
+            <select ng-model="challenge.tag_d">
+              <option selected>0</option>
+              <option>1</option>
+              <option>2</option>
+              <option>3</option>
+              <option>4</option>
+              <option>5</option>
+              <option>6</option>
+              <option>7</option>
+              <option>8</option>
+              <option>9</option>
+            </select>
+        </label>
+        <div class="spacer"></div> 
+
+        <a ng-click="finalize()" id="createNewChallenge-button29" class="button button-positive  button-block">Next</a>
+
+        <div class="spacer"></div>
+
+        <div class="valid-errors" ng-bind="errors">
+            {{errors}}
+        </div>
+
+      </ion-content>
+    </ion-modal-view>
+</script>
