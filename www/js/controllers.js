@@ -1,6 +1,6 @@
 angular.module('app.controllers', [])
 
-.controller('mainCtrl', function ($location, $timeout, $rootScope, $scope, $location) {
+.controller('mainCtrl', function (Backand, LoginService, $state, $location, $timeout, $rootScope, $scope, $location) {
     $scope.showBodyClass = function() {
 
         var bodyClasses = ''; 
@@ -23,6 +23,17 @@ angular.module('app.controllers', [])
     $scope.$back = function() { 
         window.history.back();
     };
+
+    $scope.signout = function() {
+        LoginService.signout()
+            .then(function () {
+                console.log('hello');
+                $state.go('login');
+                $rootScope.$broadcast('logout');
+                //$state.go($state.current, {}, {reload: true});
+            })
+
+    }
 
 })
 

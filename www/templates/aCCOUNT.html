@@ -1,9 +1,10 @@
 <ion-view title="Account Settings" id="page-account" class="page-account page-challenge">
     <ion-content padding="true" class="has-header">
         <form class="list">
-
+          <a ng-click="signout()" id="account-button35" style="font-weight:;" class="button button-stable  button-block"><i class="icon ion-log-out"></i> &nbsp; SIGN-OUT</a>
           <img class="account-photo" data-ng-src="{{getPhoto()}}" />
           <a ui-sref="uploadphoto" id="account-button35" style="font-weight:;" class="button button-calm  button-block"><i class="icon ion-ios-camera"></i> &nbsp; CHANGE PROFILE PHOTO</a>
+
             <label class="item item-input item-floating-label">
                <div class="input-label">
                   Username
