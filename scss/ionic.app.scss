@@ -94,6 +94,11 @@ h1, h2, h3, h4, h5, h6, .h1, .h2, .h3, .h4, .h5, .h6 {
 	    padding: 1px 6px;
 	    font-size: 9px;
 	}
+	.badge { 
+	    float: right;
+	    top: 12px;
+	    position: absolute;
+	}
 	.item-content { margin-left: 10%; }
 	.button:hover, .button.active {
 		color: #074c6b;
@@ -129,7 +134,8 @@ h1, h2, h3, h4, h5, h6, .h1, .h2, .h3, .h4, .h5, .h6 {
         @include item-active-style($item-positive-active-bg, $item-positive-active-border);
    }   
 }
-.has-header { top: 55px; }
+.has-header { top: 49px; }
+.scroll-content { padding-top: 6px; }
 
 .page-profile {
 	.profile-header { 
@@ -319,6 +325,9 @@ img-crop{width:100%;height:100%;display:block;position:relative;overflow:hidden}
     right: 0;
     padding: 20px;
 }
+.page-login {
+	.has-header { top: 0px; }
+}
 .page-login, .page-signup {
 	.login-field { 
 		background-color: #387ef5!important; 
@@ -507,11 +516,8 @@ body, .pane {
 	text-align: center;
 	color: #68ccf8;
 }
-.page-newsfeed .scroll {
-	.item-avatar {
-		background: #0295d6 !important;
-	}
-}
+
+/*
 .page-timeline {
 	.bar-header {
 		.title {
@@ -526,6 +532,7 @@ body, .pane {
 		}	
 	}
 }
+*/
 .item-interact {
     padding: 0;
     margin-bottom: 0;
@@ -688,8 +695,43 @@ textarea {
 		padding: 15px;
 		font-size: 12px;
 	}
+	.button.button-block, .button.button-full { margin-bottom: 0px; }
 }
 .page-challenges {
 	.item { border-bottom: 1px dotted; }
 	.scroll-content, .item { background-color: #FFF!important; }
+	.button-clear.button-clear { color: #2d2d2d; }
+	.item-content { 
+	    background-color: #FFF!important;
+	    color: #2d2d2d;
+	    border-bottom: 1px dotted #ccc;
+	    span { margin-left: 20px; }
+	}
+}
+.modal {
+	.list { padding-top: 15px; }
+}
+.item.item-divider {
+    color: #2d2d2d;
+    background-color: #eee!important;
+}
+.modal {
+	.card {
+		.item { 
+			background-color: #fff!important;
+			color: #2d2d2d;
+			h2, p { color: #2d2d2d; } 
+		}
+		.item-body { padding: 0 20px 20px; }
+	}
+}
+.page-invite {
+	.list { padding: 10px 5px; }
+	h2 { margin-top: 5px; }
+	h2, p { color: #2d2d2d; }
+	.item-avatar { padding: 10px 60px; }
+}
+.item-options {
+	z-index: 2;
+	&.invisible { visibility: visible; }
 }

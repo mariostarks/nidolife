@@ -19,7 +19,7 @@
                 <div class="button-label">Posts</div>
             </a>
             <a ui-sref="nido.challenges" id="profile-button5" class="button button-following  button-block">
-                <div class="button-count">0</div>
+                <div class="button-count">{{profile.challengeCount}}</div>
                 <div class="button-label">Challenges</div>
             </a>
             <a id="profile-button6" class="button button-challenges button-block" ui-sref="nido.followers({ id: profile.id })" >

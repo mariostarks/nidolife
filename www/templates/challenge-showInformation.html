@@ -1,0 +1,45 @@
+<ion-modal-view>
+  <ion-header-bar class="bar bar-header bar-positive">
+    <h1 class="title">Information</h1>
+    <button class="button button-clear button-primary" ng-click="closeInformation()">Close</button>
+  </ion-header-bar>
+  <ion-content>
+    <div class="list card">
+      <div class="item item-divider" style="margin: 0 auto;">
+        <p>{{challenge.name}}</p>
+        <p>{{challenge.description}}</p>
+      </div>
+      <div class="item item-avatar" ui-sref="nido.profile({ id: challenge.challenge_user })">
+        <img src="{{members[challenge.challenge_user].photo}}">
+        <h2>{{members[challenge.challenge_user].firstName}}</h2>
+        <p>{{challenge.created | date:'MMMM dd, yyyy h:mma'}}</p>
+      </div>
+      <div class="item item-body">
+        <p>
+          Challenge Post Goals: 
+        </p>
+        <p>
+          <a href="#" class="item item-icon-left" ng-show="challenge.tag_a>0">
+            <i class="icon ion-arrow-graph-up-right"></i>
+            Daily Sneaker Tags <span class="badge badge-assertive">{{challenge.tag_a}}</span>
+          </a>
+          <a href="#" class="item item-icon-left" ng-show="challenge.tag_b>0">
+            <i class="icon ion-arrow-graph-up-right"></i>
+            Daily Meal Tags <span class="badge badge-assertive">{{challenge.tag_b}}</span>
+          </a>
+          <a href="#" class="item item-icon-left" ng-show="challenge.tag_c>0">
+            <i class="icon ion-arrow-graph-up-right"></i>
+            Daily Physical Activity Tags 
+            <span class="badge badge-assertive">{{challenge.tag_c}}</span>
+          </a>
+          <a href="#" class="item item-icon-left" ng-show="challenge.tag_d>0">
+            <i class="icon ion-arrow-graph-up-right"></i>
+            Daily Motivation Tags 
+            <span class="badge badge-assertive">{{challenge.tag_d}}</span>
+          </a>
+        </p>
+      </div>
+
+    </div>
+  </ion-content>
+</ion-modal-view>

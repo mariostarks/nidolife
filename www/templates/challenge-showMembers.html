@@ -1,0 +1,15 @@
+<ion-modal-view>
+  <ion-header-bar class="bar bar-header bar-positive">
+    <h1 class="title">Members</h1>
+    <button class="button button-clear button-primary" ng-click="closeMembers()">Close</button>
+  </ion-header-bar>
+  <ion-content class="padding" style="margin-top: -10px;">
+    <div class="list">
+	    <a class="item item-avatar" href="#" ng-repeat="m in members" ui-sref="nido.profile({ id: m.id })">
+	      <img ui-sref="nido.profile({ id: m.id })" ng-src="{{m.photo || '/img/avatar.png'}}">
+	      <h2>{{m.firstName}}</h2>
+	      <p>{{m.lastName}}</p>
+	    </a>
+    </div>
+  </ion-content>
+</ion-modal-view>

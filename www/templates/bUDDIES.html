@@ -1,4 +1,4 @@
-<ion-view title="Find Buddies" id="page7" class="page-buddies">
+<ion-view title="Find People" id="page7" class="page-buddies">
     <ion-content padding="true" class="has-header">
         <div class="button-bar">
           <a class="button button-stable icon ion-ios-personadd" ui-sref="nido.following({ id: user.id })">&nbsp; Following</a>
@@ -38,7 +38,11 @@
 
         <!--<a ui-sref="nido.addBuddy" id="buddies-button32" style="font-weight:bolder;font-size:30px;" class="button button-positive  button-block">+</a>-->
 
+        <button class="button button-full button-light icon ion-eye" ng-click="showRecentlyJoined()">
+          &nbsp; View Recently Joined Members
+        </button>
 
+        <!--
         <div class="card">
           <div class="item item-text-wrap buddies-active">
             <h2>Recently Joined NIDO</h2>
@@ -50,8 +54,30 @@
             </div>
           </div>
         </div>
-
+        -->
 
     </ion-content>
+
 </ion-view>
 
+<script id="recentlyjoined.html" type="text/ng-template">
+    <ion-modal-view>
+      <ion-header-bar class="bar bar-header bar-positive">
+        <h1 class="title"></h1>
+        <button class="button button-clear button-primary" ng-click="close()">Cancel</button>
+      </ion-header-bar>
+      <ion-content class="padding" style="margin-top: -10px;">
+        <div class="card">
+          <div class="item item-text-wrap buddies-active">
+            <h2>Recently Joined NIDO</h2>
+            <div class="buddy-container">
+                <div class="everybody-container" style="display:block;" ng-repeat="u in users">
+                    <img ng-src="{{u.photo || '/img/avatar.png'}}" class="everybody-image" ui-sref="nido.profile({ id: u.id })">
+                    <div class="everybody-username" ui-sref="nido.profile({ id: u.id })">{{u.firstName}}</div>
+                </div>
+            </div>
+          </div>
+        </div>
+      </ion-content>
+    </ion-modal-view>
+  </script>

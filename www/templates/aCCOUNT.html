@@ -1,39 +1,46 @@
-<ion-view title="Account Settings" id="page-account" class="page-account">
+<ion-view title="Account Settings" id="page-account" class="page-account page-challenge">
     <ion-content padding="true" class="has-header">
         <form class="list">
+
           <img class="account-photo" data-ng-src="{{getPhoto()}}" />
           <a ui-sref="uploadphoto" id="account-button35" style="font-weight:;" class="button button-calm  button-block"><i class="icon ion-ios-camera"></i> &nbsp; CHANGE PROFILE PHOTO</a>
-            <label class="item item-input ">
+            <label class="item item-input item-floating-label">
                <div class="input-label">
                   Username
                 </div>
-                <input type="text" ng-model="user.firstName" placeholder="First Name">
+                <input type="text" ng-model="user.firstName" placeholder="Username">
             </label>
-            <label class="item item-input ">
+            <label class="item item-input item-floating-label">
                <div class="input-label">
                   Full Name
                 </div>
-                <input type="text" ng-model="user.lastName" placeholder="Last Name">
+                <input type="text" ng-model="user.lastName" placeholder="Full Name">
             </label>
-            <label class="item item-input">
+            <label class="item item-input item-floating-label">
                <div class="input-label">
                   Email
                 </div>
                 <input type="email" ng-model="user.email" placeholder="excellence@nido.life">
             </label>
-            <label class="item item-input">
+            <label class="item item-input item-floating-label">
                <div class="input-label">
                   Date of Birth
                 </div>
                 <input type="date" ng-model="user.birthdate" placeholder="MM/DD/YYY">
             </label>
-            <label class="item item-input">
+            <label class="item item-input item-floating-label">
                <div class="input-label">
                   Location
                 </div>
                 <input type="text" ng-model="user.location" placeholder="City, State - or - Country">
             </label>
-            <label class="item item-input item-select">
+            <label class="item item-input item-floating-label">
+               <div class="input-label">
+                  Interests
+                </div>
+                <input type="text" ng-model="user.interests" placeholder="Interests">
+            </label>
+            <label class="item item-select ">
                 <div class="input-label">
                   Gender
                 </div>

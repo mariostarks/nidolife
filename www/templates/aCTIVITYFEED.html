@@ -9,7 +9,7 @@
           </div>
 
           <div class="item item-body">
-            <img class="full-image" ng-click="gotoPhoto({{p.id}})" ng-src="{{p.data}}">
+            <img class="full-image" ng-src="{{p.data}}">
             <div class="item-interact row">
               <div class="col-50">
                 <button class="icon ion-happy-outline button  button-light" ng-click="toggleLike(p.id, $index)" ng-show="photosWithLikes[p.id].liked!=true"></button>

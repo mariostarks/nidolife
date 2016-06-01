@@ -1,0 +1,37 @@
+<ion-view title="Invite Buddies" id="page8" class="page-challenges page-invite page-message page-new-message" data-ng-init="init()">
+    <ion-nav-buttons side="right">
+    </ion-nav-buttons>
+    <ion-content padding="true" class="has-header has-footer">
+
+        <!--
+        <div id="no-messages" class="list card" ng-show="conversations==null">
+            <div class="item">
+                <p>You have no challenges. Invite your friends. <i class="icon ion-happy-outline"></i> </p>
+            </div>
+        </div>
+        -->
+        <ion-list style="clear: both; display: block;">
+            <ion-checkbox ng-model="invites[f.id].selected" ng-repeat="f in followers| filter:search" ng-change="toUserSelected(f.firstName, f.id, $index)" ng-checked="invites[f.id].selected">
+                <a class="item item-avatar" href="#"  >
+                    <img ui-sref="nido.profile({ id: f.id })" ng-src="{{f.photo || '/img/avatar.png'}}">
+                    <h2>{{f.firstName}}</h2>
+                    <p>{{f.lastName}}</p>
+                </a>
+            </ion-checkbox>
+        </ion-list>
+
+        <button class="button button-full button-positive" ng-click="invite()">
+          Send Invites
+        </button>
+
+    </ion-content>
+
+    <div class="bar bar-footer bar-light" ui-sref="nido.viewChallenge({ id: challenge.id })">
+        <a class="item item-icon-left item-icon-right"  style="width: 100%;">
+            <i class="icon ion-arrow-left-c "></i>
+            {{ challenge.name }}
+            <i class="icon ion-ios-list-outline"></i>
+        </a>
+    </div>
+
+</ion-view>

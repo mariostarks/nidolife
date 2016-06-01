@@ -13,10 +13,12 @@
             <div class="cropArea">
               <img-crop image="image.originalImage" area-type="square" area-min-size="200" result-image-size="200" result-image="image.croppedImage" result-image-format="image/png" result-image-quality="0.9" change-on-fly="true" maximize-crop="false" result-image-aspect="1x1"></img-crop>
             </div>
+          <!--  
           <p>
             <div>Preview Photo:</div>
             <div><img class="uploadphoto-preview" ng-src="{{image.croppedImage}}" /></div>
           </p>
+          -->
           <p class="photo-options">
             <a class="button button-positive" ng-click="savePhoto()">Save Photo</a>
             <a ui-sref="nido.account" class="button button-dark">Skip</a>

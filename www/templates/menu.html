@@ -1,4 +1,4 @@
-<ion-side-menus enable-menu-with-back-views="false">
+<ion-side-menus enable-menu-with-back-views="false" data-ng-init="init()">
     <ion-side-menu-content edge-drag-threshold="true"
   drag-content="true">
         <ion-nav-bar class="bar-stable">
@@ -40,13 +40,14 @@
                 <ion-item ui-sref="nido.buddies" ui-sref-active="active" class="button" menu-close="">
                     <div class="item-icon-left">
                         <i class="icon ion-person-stalker"></i>
-                        <p>BUDDIES</p>
+                        <p>PEOPLE</p>
                     </div>
                 </ion-item>
                 <ion-item ui-sref="nido.challenges" ui-sref-active="active" class="button" menu-close="">
                     <div class="item-icon-left">
                         <i class="icon ion-arrow-graph-up-right"></i>
                         <p>CHALLENGES</p>
+                         <span class="badge badge-positive">{{activeChallenges}}</span>
                     </div>
                 </ion-item>
                 
@@ -62,12 +63,6 @@
                     <div class="item-icon-left">
                         <i class="icon ion-android-settings"></i>
                         <p>SETTINGS</p>
-                    </div>
-                </ion-item>
-                <ion-item ui-sref="nido.signout" ui-sref-active="active" class="button" menu-close="">
-                    <div class="item-icon-left">
-                        <i class="icon ion-android-cancel"></i>
-                        <p>LOG OUT</p>
                     </div>
                 </ion-item>
             </ion-list>

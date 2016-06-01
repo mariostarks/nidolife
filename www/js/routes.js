@@ -53,8 +53,7 @@ angular.module('app.routes', [])
   })
 
   .state('addpost', {
-    url: '/add-post-upload',
-    cache: false,
+    url: '/add-post-upload/:challenge',
     templateUrl: 'templates/addPostUpload.html',
     controller: 'addPostUploadCtrl'
   })
@@ -101,6 +100,7 @@ angular.module('app.routes', [])
 
   .state('nido.challenges', {
     url: '/challenges',
+    cache: false,
     views: {
       'side-menu21': {
         templateUrl: 'templates/challenges.html',
@@ -116,6 +116,17 @@ angular.module('app.routes', [])
       'side-menu21': {
         templateUrl: 'templates/viewChallenge.html',
         controller: 'viewChallengeCtrl'
+      }
+    }
+  })
+
+  .state('nido.inviteChallenge', {
+    url: '/challenge/invite/:id',
+    cache: false,
+    views: {
+      'side-menu21': {
+        templateUrl: 'templates/inviteChallenge.html',
+        controller: 'inviteChallengeCtrl'
       }
     }
   })

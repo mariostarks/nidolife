@@ -1,11 +1,11 @@
-<ion-view title="Upload Post" id="upload-post" class="page-uploadphoto page-upload-post">
+<ion-view title="Upload Post" id="upload-post" class="page-uploadphoto page-upload-post" data-ng-init="init()">
 
     <ion-content padding="false" class="has-header has-footer">
       <div class="list card">
 
         <div class="item">
           <div class="upload-input">
-              <span class="button icon button-full button-dark ion-image">&nbsp; Choose Photo </span>
+              <span class="button icon button-full button-light ion-image">&nbsp; Choose Photo </span>
               <input id="post-fileInput" type="file" class="input-file" />
           </div>
         </div>
@@ -22,7 +22,7 @@
     </ion-content>
     <div class="bar bar-footer bar-positive" ui-sref="addpost">
       <p class="photo-options">
-        <a ng-click="goBack()" class="button button-small button-dark">Cancel</a>
+        <a ng-click="goBack()" class="button button-small button-light">Cancel</a>
         <a ng-click="openModal()" class="button button-large button-calm">Next Step</a>
       </p>
     </div>
@@ -52,6 +52,15 @@
               <option value="4">Physical Activity</option>
             </select>
           </label>
+          <div class="spacer"></div>
+          <label class="item item-input item-stacked-label">
+            <span class="input-label" style="display: block; width: 100%;">Post to Challenge?</span>
+            <select ng-model="post.challenge" required>
+              <option value="null">None</option>
+              <option value="{{c.id}}" ng-repeat="c in challenges" ng-selected="c.id==challenge_id">{{c.name}}</option>
+            </select>
+          </label>
+
           <button class="button button-full button-positive icon ion-paper-airplane" ng-click="save(newUser)">&nbsp; Submit Post</button>
         </div>
       </ion-content>

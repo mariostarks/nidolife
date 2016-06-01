@@ -1,21 +1,21 @@
-<ion-view cache-view="false" data-ng-init="init()" id="view-challenge" class="page-challenge page-view-challenge">
+<ion-view cache-view="false" data-ng-init="init()" id="view-challenge" class="page-challenge page-view-challenge page-newsfeed">
     <ion-nav-title>{{challenge.name}}</ion-nav-title>
     <ion-content padding="false" class="has-header has-footer" delegate-handle="mainScroll">
 
         <div class="button-bar">
-            <a id="profile-button6" class="button button-followers button-block" >
+            <a id="profile-button6" class="button button-followers button-block" ng-click="showInformation()">
                 <div class="button-count"><i class="ion-ios-information-outline"></i></div>
                 <div class="button-label">Information</div>
             </a>
-            <a id="profile-button4" class="button button-challenges button-block">
-                <div class="button-count">0</div>
-                <div class="button-label">Posts</div>
-            </a>
-            <a  id="profile-button5" class="button button-following  button-block">
-                <div class="button-count">0</div>
+            <a  id="profile-button5" class="button button-following  button-block" ng-click="showMembers()">
+                <div class="button-count">{{membersCount}}</div>
                 <div class="button-label">Members</div>
             </a>
-            <a id="profile-button6" class="button button-challenges button-block"  >
+            <a id="profile-button4" class="button button-challenges button-block">
+                <div class="button-count">{{postsCount}}</div>
+                <div class="button-label">Posts</div>
+            </a>
+            <a id="profile-button6" class="button button-challenges button-block" ng-click="showSettings()">
                 <div class="button-count"><i class="ion-ios-gear-outline"></i></div>
                 <div class="button-label">Settings</div>
             </a>
@@ -27,15 +27,42 @@
             -->
         </div>
 
-        <div class="list card" ng-repeat="r in replies" ng-class="{'message-own': r.user == currentUser}">
-            <div class="item item-avatar">
-                <img ng-src="{{r.photo}}" ui-sref="nido.profile({ id: r.user })">
-                <h2><a  ui-sref="nido.profile({ id: r.user })">{{r.screenname}}</a> <span class="message-date">{{r.timestamp | date:'MMMM dd, yyyy h:mma'}}</span></h2>
-                <p ng-bind-html="r.reply | embed">"{{r.reply}}"</p>
-            </div>
-        </div>
-    </ion-content>
+        <div class="list card" ng-repeat="p in posts">
 
+          <div class="item item-avatar">
+            <img ui-sref="nido.profile({ id: p.user })" ng-src="{{users[p.user].photo}}">
+            <h2  ui-sref="nido.profile({ id: p.user })" style="font-weight:500;">{{users[p.user].firstName|lowercase}}</h2>
+            <p>{{p.created | date:'MMMM dd, yyyy h:mma'}}</p>
+          </div>
+
+          <div class="item item-body">
+            <img class="full-image" ng-click="gotoPhoto({{p.id}})" ng-src="{{p.data}}">
+            <div class="item-interact row">
+              <div class="col-50">
+                <button class="icon ion-happy-outline button  button-light" ng-click="toggleLike(p.id, $index)" ng-show="photosWithLikes[p.id].liked!=true"></button>
+                <button class="icon ion-happy button  button-light" ng-click="toggleLike(p.id, $index)" ng-show="photosWithLikes[p.id].liked==true"></button>
+                <!--<button class="icon ion-ios-chatboxes-outline button  button-light"></button>-->
+                <button class="button button-light icon ion-edit" ng-click="gotoPhoto({{p.id}})" ng-show="{{p.user == user.id}}"></button>
+              </div>
+              <div class="col-50">
+                <p class="item-social">
+                  <a href="#" class="subdued" ng-show="photosWithLikes[p.id].likeCounter>0"><i class="icon ion-happy"></i> 
+
+                    {{photosWithLikes[p.id].likeCounter}} Likes</a>
+                  <a href="#" class="subdued pull-right" ng-show="p.category!=null"><i class="icon ion-ios-folder"></i> &nbsp; {{showCategory(p.category)}}</a>
+                </p>
+              </div>
+            </div>
+            <p class="item-caption" ng-show="{{p.caption!=null}}">
+             <strong ui-sref="nido.profile({ id: p.user })">{{p.firstName}}</strong> {{p.caption}}
+            </p>
+          </div>
+        </div>
+
+    </ion-content>
+    <div class="bar bar-footer bar-positive" ui-sref="addpost({ challenge: challenge_id })">
+      <div class="title" style="margin: 0 auto;"><i class="icon light ion-camera" style="font-size: 30px;"></i></div>
+    </div>
 </ion-view>
 
 

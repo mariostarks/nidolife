@@ -9810,6 +9810,11 @@ h1, h2, h3, h4, h5, h6, .h1, .h2, .h3, .h4, .h5, .h6 {
   padding: 1px 6px;
   font-size: 9px; }
 
+.side-menu-left .badge {
+  float: right;
+  top: 12px;
+  position: absolute; }
+
 .side-menu-left .item-content {
   margin-left: 10%; }
 
@@ -9857,7 +9862,10 @@ h1, h2, h3, h4, h5, h6, .h1, .h2, .h3, .h4, .h5, .h6 {
     background-color: #0c60ee; }
 
 .has-header {
-  top: 55px; }
+  top: 49px; }
+
+.scroll-content {
+  padding-top: 6px; }
 
 .page-profile .profile-header {
   margin-top: 3px;
@@ -10075,6 +10083,9 @@ img-crop canvas {
   right: 0;
   padding: 20px; }
 
+.page-login .has-header {
+  top: 0px; }
+
 .page-login .login-field, .page-signup .login-field {
   background-color: #387ef5 !important;
   padding: 10px 20px;
@@ -10275,19 +10286,22 @@ body, .pane {
   text-align: center;
   color: #68ccf8; }
 
-.page-newsfeed .scroll .item-avatar {
-  background: #0295d6 !important; }
-
-.page-timeline .bar-header .title {
-  background: url("../img/logo-header.png") no-repeat;
-  background-size: contain;
-  width: 120px;
-  top: 5px !important;
-  position: absolute;
-  margin: 0 auto;
-  left: 0px !important;
-  right: 0 !important; }
-
+/*
+.page-timeline {
+	.bar-header {
+		.title {
+		    background: url("../img/logo-header.png") no-repeat;
+		    background-size: contain;
+		    width: 120px;
+		    top: 5px!important;
+		    position: absolute;
+		    margin: 0 auto;
+		    left: 0px!important;
+		    right: 0!important;
+		}	
+	}
+}
+*/
 .item-interact {
   padding: 0;
   margin-bottom: 0; }
@@ -10471,8 +10485,54 @@ textarea {
   padding: 15px;
   font-size: 12px; }
 
+.page-challenge .button.button-block, .page-challenge .button.button-full {
+  margin-bottom: 0px; }
+
 .page-challenges .item {
   border-bottom: 1px dotted; }
 
 .page-challenges .scroll-content, .page-challenges .item {
   background-color: #FFF !important; }
+
+.page-challenges .button-clear.button-clear {
+  color: #2d2d2d; }
+
+.page-challenges .item-content {
+  background-color: #FFF !important;
+  color: #2d2d2d;
+  border-bottom: 1px dotted #ccc; }
+  .page-challenges .item-content span {
+    margin-left: 20px; }
+
+.modal .list {
+  padding-top: 15px; }
+
+.item.item-divider {
+  color: #2d2d2d;
+  background-color: #eee !important; }
+
+.modal .card .item {
+  background-color: #fff !important;
+  color: #2d2d2d; }
+  .modal .card .item h2, .modal .card .item p {
+    color: #2d2d2d; }
+
+.modal .card .item-body {
+  padding: 0 20px 20px; }
+
+.page-invite .list {
+  padding: 10px 5px; }
+
+.page-invite h2 {
+  margin-top: 5px; }
+
+.page-invite h2, .page-invite p {
+  color: #2d2d2d; }
+
+.page-invite .item-avatar {
+  padding: 10px 60px; }
+
+.item-options {
+  z-index: 2; }
+  .item-options.invisible {
+    visibility: visible; }
