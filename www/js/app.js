@@ -23,7 +23,7 @@ angular.module('app', ['monospaced.elastic', 'ngSanitize', 'ngEmbed', 'ngTagsInp
     $httpProvider.interceptors.push('APIInterceptor');
 
     RestangularProvider.setBaseUrl('https://api.backand.com/1/objects');
-    RestangularProvider.setDefaultHeaders({'AnonymousToken': '589837be-36cf-4ec0-8871-5d947dcd670a'});
+    //RestangularProvider.setDefaultHeaders({'AnonymousToken': '589837be-36cf-4ec0-8871-5d947dcd670a'});
     // add a response intereceptor
     RestangularProvider.setResponseExtractor(function(response, operation) {
         return response.data;

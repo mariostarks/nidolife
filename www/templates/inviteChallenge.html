@@ -11,7 +11,8 @@
         </div>
         -->
         <ion-list style="clear: both; display: block;">
-            <ion-checkbox ng-model="invites[f.id].selected" ng-repeat="f in followers| filter:search" ng-change="toUserSelected(f.firstName, f.id, $index)" ng-checked="invites[f.id].selected">
+            <p style="margin-top: 10px;">You can only invite members who you are currently following and who are not already a member of this challenge.</p>
+            <ion-checkbox ng-model="invites[f.id].selected" ng-repeat="f in followers| filter:search" ng-change="toUserSelected(f.firstName, f.id, $index)" ng-checked="invites[f.id].selected" ng-show="f.id != members[f.id]">
                 <a class="item item-avatar" href="#"  >
                     <img ui-sref="nido.profile({ id: f.id })" ng-src="{{f.photo || '/img/avatar.png'}}">
                     <h2>{{f.firstName}}</h2>

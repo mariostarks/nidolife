@@ -9792,6 +9792,9 @@ h1, h2, h3, h4, h5, h6, .h1, .h2, .h3, .h4, .h5, .h6 {
 .profile-location {
   font-size: 12px; }
 
+.profile-interests {
+  font-size: 10px; }
+
 .bar .title {
   position: relative; }
 
@@ -10078,7 +10081,7 @@ img-crop canvas {
 
 .login-buttons {
   position: absolute;
-  bottom: 0;
+  bottom: 0px;
   left: 0;
   right: 0;
   padding: 20px; }

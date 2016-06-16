@@ -44,6 +44,7 @@ angular.module('app.controllers', [])
     $scope.post.caption = '';
     $scope.post.challenge = null; 
     $scope.challenges = {};
+    $scope.challengesDetails = {};
     $scope.challenge_id = null; 
 
     if ($stateParams.challenge) {
@@ -51,9 +52,16 @@ angular.module('app.controllers', [])
     }
 
     $scope.init = function() {
-        getChallenges($scope.currentUser).then(function(results) {
-            $scope.challenges = results.data.data;
-            console.log($scope.challenges); 
+        getChallengesByMembership($scope.currentUser).then(function(results) {
+            console.log(results);
+            if (results.status == 200) {
+                if (results.data.totalRows > 0) {
+                    $scope.challenges = results.data.data;
+                    $scope.challengesDetails = results.data.relatedObjects.challenges;
+                }
+                else 
+                    $scope.challenges = null;
+            }
         });
     }
 
@@ -106,7 +114,10 @@ angular.module('app.controllers', [])
             $scope.post.category = $scope.post.category;
             $scope.post.created = Date.now().toString(); 
             $scope.post.user = $localStorage.user.id;
-            $scope.post.challenge = $scope.challenge_id;   
+            $scope.post.challenge = $scope.challenge_id; 
+
+            $scope.post.croppedImage = '';
+            $scope.post.originalImage = '';  
     
             create($scope.post);
 
@@ -118,7 +129,9 @@ angular.module('app.controllers', [])
     };
 
     $scope.goBack = function() {
-        $ionicHistory.goBack();
+        $ionicHistory.clearCache([$state.current.name]).then(function() {
+            $state.go('nido.activityFeed', {}, {reload: true}); 
+        });
     }
 
     function create(object) {
@@ -150,6 +163,26 @@ angular.module('app.controllers', [])
         });
     };
 
+    getChallengesByMembership = function(user) {
+        return $http ({
+          method: 'GET',
+          url: Backand.getApiUrl() + '/1/objects/challenge_members',
+          params: {
+            deep: true,
+            filter: [
+              {
+                fieldName: 'user',
+                operator: 'in',
+                value: user
+              }
+            ],
+            sort: '[{fieldName:\'id\', order:\'desc\'}]'
+          }
+        });
+    };
+
+
+    // MAKE THIS DEFUNCT 
     getChallenges = function(user) {
         return $http ({
           method: 'GET',
@@ -176,16 +209,53 @@ angular.module('app.controllers', [])
     $scope.user = $localStorage.user;
     $scope.currentUser = $localStorage.user.id;
     $scope.activeChallenges = 0;
+    $scope.conversations = {};
+    $scope.unreadMessagesCount = 0;
 
     $scope.init = function() {
         getActiveChallenges($scope.currentUser).then(function(results){
             if (results.status ==200) {
+                console.log(results);
                 if (results.data.totalRows)
                     $scope.activeChallenges = results.data.totalRows;
-                
-                console.log($scope.activeChallenges);
             }
         });
+
+        getConversationList($scope.currentUser).then(function(results) {
+            var tempConvoList = []; 
+            if (results.status == 200) {
+                $scope.conversations = results.data; 
+                $scope.conversationsCount = $scope.conversations.length; 
+
+                angular.forEach($scope.conversations, function(value, key) {
+                    this.push(value.conversation_id);
+                }, tempConvoList); 
+
+                $scope.convoList = tempConvoList.join(',');
+
+                //build array of conversation list ids. 
+                //
+
+                //check last time the user checked his/her messages
+                getLastCheckedMessages().then(function(results) {
+                    if (results.status == 200) {
+                        $scope.lastCheckedMessages = results.data.data[0].mailcheck;
+
+                        //get list (total count) of unread messages 
+                        getUnreadMessages($scope.lastCheckedMessages, $scope.convoList).then(function(results) {
+                            if (results.status == 200) {
+                                $scope.unreadMessagesCount = results.data.length; 
+                                console.log(results); 
+                            }
+                        });
+                    }
+                });
+
+            }
+
+        });
+
+
     }
 
     //console.log('scope user: ');
@@ -220,7 +290,51 @@ angular.module('app.controllers', [])
           }
         });    
     }
+
+    getConversationList = function(user_id) {
+        return $http ({
+          method: 'GET',
+          url: Backand.getApiUrl() + '/1/query/data/getConversationList',
+          params: {
+            parameters: {
+              user_id: user_id
+            }
+          }
+        });
+    }
+
+    getUnreadMessages = function(lastCheckedTime, convoList) {
+        return $http ({
+          method: 'GET',
+          url: Backand.getApiUrl() + '/1/query/data/getUnreadMessages',
+          params: {
+            parameters: {
+              lastCheckedTime: lastCheckedTime,
+              convoList: convoList
+            }
+          }
+        });
+    }
+
+    getLastCheckedMessages = function() {
+        return $http ({
+          method: 'GET',
+          url: Backand.getApiUrl() + '/1/objects/users',
+          params: {
+            filter: [
+              {
+                fieldName: 'id',
+                operator: 'equals',
+                value: $localStorage.user.id
+              }
+            ],
+            sort: ''
+          }
+        });
+    }
+
 	$scope.devWidth = (($window.innerWidth > 0) ? $window.innerWidth : screen.width);
+
 })
 
 .controller('homeCtrl', function($scope, $rootScope) {
@@ -259,17 +373,19 @@ angular.module('app.controllers', [])
             $scope.user.photo = $scope.imageUrl;
             $localStorage.user.photo = $scope.imageUrl;
             console.log($scope.imageUrl);
+
+            UsersModel.update($scope.user.id, $scope.user)
+                .then(function (result) {
+                    console.log(result);
+                    $state.go('nido.account', {}, {reload: true}); 
+                });
         }, function(err){
             console.log(err.data);
         });
 
         //update usermodel with $scope.user. 
 
-        UsersModel.update($scope.user.id, $scope.user)
-            .then(function (result) {
-                console.log(result);
-                $state.go('nido.account', {}, {reload: true}); 
-            });
+
 
     };
 
@@ -283,7 +399,8 @@ angular.module('app.controllers', [])
             "name": 'files'
           },
           headers: {
-            'Content-Type': 'application/json'
+            'Content-Type': 'application/json',
+            'Authorization': userProfile.token
           },
           // you need to provide the file name and the file data
           data: {
@@ -428,6 +545,30 @@ angular.module('app.controllers', [])
     vm.lastName = '';
     vm.errorMessage = '';
 })
+
+.controller('forgotPasswordCtrl', function (Backand, $state, $rootScope, LoginService, $localStorage, Restangular) {
+    $rootScope.bodyClass = "";
+    var vm = this;
+    var login = this;
+    vm.signup = signUp;
+
+    function signUp(){
+        vm.errorMessage = '';
+
+        LoginService.signup(vm.firstName, vm.lastName, vm.email, vm.password, vm.again)
+            .then(function (response) {
+                // success
+                onLogin();
+            }, function (reason) {
+                if(reason.data.error_description !== undefined){
+                    vm.errorMessage = reason.data.error_description;
+                }
+                else{
+                    vm.errorMessage = reason.data;
+                }
+            });
+    }
+})
    
 .controller('userProfileCtrl', function ($scope, $rootScope) {
     $rootScope.bodyClass = "";
@@ -455,33 +596,38 @@ angular.module('app.controllers', [])
             if (results.data.totalRows > 0) {
                 $scope.challenge = results.data.data[0];
 
-                apiGetFollowersList().then(function(results) {
-                    $scope.followersIds = results.data;
-                    $scope.followersCount = results.data.length; 
-
-                    //Build temp followers list from DB
-                    angular.forEach($scope.followersIds, function(value, key) {
-                        this.push(value.to_id);
-                    }, tempFollowersList);;
-
-                    //String value passed to get follower details 
-                    $scope.followersList = tempFollowersList.join(',');
-
-                    apiGetFollowersDetails($scope.followersList).then(function(results) {
-                        $scope.followers = results.data;
-                        angular.forEach($scope.followers, function(value, key) {
-                            this.push({text: value.firstName});
-                        }, $scope.userList);
-
-                        console.log($scope.userList);
-                    });
-
-                });
-
                 getMembers($scope.challenge_id).then(function(results) {
                     if (results.status == 200) {
+
                         $scope.members = results.data.relatedObjects.users;
+                        console.log($scope.members);
                         $scope.membersCount = results.data.data.length; 
+                        //console.log($scope.members);
+                        apiGetFollowersList().then(function(results) {
+                            $scope.followersIds = results.data;
+                            $scope.followersCount = results.data.length; 
+
+                            //Build temp followers list from DB
+                            angular.forEach($scope.followersIds, function(value, key) {
+                                if (parseInt(value.to_id) != parseInt($scope.currentUser)) {
+                                    console.log(value);
+                                    this.push(value.to_id);
+                                }
+                            }, tempFollowersList);
+
+                            //String value passed to get follower details 
+                            $scope.followersList = tempFollowersList.join(',');
+
+                            apiGetFollowersDetails($scope.followersList).then(function(results) {
+                                $scope.followers = results.data;
+                                angular.forEach($scope.followers, function(value, key) {
+                                    this.push({text: value.firstName});
+                                }, $scope.userList);
+                                console.log($scope.followers);
+                                //console.log($scope.userList);
+                            });
+
+                        });
                     }
                 });
             }
@@ -490,7 +636,7 @@ angular.module('app.controllers', [])
                 $scope.challenge = null; 
             }
 
-            console.log($scope.challenge);
+            //console.log($scope.challenge);
         });
     }
 
@@ -602,6 +748,7 @@ angular.module('app.controllers', [])
     $scope.postsCount = 0;
     $scope.membersCount = 0;
     $scope.challengeMembershipId = null;
+    $scope.challengeMembersList = '';
 
     $scope.init = function() {
         getChallenge($scope.challenge_id).then(function(results) {
@@ -621,15 +768,27 @@ angular.module('app.controllers', [])
 
                 getMembers($scope.challenge_id).then(function(results) {
                     if (results.status == 200) {
+                        var tempChallengeMembersList = []; 
+
                         $scope.members = results.data.relatedObjects.users;
                         $scope.membersCount = results.data.data.length;
+
+                        //Build temp members list from DB -- used later if this is deleted
+                        //Maybe we should rebuild this list upon actual delete versus here
+                        //TODO!!! 
+                        angular.forEach($scope.members, function(value, key) {
+                            this.push(value.id);
+                        }, tempChallengeMembersList);
+                        $scope.challengeMembersList = tempChallengeMembersList.join(',');
+
                         //presumably only one record should be returned 
                         //TBD: add logic to check for duplicates and remove all
                         if ($scope.challengeMembershipId == null) {
                             $scope.challengeMembershipId = results.data.data[0].id;
                         } 
                         //console.log($scope.challengeMembershipId);
-                        console.log(results.data);
+                        //console.log(results.data);
+                        console.log($scope.challengeMembersList);
                     }
                 });
 
@@ -685,8 +844,9 @@ angular.module('app.controllers', [])
         confirmPopup.then(function(res) {
             if(res) {
                 $scope.leaveChallengeConfirmed($scope.challengeMembershipId);
+                $state.go('nido.challenges', {}, {reload: true});
             } else {
-                //console.log('You are not sure');
+                $state.go('nido.challenges', {}, {reload: true});
             }
         });
     }
@@ -694,10 +854,10 @@ angular.module('app.controllers', [])
     $scope.deleteChallenge = function() {
         var memberWarningText = ''; 
         if ($scope.membersCount > 1) 
-            memberWarningText = 'You have ' + $scope.membersCount + ' members who will no longer be able to post to this challenge as well.';
+            memberWarningText = 'You have ' + $scope.membersCount + ' members who will be affected by this change as well.';
         var confirmPopup = $ionicPopup.confirm({
             title: 'Delete Challenge',
-            template: 'Woah! Chill. As the admin of this challenge, are you sure you want to delete it entirely? This action cannot be undone. ' + memberWarningText + ''
+            template: 'Woah! Chill. Are you sure you want to delete it entirely? This action cannot be undone. ' + memberWarningText + ''
         });
 
         confirmPopup.then(function(res) {
@@ -719,17 +879,31 @@ angular.module('app.controllers', [])
         });
     }
 
-    $scope.deleteChallengeConfirmed = function(id) {
-
-        //REMOVE ALL CHALLENGE MEMBERS FIRST
-        //DELETE THE CHALLENGE ITSELF 
-
-        ChallengeModel.delete($scope.challenge_id).then(function(results) {
-            console.log(results);
-            if (results.status == 200) { 
-                console.log('record removed');
-                $state.go('nido.challenges', {}, {reload: true});
+    deleteMemberships = function(challengeid) {
+        //Danger: running this in test or prod environment affects data
+        //Prototype purposes only 
+        return $http ({
+          method: 'GET',
+          url: Backand.getApiUrl() + '/1/query/data/deleteChallengeMemberships',
+          params: {
+            parameters: {
+              challengeId: challengeid
             }
+          }
+        });
+    }
+
+    $scope.deleteChallengeConfirmed = function(id) {
+        //REMOVE ALL CHALLENGE MEMBERS FIRST
+        deleteMemberships($scope.challenge_id).then(function(results) {
+            //DELETE THE CHALLENGE ITSELF 
+            ChallengeModel.delete($scope.challenge_id).then(function(results) {
+                console.log(results);
+                if (results.status == 200) { 
+                    console.log('record removed');
+                    $state.go('nido.challenges', {}, {reload: true});
+                }
+            });
         });
     }
 
@@ -829,11 +1003,19 @@ angular.module('app.controllers', [])
 
         ChallengeMembersModel.update($scope.inviteApproved.id, $scope.inviteApproved).then(function(results) {
             console.log(results);
-            $state.go('nido.viewChallenge', {id: $scope.inviteApproved.challenge_id}, {reload: true});
-
+            $state.go('nido.challenges', {}, {reload: true});
+            //$state.go('nido.viewChallenge', {id: $scope.inviteApproved.challenge_id}, {reload: true});
         });
     };
 
+    $scope.declineInvite = function(id, challenge_id) {
+        console.log(id);
+
+        ChallengeMembersModel.delete(id).then(function(results) {
+            console.log(results);
+            $state.go('nido.challenges', {}, {reload: true});
+        });
+    };
 
     getChallenges = function(user) {
         return $http ({
@@ -1173,7 +1355,7 @@ angular.module('app.controllers', [])
 
 })
    
-.controller('accountCtrl', function (Backand, $scope, $rootScope, $localStorage, Restangular, UsersModel) {
+.controller('accountCtrl', function (Backand, $scope, $state, $rootScope, $localStorage, Restangular, UsersModel) {
     var _self = this;
     var user = {}; 
 
@@ -1200,7 +1382,8 @@ angular.module('app.controllers', [])
     $scope.updateAccount = function() {
         UsersModel.update($scope.user.id, $scope.user)
             .then(function (result) {
-                console.log(result); 
+                if (result.status == 200)
+                    $state.go('nido.activityFeed', {}, {reload: true});
             });
     };
 
@@ -1230,6 +1413,8 @@ angular.module('app.controllers', [])
         $scope.pollRefresh = 20; //every seconds
         $scope.maxSession = 5; //max minutes 
         $rootScope.hideLoading = true; 
+
+        var checkMail = setMessageCheck(); 
 
         (function tick() {
             if ($scope.tickCounter < Math.ceil((60 / $scope.pollRefresh)*$scope.maxSession)) { // stop updating after 10 minutes
@@ -1283,6 +1468,21 @@ angular.module('app.controllers', [])
           }
         });
     }
+
+    setMessageCheck = function() {
+        var currentTime = new Date();
+        var currentUser = $localStorage.user.id; 
+        var user = {};
+
+        user.mailcheck = currentTime; 
+
+        UsersModel.update(currentUser, user)
+            .then(function (result) {
+                console.log(result);
+            });
+    }
+
+
 })
 
 .controller('readMessageCtrl', function ($sce, $ionicLoading, $location, $timeout, $ionicScrollDelegate, ConversationsModel, ConversationRepliesModel, $http, Backand, $scope, $rootScope, BuddyRequestsModel, $localStorage, Restangular, UsersModel, $stateParams) {
@@ -1980,6 +2180,7 @@ angular.module('app.controllers', [])
     }
 
     $scope.likes = 0;
+    $scope.lastKey = 0;
     $rootScope.bodyClass = "add-item";
     $scope.user = {};
     var user_photo = ''; 
@@ -2060,10 +2261,11 @@ angular.module('app.controllers', [])
                     if (results.status == 200) {
                         //Store all photos to appear on user's timeline
                         $scope.user.photos = results.data.data;
+                        $scope.lastKey = results.data.totalRows + 1;
                         
                         //Get user details of individual photos
                         $scope.user.usersFollowed = results.data.relatedObjects.users;
-                        
+
                         //Compose list of all photo ids 
                         angular.forEach($scope.user.photos, function(value, key) {
                             this.push(value.id);
@@ -2108,18 +2310,19 @@ angular.module('app.controllers', [])
                         });
 
                         /* ADD FIRST or WELCOME POST */ 
-                        /*
-                        var lastKey = results.data.length + 1;
-                        $scope.user.photos[lastKey] = {};
-                        $scope.user.photos[lastKey].data = '/img/timeline-drluna.png'; 
-                        $scope.user.photos[lastKey].id = 9999999999;
-                        $scope.user.photos[lastKey].created = Date.now().toString();
-                        $scope.user.photos[lastKey].caption = 'Greetings! My name is Dr. Luna, founder of NIDO.LIFE. Let me be the first to welcome you. May this app help you foster and maintain healthy habits through community.'; 
-                        $scope.user.photos[lastKey].category = "";
-                        $scope.user.photos[lastKey].comments = Date.now().toString(); 
-                        $scope.user.photos[lastKey].likes = ''; 
-                        $scope.user.photos[lastKey].user = '2';  
-                        */
+                        $scope.user.photos[$scope.lastKey] = {};
+                        $scope.user.photos[$scope.lastKey].data = '/img/timeline-drluna.png'; 
+                        $scope.user.photos[$scope.lastKey].id = 9999999999;
+                        $scope.user.photos[$scope.lastKey].created = Date.now().toString();
+                        $scope.user.photos[$scope.lastKey].caption = 'Greetings! My name is Dr. Luna, founder of NIDO.LIFE. Let me be the first to welcome you. May this app help you foster and maintain healthy habits through community.'; 
+                        $scope.user.photos[$scope.lastKey].category = "";
+                        $scope.user.photos[$scope.lastKey].comments = Date.now().toString(); 
+                        $scope.user.photos[$scope.lastKey].likes = ''; 
+                        $scope.user.photos[$scope.lastKey].user = 14; 
+
+                        console.log($scope.user.photos); 
+
+                        
                     }
                 });
             });

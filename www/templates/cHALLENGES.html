@@ -21,7 +21,7 @@
                 Create a New Challenge
                 <i class="icon ion-arrow-right-c"></i>
             </a>
-            <a class="item item-icon-left item-icon-right" ng-repeat="c in challenges" ui-sref="nido.viewChallenge({ id: c.challenge_id })"  ng-show="c.status=='active'">
+            <a class="item item-icon-left item-icon-right" ng-repeat="c in challenges" ui-sref="nido.viewChallenge({ id: c.challenge_id })" ng-show="c.status=='active'">
                 <i class="icon ion-ios-list-outline"></i>
                 {{challengesDetails[c.challenge_id].name}}
                 <i class="icon ion-arrow-right-c"></i>
@@ -34,7 +34,7 @@
                 <i class="icon ion-ios-list-outline"></i>
                 <span>{{challengesDetails[c.challenge_id].name}}</span>
                 <ion-option-button class="button-clear icon dark ion-checkmark-circled" ng-click="approveMembership(c.id, c.challenge_id)"></ion-option-button>
-                <ion-option-button class="button-clear icon dark ion-close-circled" disabled></ion-option-button>
+                <ion-option-button class="button-clear icon dark ion-close-circled" ng-click="declineInvite(c.id)"></ion-option-button>
               </ion-item>
             </ion-list>
 

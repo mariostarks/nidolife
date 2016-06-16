@@ -9,8 +9,8 @@
 
         <div class="list card" ng-repeat="c in conversations">
             <div class="item item-avatar"  ui-sref="nido.readMessage({ id: c.conversation_id })">
-                <img ng-src="{{c.profile_photo}}">
-                <h2><a ui-sref="nido.readMessage">{{c.screenname}}</a> <span class="message-date">{{c.last_updated | date:'MMMM dd, yyyy h:mma'}}</span></h2>
+                <img ng-src="{{c.profile_photo =! '' && c.profile_photo || 'img/avatar.png'}}">
+                <h2><a ui-sref="nido.readMessage({ id: c.conversation_id })">{{c.screenname}}</a> <span class="message-date">{{c.last_updated | date:'MMMM dd, yyyy h:mma'}}</span></h2>
                 <p>"{{c.lastReply}}"</p>
             </div>
         </div>

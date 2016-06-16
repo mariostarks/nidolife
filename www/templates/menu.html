@@ -1,4 +1,4 @@
-<ion-side-menus enable-menu-with-back-views="false" data-ng-init="init()">
+<ion-side-menus enable-menu-with-back-views="true" data-ng-init="init()">
     <ion-side-menu-content edge-drag-threshold="true"
   drag-content="true">
         <ion-nav-bar class="bar-stable">
@@ -16,9 +16,9 @@
         <ion-header-bar class="bar-stable">
             <div class="menu-close ion-close-circled light"></div>
             <div class="profile-header">
-                <img ng-src="{{getPhoto()}}" class="profile-image"/>
+                <img ui-sref="nido.profile({ id: user.id })" ng-src="{{getPhoto()}}" class="profile-image"/>
                 <div class="profile-title">
-                    <div class="profile-name">{{user.firstName}}</div>
+                    <div class="profile-name" ui-sref="nido.profile({ id: user.id })">{{user.firstName}}</div>
                     <div class="profile-location">New York, New York</div>
                 </div>
             </div>
@@ -55,6 +55,10 @@
                     <div class="item-icon-left">
                         <i class="icon ion-chatbubbles"></i>
                         <p>MESSAGES <!--<span class="badge badge-light">0</span>--></p>
+
+                        <span class="badge badge-positive" ng-show="unreadMessagesCount>0">New!</span>
+
+                        <span class="badge badge-positive" ng-show="unreadMessagesCount==0">{{conversationsCount}}</span>
                         
                     </div>
                 </ion-item>

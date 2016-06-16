@@ -55,7 +55,8 @@ angular.module('app.routes', [])
   .state('addpost', {
     url: '/add-post-upload/:challenge',
     templateUrl: 'templates/addPostUpload.html',
-    controller: 'addPostUploadCtrl'
+    controller: 'addPostUploadCtrl',
+    cache: false
   })
 
   .state('login', {
@@ -68,6 +69,12 @@ angular.module('app.routes', [])
     url: '/signup',
     templateUrl: 'templates/signup.html',
     controller: 'signupCtrl as vm'
+  })
+
+  .state('forgotpassword', {
+    url: '/forgot-password',
+    templateUrl: 'templates/forgotPassword.html',
+    controller: 'forgotPasswordCtrl'
   })
 
   .state('uploadphoto', {

@@ -1,10 +1,10 @@
-<ion-view title="" id="page19" class="page-newsfeed" hide-back-button="true">
+<ion-view title="" id="page19" class="page-newsfeed" hide-back-button="false">
     <ion-content padding="false" class="has-header has-tabs">
         <div class="list card" ng-repeat="p in user.photos">
 
           <div class="item item-avatar">
             <img ui-sref="nido.profile({ id: p.user })" ng-src="{{user.usersFollowed[p.user].photo}}">
-            <h2  ui-sref="nido.profile({ id: p.user })" style="font-weight:500;">{{user.usersFollowed[p.user].firstName|lowercase}}</h2>
+            <h2  ui-sref="nido.profile({ id: p.user })" style="font-weight:500;">{{user.usersFollowed[p.user].firstName}}</h2>
             <p>{{p.created | date:'MMMM dd, yyyy h:mma'}}</p>
           </div>
 

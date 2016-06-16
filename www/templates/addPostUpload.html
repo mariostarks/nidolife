@@ -11,8 +11,9 @@
         </div>
 
         <form class="item item-body">
+
           <div class="cropArea">
-            <img-crop image="post.originalImage" area-type="square" area-min-size="200" result-image-size="425" result-image="post.croppedImage" result-image-format="image/jpg" result-image-quality="0.95" change-on-fly="true" maximize-crop="true" result-image-aspect="1x1" class=""></img-crop>
+            <img-crop image="post.originalImage" area-type="square" area-min-size="200" result-image-size="400" result-image="post.croppedImage" result-image-format="image/jpg" result-image-quality="0.90" change-on-fly="false" maximize-crop="true" result-image-aspect="1x1" class=""></img-crop>
           </div>
 
 
@@ -20,9 +21,9 @@
         </form>
       </div>
     </ion-content>
-    <div class="bar bar-footer bar-positive" ui-sref="addpost">
+    <div class="bar bar-footer bar-positive">
       <p class="photo-options">
-        <a ng-click="goBack()" class="button button-small button-light">Cancel</a>
+        <a ui-sref="nido.activityFeed" class="button button-small button-light">Cancel</a>
         <a ng-click="openModal()" class="button button-large button-calm">Next Step</a>
       </p>
     </div>
@@ -57,7 +58,7 @@
             <span class="input-label" style="display: block; width: 100%;">Post to Challenge?</span>
             <select ng-model="post.challenge" required>
               <option value="null">None</option>
-              <option value="{{c.id}}" ng-repeat="c in challenges" ng-selected="c.id==challenge_id">{{c.name}}</option>
+              <option value="{{c.id}}" ng-repeat="c in challenges" ng-selected="c.id==challenge_id">{{challengesDetails[c.challenge_id].name}}</option>
             </select>
           </label>
 
